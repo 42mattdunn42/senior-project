@@ -21,11 +21,13 @@ public class FightManager : MonoBehaviour
         enemy = null;  // for now until we have an enemy
         if (playerTurn)
         {
-            
+            // draw cards
+            // add AP
+
         }
         else
         {
-            
+            // enemy stuff
             playerTurn = false;
         }
     }
