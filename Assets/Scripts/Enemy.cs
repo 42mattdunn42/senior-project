@@ -14,5 +14,11 @@ public class Enemy : MonoBehaviour
         
     }
 
-    public bool IsAlive() { return hp > 0; }
+    public bool IsAlive() { 
+        return hp > 0; 
+    }
+    public void TakeDamage(int damage)
+    {
+        hp -= damage;
+    }
 }

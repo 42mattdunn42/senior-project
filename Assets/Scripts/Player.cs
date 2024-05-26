@@ -22,4 +22,9 @@ public class Player : MonoBehaviour
     {
         return hp > 0;
     }
+
+    public void TakeDamage(int damage)
+    {
+        hp -= damage;
+    }
 }

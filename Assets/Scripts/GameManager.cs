@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     private static GameManager _instance = null;
     private Player player;
     private Enemy enemy;
+    private FightManager fightManager;
     public int maxNumTurns;  // here for the example fight handler
     bool playerTurn = true; //start with player turn
     int turnNum = 0;
@@ -49,6 +50,7 @@ public class GameManager : MonoBehaviour
         {
             case "FightScene":
                 // InitiateFight();  // maybe change to initiate a fight in a fight manager
+                // don't need to call it b/c it will be iitialized with the scene
                 break;
             default: break;
         }

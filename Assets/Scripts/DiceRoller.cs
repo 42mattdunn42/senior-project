@@ -8,6 +8,11 @@ public class DiceRoller : MonoBehaviour
     public List<int> faces;
     public int[] results { get; private set; }
 
+    public void SetDice(List<TextMeshProUGUI> dice) { this.dice = dice; }
+    public List<TextMeshProUGUI> GetDice() { return this.dice; }
+    public void SetNumFaces(List<int> faces) { this.faces = faces; }
+    public List<int> GetFaces() { return this.faces; }
+
     /// <summary>
     /// Uses the list of TextMeshPro and numFaces to roll dice and display to the user
     /// </summary>
@@ -24,8 +29,12 @@ public class DiceRoller : MonoBehaviour
         this.results =  output;
     }
 
-    public void SetDice(List<TextMeshProUGUI> dice) { this.dice = dice; }
-    public List<TextMeshProUGUI> GetDice() { return this.dice; }
-    public void SetNumFaces(List<int> faces) { this.faces = faces; }
-    public List<int> GetFaces() { return this.faces; }
+    public void ClearDice()
+    {
+        foreach(TextMeshProUGUI die in dice)
+        {
+            die.text = "";
+        }
+    }
+
 }
