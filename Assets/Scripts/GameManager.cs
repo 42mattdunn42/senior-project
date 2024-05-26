@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
         switch (SceneManager.GetActiveScene().name)  // needs to be here to assure that player is initialized
         {
             case "FightScene":
-                InitiateFight();  // maybe change to initiate a fight in a fight manager
+                // InitiateFight();  // maybe change to initiate a fight in a fight manager
                 break;
             default: break;
         }
