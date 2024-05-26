@@ -24,11 +24,12 @@ public class FightManager : MonoBehaviour
             // draw cards
             // add AP
 
+            playerTurn = false;
         }
         else
         {
             // enemy stuff
-            playerTurn = false;
+            playerTurn = true;
         }
     }
 }
