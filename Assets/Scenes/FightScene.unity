@@ -446,9 +446,9 @@ RectTransform:
   m_Children:
   - {fileID: 1076915418}
   - {fileID: 1481153950}
+  - {fileID: 331013185}
   - {fileID: 700933724}
   - {fileID: 1229745636}
-  - {fileID: 331013185}
   - {fileID: 433951942}
   - {fileID: 1864982992}
   - {fileID: 552563810}
@@ -587,6 +587,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcf58e95d146e44488eb54b241a80ebc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deck:
+  - {fileID: 1039504723}
+  - {fileID: 1846224277}
+  - {fileID: 1542578275}
+  - {fileID: 89301424}
+  - {fileID: 1284639332}
+  - {fileID: 1230432045}
+  - {fileID: 106932680}
+  - {fileID: 626520115}
+  - {fileID: 1148293240}
+  - {fileID: 1719780161}
+  - {fileID: 1457434285}
+  - {fileID: 565714920}
+  cardSlots:
+  - {fileID: 31188171}
+  - {fileID: 1077629789}
+  - {fileID: 365171559}
+  - {fileID: 885257747}
+  - {fileID: 1863702173}
+  availableCardSlots: 0101010101
+  actionPoints: 0
+  numOfActionPoints: 5
+  actionPointsPips:
+  - {fileID: 199927114}
+  - {fileID: 388358801}
+  - {fileID: 1674959978}
+  - {fileID: 1123164290}
+  - {fileID: 170053180}
+  APFull: {fileID: 21300000, guid: 8dabdc637b34f8645ad10bf91f9c1439, type: 3}
+  APEmpty: {fileID: 21300000, guid: 9e8f9621d941a4847b0ba934382e6cc2, type: 3}
 --- !u!4 &169966920
 Transform:
   m_ObjectHideFlags: 0
@@ -765,7 +795,7 @@ GameObject:
   - component: {fileID: 331013187}
   - component: {fileID: 331013186}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Roll Dice
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -788,7 +818,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -295.99997, y: 0.37483215}
+  m_AnchoredPosition: {x: -296, y: 0.3748169}
   m_SizeDelta: {x: -640, y: -320}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &331013186
@@ -1999,7 +2029,7 @@ GameObject:
   - component: {fileID: 1076915420}
   - component: {fileID: 1076915419}
   m_Layer: 5
-  m_Name: Button
+  m_Name: End Turn Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2069,8 +2099,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1489125222}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 169966919}
+        m_TargetAssemblyTypeName: FightManager, Assembly-CSharp
         m_MethodName: EndTurn
         m_Mode: 1
         m_Arguments:

@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static UnityEditor.Experimental.GraphView.GraphView;
+using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class FightManager : MonoBehaviour
 {
@@ -10,6 +12,20 @@ public class FightManager : MonoBehaviour
     private Player player;
     private Enemy enemy;
     bool playerTurn = true; //start with player turn
+    bool playerAutomaticActions = false; //checks if the automatic actions have been completed yet
+
+    //deck variables, arrays, and lists
+    public List<Card> deck = new List<Card>();
+    public Transform[] cardSlots;
+    public bool[] availableCardSlots;
+
+    //action point variables
+    public int actionPoints;
+    public int numOfActionPoints;
+
+    public Image[] actionPointsPips;
+    public Sprite APFull;
+    public Sprite APEmpty;
 
     // Start is called before the first frame update
     void Start()
@@ -29,11 +45,19 @@ public class FightManager : MonoBehaviour
 
             // draw cards
             // add AP
-
+            if(!playerAutomaticActions)
+            {
+                for (int i = 0; i<3; i++)
+                {
+                    DrawCards();
+                }
+                AddActionPoints();
+                playerAutomaticActions = true;
+            }
             // calculate and deal damage
             //enemy.TakeDamage(CalculateDamage());  // dice rolling is currently occuring here. Cards currently have no effect
             //Debug.Log(CalculateDamage());
-            playerTurn = false;
+            //playerTurn = false;
         }
         else if(!playerTurn && player.IsAlive() && enemy.IsAlive())  // enemy turn
         {
@@ -45,6 +69,7 @@ public class FightManager : MonoBehaviour
             // calculate and deal damage
             //player.TakeDamage(CalculateDamage());  // dice rolling is currently occuring here
             //Debug.Log(CalculateDamage());
+            playerAutomaticActions = false;
             playerTurn = true;
         }
         else  // someone was defeated
@@ -162,5 +187,55 @@ public class FightManager : MonoBehaviour
     public void DebugCalculatedamage()
     {
         Debug.Log(CalculateDamage());
+    }
+
+    public void EndTurn()
+    {
+        Debug.Log("End Turn");
+        playerTurn = false;
+    }
+
+    public void DrawCards()
+    {
+        if (deck.Count >= 1)
+        {
+            Card randCard = deck[Random.Range(0, deck.Count)];
+            for (int i = 0; i < availableCardSlots.Length; i++)
+            {
+                if (availableCardSlots[i] == true)
+                {
+                    randCard.gameObject.SetActive(true);
+                    randCard.transform.position = cardSlots[i].position;
+                    availableCardSlots[i] = false;
+                    deck.Remove(randCard);
+                    return;
+                }
+            }
+        }
+    }
+
+    public void AddActionPoints()
+    {
+        actionPoints = actionPoints + 3; //adds 3 ap everytime it is called
+        for (int i = 0; i < actionPointsPips.Length; i++)
+        {
+            if (i < actionPoints)
+            {
+                actionPointsPips[i].sprite = APFull;
+            }
+            else
+            {
+                actionPointsPips[i].sprite = APEmpty;
+            }
+            /*
+            if(i<numOfActionPoints)
+            {
+                actionPointsPips[i].enabled = true;
+            }
+            else
+            {
+                actionPointsPips[i].enabled = false;
+            }*/
+        }
     }
 }
