@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    private int hp;
+
+    public Enemy(int hp) { this.hp = hp; }
+
     // Start is called before the first frame update
     void Start()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public bool IsAlive() { return hp > 0; }
 }

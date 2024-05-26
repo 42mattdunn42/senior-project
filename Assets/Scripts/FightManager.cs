@@ -19,17 +19,28 @@ public class FightManager : MonoBehaviour
     void Update()
     {
         enemy = null;  // for now until we have an enemy
-        if (playerTurn)
+        if (playerTurn && player.IsAlive() && enemy.IsAlive())  // player turn
         {
             // draw cards
             // add AP
 
             playerTurn = false;
         }
-        else
+        else if(!playerTurn && player.IsAlive() && enemy.IsAlive())  // enemy turn
         {
             // enemy stuff
             playerTurn = true;
+        }
+        else  // someone was defeated
+        {
+            if (!player.IsAlive())  // player lost
+            {
+                // do lose stuff
+            }
+            else  // player won
+            {
+                // do win stuff
+            }
         }
     }
 }
