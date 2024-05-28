@@ -13,11 +13,17 @@ public class FightManager : MonoBehaviour
     private Enemy enemy;
     bool playerTurn = true; //start with player turn
     bool playerAutomaticActions = false; //checks if the automatic actions have been completed yet
+    bool enemyAutomaticActions = false; //same but for enemy
 
     //deck variables, arrays, and lists
     public List<Card> deck = new List<Card>();
     public Transform[] cardSlots;
     public bool[] availableCardSlots;
+
+    //enemy deck variables, arrays, and lists
+    public List<Card> enemyDeck = new List<Card>();
+    public Transform[] enemyCardSlots;
+    public bool[] enemyAvailableCardSlots;
 
     //action point variables
     public int actionPoints;
@@ -65,7 +71,14 @@ public class FightManager : MonoBehaviour
             // roller.ClearDice();
 
             // enemy stuff
-
+            if (!enemyAutomaticActions)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    DrawCards();
+                }
+                enemyAutomaticActions = true;
+            }
             // calculate and deal damage
             //player.TakeDamage(CalculateDamage());  // dice rolling is currently occuring here
             //Debug.Log(CalculateDamage());
@@ -197,18 +210,39 @@ public class FightManager : MonoBehaviour
 
     public void DrawCards()
     {
-        if (deck.Count >= 1)
+        if (playerTurn == true)
         {
-            Card randCard = deck[Random.Range(0, deck.Count)];
-            for (int i = 0; i < availableCardSlots.Length; i++)
+            if (deck.Count >= 1)
             {
-                if (availableCardSlots[i] == true)
+                Card randCard = deck[Random.Range(0, deck.Count)];
+                for (int i = 0; i < availableCardSlots.Length; i++)
                 {
-                    randCard.gameObject.SetActive(true);
-                    randCard.transform.position = cardSlots[i].position;
-                    availableCardSlots[i] = false;
-                    deck.Remove(randCard);
-                    return;
+                    if (availableCardSlots[i] == true)
+                    {
+                        randCard.gameObject.SetActive(true);
+                        randCard.transform.position = cardSlots[i].position;
+                        availableCardSlots[i] = false;
+                        deck.Remove(randCard);
+                        return;
+                    }
+                }
+            }
+        }
+        else if(playerTurn==false) 
+        {
+            if (enemyDeck.Count >= 1)
+            {
+                Card randCard = enemyDeck[Random.Range(0, enemyDeck.Count)];
+                for (int i = 0; i < enemyAvailableCardSlots.Length; i++)
+                {
+                    if (enemyAvailableCardSlots[i] == true)
+                    {
+                        randCard.gameObject.SetActive(true);
+                        randCard.transform.position = enemyCardSlots[i].position;
+                        enemyAvailableCardSlots[i] = false;
+                        enemyDeck.Remove(randCard);
+                        return;
+                    }
                 }
             }
         }
