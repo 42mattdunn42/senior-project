@@ -28,10 +28,18 @@ public class FightManager : MonoBehaviour
     //action point variables
     public int actionPoints;
     public int numOfActionPoints;
+    private int maxActionPoints = 5;
 
     public Image[] actionPointsPips;
     public Sprite APFull;
     public Sprite APEmpty;
+
+    //enemy action point variables
+    public int enemyActionPoints;
+    public int enemyNumOfActionPoints;
+    private int maxEnemyActionPoints = 5;
+
+    public Image[] enemyActionPointsPips;
 
     // Start is called before the first frame update
     void Start()
@@ -77,13 +85,16 @@ public class FightManager : MonoBehaviour
                 {
                     DrawCards();
                 }
+                AddActionPoints();
                 enemyAutomaticActions = true;
             }
             // calculate and deal damage
             //player.TakeDamage(CalculateDamage());  // dice rolling is currently occuring here
             //Debug.Log(CalculateDamage());
             playerAutomaticActions = false;
+            enemyAutomaticActions = false;
             playerTurn = true;
+
         }
         else  // someone was defeated
         {
@@ -250,26 +261,67 @@ public class FightManager : MonoBehaviour
 
     public void AddActionPoints()
     {
-        actionPoints = actionPoints + 3; //adds 3 ap everytime it is called
-        for (int i = 0; i < actionPointsPips.Length; i++)
+        if(playerTurn==true)
         {
-            if (i < actionPoints)
+            if (actionPoints <= 2)
             {
-                actionPointsPips[i].sprite = APFull;
+               actionPoints = actionPoints + 3;
             }
             else
             {
-                actionPointsPips[i].sprite = APEmpty;
+                actionPoints = maxActionPoints;
             }
-            /*
-            if(i<numOfActionPoints)
+            for (int i = 0; i < actionPointsPips.Length; i++)
             {
-                actionPointsPips[i].enabled = true;
+                if (i < actionPoints)
+                {
+                    actionPointsPips[i].sprite = APFull;
+                }
+                else
+                {
+                    actionPointsPips[i].sprite = APEmpty;
+                }
+                /*
+                if(i<numOfActionPoints)
+                {
+                    actionPointsPips[i].enabled = true;
+                }
+                else
+                {
+                    actionPointsPips[i].enabled = false;
+                }*/
+            }
+        }
+        if(playerTurn==false) //add AP for enemy turns
+        {
+            if (enemyActionPoints <= 2)
+            {
+                enemyActionPoints = enemyActionPoints + 3;
             }
             else
             {
-                actionPointsPips[i].enabled = false;
-            }*/
+                enemyActionPoints = maxEnemyActionPoints;
+            }
+            for (int i = 0; i < enemyActionPointsPips.Length; i++)
+            {
+                if (i < enemyActionPoints)
+                {
+                    enemyActionPointsPips[i].sprite = APFull;
+                }
+                else
+                {
+                    enemyActionPointsPips[i].sprite = APEmpty;
+                }
+                /*
+                if(i<numOfActionPoints)
+                {
+                    actionPointsPips[i].enabled = true;
+                }
+                else
+                {
+                    actionPointsPips[i].enabled = false;
+                }*/
+            }
         }
     }
 }
