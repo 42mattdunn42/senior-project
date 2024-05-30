@@ -26,7 +26,6 @@ public class Card : MonoBehaviour
                 hasBeenPlayed = true;
                 fm.availableCardSlots[handIndex] = true;
                 Invoke("PlayCard", 2f);
-                fm.actionPoints--;
             }
         }
     }
@@ -35,5 +34,7 @@ public class Card : MonoBehaviour
     {
         fm.discardPile.Add(this);
         gameObject.SetActive(false);
+        fm.actionPoints--;
+        fm.UpdateActionPoints();
     }
 }

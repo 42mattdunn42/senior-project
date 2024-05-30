@@ -67,6 +67,7 @@ public class FightManager : MonoBehaviour
                     DrawCards();
                 }
                 AddActionPoints();
+                UpdateActionPoints();
                 playerAutomaticActions = true;
             }
             // calculate and deal damage
@@ -87,6 +88,7 @@ public class FightManager : MonoBehaviour
                     DrawCards();
                 }
                 AddActionPoints();
+                UpdateActionPoints();
                 enemyAutomaticActions = true;
             }
             // calculate and deal damage
@@ -273,7 +275,7 @@ public class FightManager : MonoBehaviour
             {
                 actionPoints = maxActionPoints;
             }
-            for (int i = 0; i < actionPointsPips.Length; i++)
+            /*for (int i = 0; i < actionPointsPips.Length; i++)
             {
                 if (i < actionPoints)
                 {
@@ -291,8 +293,8 @@ public class FightManager : MonoBehaviour
                 else
                 {
                     actionPointsPips[i].enabled = false;
-                }*/
-            }
+                }
+            }*/
         }
         if(playerTurn==false) //add AP for enemy turns
         {
@@ -304,7 +306,7 @@ public class FightManager : MonoBehaviour
             {
                 enemyActionPoints = maxEnemyActionPoints;
             }
-            for (int i = 0; i < enemyActionPointsPips.Length; i++)
+            /*for (int i = 0; i < enemyActionPointsPips.Length; i++)
             {
                 if (i < enemyActionPoints)
                 {
@@ -322,7 +324,38 @@ public class FightManager : MonoBehaviour
                 else
                 {
                     actionPointsPips[i].enabled = false;
-                }*/
+                }
+            }*/
+        }
+    }
+    public void UpdateActionPoints()
+    {
+        if (playerTurn == true)
+        {
+            for (int i = 0; i < actionPointsPips.Length; i++)
+            {
+                if (i < actionPoints)
+                {
+                    actionPointsPips[i].sprite = APFull;
+                }
+                else
+                {
+                    actionPointsPips[i].sprite = APEmpty;
+                }
+            }
+        }
+        if (playerTurn == false) //add AP for enemy turns
+        {
+            for (int i = 0; i < enemyActionPointsPips.Length; i++)
+            {
+                if (i < enemyActionPoints)
+                {
+                    enemyActionPointsPips[i].sprite = APFull;
+                }
+                else
+                {
+                    enemyActionPointsPips[i].sprite = APEmpty;
+                }
             }
         }
     }
