@@ -17,6 +17,7 @@ public class FightManager : MonoBehaviour
 
     //deck variables, arrays, and lists
     public List<Card> deck = new List<Card>();
+    public List<Card> discardPile = new List<Card>();
     public Transform[] cardSlots;
     public bool[] availableCardSlots;
 
@@ -231,6 +232,7 @@ public class FightManager : MonoBehaviour
                     if (availableCardSlots[i] == true)
                     {
                         randCard.gameObject.SetActive(true);
+                        randCard.handIndex = i;
                         randCard.transform.position = cardSlots[i].position;
                         availableCardSlots[i] = false;
                         deck.Remove(randCard);
@@ -259,7 +261,7 @@ public class FightManager : MonoBehaviour
         }
     }
 
-    public void AddActionPoints()
+    public void AddActionPoints() //Need to make a function that removes AP when card is played
     {
         if(playerTurn==true)
         {
