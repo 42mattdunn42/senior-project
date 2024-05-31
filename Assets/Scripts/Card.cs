@@ -10,36 +10,46 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     public bool hasBeenPlayed;
     public int handIndex;
     private FightManager fm;
-    private RectTransform panelRectTransform;
+    private RectTransform playRectTransform;
+    private RectTransform burnRectTransform;
     // Start is called before the first frame update
     void Start()
     {
         fm = FindObjectOfType<FightManager>();
-        panelRectTransform = GameObject.Find("Play Area").GetComponent<RectTransform>();
+        playRectTransform = GameObject.Find("Play Area").GetComponent<RectTransform>();
+        burnRectTransform = GameObject.Find("Burn Card Area").GetComponent<RectTransform>();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        Debug.Log("Begin Drag");
+
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        Debug.Log("Dragging");
         this.transform.position = eventData.position;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (IsPointerOverUIObject(eventData, panelRectTransform))
+        if (IsPointerOverUIObject(eventData, playRectTransform))
         {
             Debug.Log("Card played");
             PlayCard();
             hasBeenPlayed = true;
-            // Perform any additional logic for playing the card
+            fm.availableCardSlots[handIndex] = true;
         }
-        Debug.Log("End Drag");
+
+        if (IsPointerOverUIObject(eventData, burnRectTransform))
+        {
+            Debug.Log("Card burned");
+            BurnCard();
+            hasBeenPlayed = true;
+            fm.availableCardSlots[handIndex] = true;
+        }
     }
+
+
     /*private void OnMouseDown()
     {
         if (hasBeenPlayed == false)
@@ -66,6 +76,21 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         fm.discardPile.Add(this);
         gameObject.SetActive(false);
         fm.actionPoints--;
+        fm.UpdateActionPoints();
+    }
+
+    void BurnCard()
+    {
+        fm.discardPile.Add(this);
+        gameObject.SetActive(false);
+        if (fm.actionPoints <= 4)
+        {
+            fm.actionPoints = fm.actionPoints + 1;
+        }
+        else
+        {
+            fm.actionPoints =  fm.maxActionPoints;
+        }
         fm.UpdateActionPoints();
     }
 }

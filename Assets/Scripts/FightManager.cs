@@ -29,7 +29,7 @@ public class FightManager : MonoBehaviour
     //action point variables
     public int actionPoints;
     public int numOfActionPoints;
-    private int maxActionPoints = 5;
+    public int maxActionPoints = 5;
 
     public Image[] actionPointsPips;
     public Sprite APFull;
