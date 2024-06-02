@@ -47,7 +47,7 @@ public class FightManager : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         roller = GameObject.FindGameObjectWithTag("Roller").GetComponent<DiceRoller>();
-        enemy = new Enemy(100);  // for now until we have an enemy
+        enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>();
     }
 
     // Update is called once per frame
@@ -69,9 +69,7 @@ public class FightManager : MonoBehaviour
                 roller.Roll();
                 playerAutomaticActions = true;
             }
-            // calculate and deal damage
-            //enemy.TakeDamage(CalculateDamage());  // dice rolling is currently occuring here. Cards currently have no effect
-            //Debug.Log(CalculateDamage());
+
             //playerTurn = false;
         }
         else if(!playerTurn && player.IsAlive() && enemy.IsAlive())  // enemy turn
@@ -88,9 +86,9 @@ public class FightManager : MonoBehaviour
                 roller.Roll();
                 enemyAutomaticActions = true;
             }
-            // calculate and deal damage
-            //player.TakeDamage(CalculateDamage());  // dice rolling is currently occuring here
-            //Debug.Log(CalculateDamage());
+
+            player.TakeDamage(CalculateDamage());
+
             playerAutomaticActions = false;
             enemyAutomaticActions = false;
             playerTurn = true;
@@ -111,10 +109,13 @@ public class FightManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Calculates the damage from the dice rolling to be dealt.
+    /// </summary>
+    /// <returns>The amount of damage to be dealt</returns>
     private int CalculateDamage()
     {
-        // roll dice and get results
-        roller.Roll();
+        // get dice results
         int[] rolls = roller.results;
         Array.Sort(rolls);
 
@@ -215,6 +216,14 @@ public class FightManager : MonoBehaviour
 
     public void EndTurn()
     {
+        if (playerTurn)
+        {
+            enemy.TakeDamage(CalculateDamage());
+        }
+        else
+        {
+            player.TakeDamage(CalculateDamage());
+        }
         Debug.Log("End Turn");
         playerTurn = false;
     }

@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Roller
   - FightManager
+  - HealthManager
+  - Enemy
+  - EnemyHealthBar
   layers:
   - Default
   - TransparentFX

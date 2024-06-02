@@ -4,14 +4,23 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    private int hp;
+    public int hp;
+    public int maxhp;
+    private HealthBarManager healthBars;
 
-    public Enemy(int hp) { this.hp = hp; }
+    public Enemy(int hp) { 
+        this.hp = hp; 
+        maxhp = hp; 
+        if (healthBars == null)
+        {
+            healthBars = GameObject.FindGameObjectWithTag("HealthManager").GetComponent<HealthBarManager>();
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        healthBars = GameObject.FindGameObjectWithTag("HealthManager").GetComponent<HealthBarManager>();
     }
 
     public bool IsAlive() { 
@@ -20,5 +29,6 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(int damage)
     {
         hp -= damage;
+        healthBars.updateEnemyBar();
     }
 }
