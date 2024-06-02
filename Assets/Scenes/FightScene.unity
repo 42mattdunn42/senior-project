@@ -713,7 +713,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd83459e58967774eb779448e0e6ec91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyBar: {fileID: 0}
+  enemyBar: {fileID: 1354720004}
   playerBar: {fileID: 594078534}
 --- !u!4 &46791615
 Transform:
