@@ -55,11 +55,9 @@ public class FightManager : MonoBehaviour
     {
         if (playerTurn && player.IsAlive() && enemy.IsAlive())  // player turn
         {
-            // clear dice results
-            // roller.ClearDice();
-
             // draw cards
             // add AP
+            // Roll dice
             if(!playerAutomaticActions)
             {
                 for (int i = 0; i<3; i++)
@@ -68,6 +66,7 @@ public class FightManager : MonoBehaviour
                 }
                 AddActionPoints();
                 UpdateActionPoints();
+                roller.Roll();
                 playerAutomaticActions = true;
             }
             // calculate and deal damage
@@ -77,9 +76,6 @@ public class FightManager : MonoBehaviour
         }
         else if(!playerTurn && player.IsAlive() && enemy.IsAlive())  // enemy turn
         {
-            // clear dice results
-            // roller.ClearDice();
-
             // enemy stuff
             if (!enemyAutomaticActions)
             {
@@ -89,6 +85,7 @@ public class FightManager : MonoBehaviour
                 }
                 AddActionPoints();
                 UpdateActionPoints();
+                roller.Roll();
                 enemyAutomaticActions = true;
             }
             // calculate and deal damage

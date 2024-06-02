@@ -29,6 +29,9 @@ public class DiceRoller : MonoBehaviour
         this.results =  output;
     }
 
+    /// <summary>
+    /// Sets all dice faces to zero
+    /// </summary>
     public void ClearDice()
     {
         foreach(TextMeshProUGUI die in dice)
@@ -37,4 +40,51 @@ public class DiceRoller : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Rerolls the specified die
+    /// </summary>
+    /// <param name="die_number"></param>
+    public void ReRoll(int die_number)
+    {
+        int temp = (Random.Range(0, faces[die_number]) + 1);
+        dice[die_number].text = temp.ToString();
+        results[die_number] = temp;
+    }
+
+    // These are needed for the dice if they are buttons.
+    /// <summary>
+    /// Rerolls only die 0
+    /// </summary>
+    public void ReRoll_Die0()
+    {
+        ReRoll(0);
+    }
+    /// <summary>
+    /// Rerolls only die 1
+    /// </summary>
+    public void ReRoll_Die1()
+    {
+        ReRoll(1);
+    }
+    /// <summary>
+    /// Rerolls only die 2
+    /// </summary>
+    public void ReRoll_Die2()
+    {
+        ReRoll(2);
+    }
+    /// <summary>
+    /// Rerolls only die 3
+    /// </summary>
+    public void ReRoll_Die3()
+    {
+        ReRoll(3);
+    }
+    /// <summary>
+    /// Rerolls only die 4
+    /// </summary>
+    public void ReRoll_Die4()
+    {
+        ReRoll(4);
+    }
 }
