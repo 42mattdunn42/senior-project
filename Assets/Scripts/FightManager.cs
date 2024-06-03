@@ -5,6 +5,8 @@ using UnityEngine;
 using static UnityEditor.Experimental.GraphView.GraphView;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
+using UnityEngine.SceneManagement;
+using TMPro;
 
 public class FightManager : MonoBehaviour
 {
@@ -41,6 +43,8 @@ public class FightManager : MonoBehaviour
     private int maxEnemyActionPoints = 5;
 
     public Image[] enemyActionPointsPips;
+
+    public TextMeshProUGUI diceresult;
 
     // Start is called before the first frame update
     void Start()
@@ -99,12 +103,12 @@ public class FightManager : MonoBehaviour
             if (!player.IsAlive())  // player lost
             {
                 // do lose stuff
-                Debug.Log("Enemy Won");
+                SceneManager.LoadScene("LoseScreen");
             }
             else  // player won
             {
                 // do win stuff
-                Debug.Log("Player Won");
+                SceneManager.LoadScene("WinScreen");
             }
         }
     }
@@ -113,10 +117,10 @@ public class FightManager : MonoBehaviour
     /// Calculates the damage from the dice rolling to be dealt.
     /// </summary>
     /// <returns>The amount of damage to be dealt</returns>
-    private int CalculateDamage()
+    public int CalculateDamage()
     {
         // get dice results
-        int[] rolls = roller.results;
+        int[] rolls = (int[])roller.results.Clone();
         Array.Sort(rolls);
 
         /* Valid Damage Rolls
@@ -133,25 +137,31 @@ public class FightManager : MonoBehaviour
         // check for straights
         int maxNumConsecutive = 0;
         int currCount = 1;
+        int min = rolls[0];
         for (int i = 1; i < rolls.Length; i++)
         {
             if (rolls[i] == rolls[i - 1] + 1)
             {
                 currCount++;
             }
-            else if (rolls[i] != rolls[i - 1])
+            else if (rolls[i] != rolls[i - 1])  // checks for duplicates here
             {
+                min = rolls[i];
                 currCount = 1;
             }
 
             if (currCount > maxNumConsecutive) { maxNumConsecutive = currCount; }
         }
-        if (maxNumConsecutive == 5)
+        if (maxNumConsecutive == 5)  // large straight
         {
+            roller.ColorLargeStraight();
+            diceresult.text = "Large Straight";
             return 40;
         }
-        else if (maxNumConsecutive == 4)
+        else if (maxNumConsecutive == 4)  // small straight
         {
+            roller.ColorSmallStraight(min);
+            diceresult.text = "Small Straight";
             return 30;
         }
 
@@ -177,10 +187,14 @@ public class FightManager : MonoBehaviour
 
         if (maxNumSame == 5)  // 5 of a kind
         {
+            roller.ColorXOfAKind(val);
+            diceresult.text = "5 of a Kind";
             return 50;
         }
         else if (maxNumSame == 4)  // 4 of a kind
         {
+            roller.ColorXOfAKind(val);
+            diceresult.text = "4 of a Kind";
             return 4 * val;
         }
         else if (maxNumSame == 3)  // determine if 3 of a kind or full house
@@ -197,15 +211,21 @@ public class FightManager : MonoBehaviour
                     }
                     if (numSame >= 2)
                     {
+                        roller.ColorFullHouse(val);
+                        diceresult.text = "Full House";
                         return 25;
                     }
                 }
             }
 
             // 3 of a kind
+            roller.ColorXOfAKind(val);
+            diceresult.text = "3 of a Kind";
+
             return 3 * val;
         }
 
+        diceresult.text = "";
         return 0;
     }
 
