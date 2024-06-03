@@ -5,6 +5,7 @@ using UnityEngine;
 using static UnityEditor.Experimental.GraphView.GraphView;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
+using UnityEngine.SceneManagement;
 
 public class FightManager : MonoBehaviour
 {
@@ -99,12 +100,12 @@ public class FightManager : MonoBehaviour
             if (!player.IsAlive())  // player lost
             {
                 // do lose stuff
-                Debug.Log("Enemy Won");
+                SceneManager.LoadScene("LoseScreen");
             }
             else  // player won
             {
                 // do win stuff
-                Debug.Log("Player Won");
+                SceneManager.LoadScene("WinScreen");
             }
         }
     }
