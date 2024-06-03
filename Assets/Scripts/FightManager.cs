@@ -13,7 +13,7 @@ public class FightManager : MonoBehaviour
     private DiceRoller roller;
     private Player player;
     private Enemy enemy;
-    bool playerTurn = true; //start with player turn
+    public bool playerTurn = true; //start with player turn
     bool playerAutomaticActions = false; //checks if the automatic actions have been completed yet
     bool enemyAutomaticActions = false; //same but for enemy
 

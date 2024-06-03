@@ -6,7 +6,7 @@ public class Enemy : MonoBehaviour
 {
     public int hp;
     public int maxhp;
-    private HealthBarManager healthBars;
+    public HealthBarManager healthBars;
 
     public Enemy(int hp) { 
         this.hp = hp; 
