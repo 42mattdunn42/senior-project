@@ -49,22 +49,6 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         }
     }
 
-
-    /*private void OnMouseDown()
-    {
-        if (hasBeenPlayed == false)
-        {
-            
-            if (fm.actionPoints >= 1) //checks if AP is available
-            {
-                transform.position += Vector3.up * 2;
-                hasBeenPlayed = true;
-                fm.availableCardSlots[handIndex] = true;
-                Invoke("PlayCard", .5f);
-            }
-        }
-    }*/
-
     private bool IsPointerOverUIObject(PointerEventData eventData, RectTransform target)
     {
         Vector2 localMousePosition = target.InverseTransformPoint(eventData.position);
