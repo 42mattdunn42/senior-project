@@ -19,6 +19,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     private FightManager fm;
     private Player player;
     private Enemy enemy;
+    private DiceRoller diceRoller;
     private RectTransform playRectTransform;
     private RectTransform burnRectTransform;
     private Dictionary<int, Func<bool>> cardDictionary;
@@ -28,6 +29,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         fm = FindObjectOfType<FightManager>();
         player = FindObjectOfType<Player>();
         enemy = FindObjectOfType<Enemy>();
+        diceRoller = FindObjectOfType<DiceRoller>();
         playRectTransform = GameObject.Find("Play Area").GetComponent<RectTransform>();
         burnRectTransform = GameObject.Find("Burn Card Area").GetComponent<RectTransform>();
 
@@ -38,7 +40,8 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     {
         cardDictionary = new Dictionary<int, Func<bool>>()
         {
-            { 1, () => Heal(10)}
+            { 1, () => Heal(10)}, //Jack of Clubs
+            { 2, () => Reroll(5)} //King of Diamonds
         };
     }
     bool ApplyEffect()
@@ -170,5 +173,15 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             }
         }
         else { return false; }
+    }
+
+    bool Reroll (int numberOfDice)
+    {
+        //probably doesn't need to check for player or enemy turn?
+        for(int i = 0; i < numberOfDice; i++)
+        {
+            diceRoller.ReRoll(i);
+        }
+        return true; //always returns true b/c I see no reason why it cant always reroll? AP is checked elsewhere
     }
 }
