@@ -41,7 +41,8 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         cardDictionary = new Dictionary<int, Func<bool>>()
         {
             { 1, () => Heal(10)}, //Jack of Clubs
-            { 2, () => Reroll(5)} //King of Diamonds
+            { 2, () => Reroll(5)}, //King of Diamonds
+            { 3, () => ChangeDiceFace(3)} //Queen of Hearts
         };
     }
     bool ApplyEffect()
@@ -183,5 +184,14 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             diceRoller.ReRoll(i);
         }
         return true; //always returns true b/c I see no reason why it cant always reroll? AP is checked elsewhere
+    }
+
+    bool ChangeDiceFace(int numberOfDice)
+    {
+        for (int i = 0; i < numberOfDice; i++)
+        {
+            diceRoller.SetDiceNumber(i, 3);
+        }
+        return true;
     }
 }

@@ -165,4 +165,16 @@ public class DiceRoller : MonoBehaviour
             die.GetComponent<Image>().color = Color.white;
         }
     }
+
+    /// <summary>
+    /// Sets an individual dice to the desired value
+    /// </summary>
+    /// <param name="diceIndex"></param>
+    /// <param name="val"></param>
+    public void SetDiceNumber(int diceIndex, int val)
+    {
+        dice[diceIndex].GetComponentInChildren<TextMeshProUGUI>().text = val.ToString();
+        results[diceIndex] = val;
+        fm.CalculateDamage();  // color dice
+    }
 }
