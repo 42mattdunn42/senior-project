@@ -77,10 +77,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
         if (IsPointerOverUIObject(eventData, burnRectTransform))
         {
-            Debug.Log("Card burned");
             BurnCard();
-            hasBeenPlayed = true;
-            fm.availableCardSlots[handIndex] = true;
         }
     }
 
@@ -120,17 +117,20 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     void BurnCard()
     {
-        fm.discardPile.Add(this);
-        gameObject.SetActive(false);
         if (fm.actionPoints <= 4)
         {
             fm.actionPoints = fm.actionPoints + 1;
+            fm.UpdateActionPoints();
+            Debug.Log("Card burned");
         }
         else
         {
-            fm.actionPoints =  fm.maxActionPoints;
+            Debug.Log("AP already at maximum value. Discarding Card.");
         }
-        fm.UpdateActionPoints();
+        fm.discardPile.Add(this);
+        gameObject.SetActive(false);
+        hasBeenPlayed = true;
+        fm.availableCardSlots[handIndex] = true;
     }
 
     bool Heal(int amount) //needs to check if you are allowed to play the card
