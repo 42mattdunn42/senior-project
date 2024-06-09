@@ -1073,9 +1073,9 @@ MonoBehaviour:
   - {fileID: 1332892833}
   - {fileID: 1018990695}
   - {fileID: 340659860}
-  - {fileID: 277708080}
   - {fileID: 639556474}
   - {fileID: 1327614963}
+  - {fileID: 277708080}
   discardPile: []
   cardSlots:
   - {fileID: 31188171}
