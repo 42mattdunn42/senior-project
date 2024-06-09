@@ -7,6 +7,9 @@ public class Enemy : MonoBehaviour
     public int hp;
     public int maxhp;
     public HealthBarManager healthBars;
+    public int shield;
+    public int shieldLength;
+    public FightManager fm;
 
     public Enemy(int hp) { 
         this.hp = hp; 
@@ -21,6 +24,7 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         healthBars = GameObject.FindGameObjectWithTag("HealthManager").GetComponent<HealthBarManager>();
+        fm = GameObject.FindGameObjectWithTag("FightManager").GetComponent<FightManager>();
     }
 
     public bool IsAlive() { 
@@ -28,7 +32,28 @@ public class Enemy : MonoBehaviour
     }
     public void TakeDamage(int damage)
     {
-        hp -= damage;
+        if (shieldLength > 0)
+        {
+            if (damage > shield)
+            {
+                hp -= (damage - shield);
+                fm.DeactivateShield(false);
+            }
+            else
+            {
+                shield -= damage;
+                fm.UpdateShield(false, shield);
+            }
+            shieldLength--;
+            if (shieldLength < 1)
+            {
+                fm.DeactivateShield(false);
+            }
+        }
+        else
+        {
+            hp -= damage;
+        }
         healthBars.updateEnemyBar();
     }
 }

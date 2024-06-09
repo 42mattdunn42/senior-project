@@ -46,10 +46,15 @@ public class FightManager : MonoBehaviour
 
     public TextMeshProUGUI diceresult;
 
-    // damage delay
+    // Damage delay
     private int damageDelay = 0;  // must be initialized to zero to prevent damage from being dealt prematurely
     public TextMeshProUGUI incomingDamage;
     public TextMeshProUGUI outgoingDamage;
+
+    // Shield
+    public RawImage playerShield;
+    public RawImage enemyShield;
+    
 
 
     // Start is called before the first frame update
@@ -360,5 +365,48 @@ public class FightManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void ActivateShield(int amt, int numTurns)
+    {
+        if (playerTurn)
+        {
+            player.shield = amt;
+            player.shieldLength = numTurns;
+            playerShield.gameObject.SetActive(true);
+            playerShield.GetComponentInChildren<TextMeshProUGUI>().text = amt.ToString();
+        }
+        else
+        {
+            enemy.shield = amt;
+            enemy.shieldLength = numTurns;
+            enemyShield.gameObject.SetActive(true);
+            enemyShield.GetComponentInChildren<TextMeshProUGUI>().text = amt.ToString();
+        }
+    }
+
+    public void UpdateShield(bool IsPlayer, int amt)
+    {
+        if (IsPlayer)
+        {
+            playerShield.GetComponentInChildren<TextMeshProUGUI>().text = amt.ToString();
+        }
+        else
+        {
+            enemyShield.GetComponentInChildren<TextMeshProUGUI>().text = amt.ToString();
+        }
+    }
+
+    public void DeactivateShield(bool IsPlayer)
+    {
+        if (IsPlayer)
+        {
+            playerShield.gameObject.SetActive(false);
+        }
+        else
+        {
+            enemyShield.gameObject.SetActive(false);
+        }
+        
     }
 }

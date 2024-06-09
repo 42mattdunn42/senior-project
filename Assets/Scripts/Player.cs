@@ -7,12 +7,16 @@ public class Player : MonoBehaviour
     public int hp;
     public int maxhp;
     public HealthBarManager healthBars;
+    public int shield;
+    public int shieldLength;
+    public FightManager fm;
 
     // Start is called before the first frame update
     void Start()
     {
         maxhp = hp;
         healthBars = GameObject.FindGameObjectWithTag("HealthManager").GetComponent<HealthBarManager>();
+        fm = GameObject.FindGameObjectWithTag("FightManager").GetComponent<FightManager>();
     }
 
     // Update is called once per frame
@@ -28,7 +32,28 @@ public class Player : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        hp -= damage;
+        if (shieldLength > 0 && damage != 0)
+        {
+            if(damage > shield)
+            {
+                hp -= (damage - shield);
+                fm.DeactivateShield(true);
+            }
+            else
+            {
+                shield -= damage;
+                fm.UpdateShield(true, shield);
+            }
+            shieldLength--;
+            if(shieldLength < 1)
+            {
+                fm.DeactivateShield(true);
+            }
+        }
+        else
+        {
+            hp -= damage;
+        }
         healthBars.updatePlayerBar();
     }
 }

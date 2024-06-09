@@ -42,7 +42,8 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         {
             { 1, () => Heal(10)}, //Jack of Clubs
             { 2, () => Reroll(5)}, //King of Diamonds
-            { 3, () => ChangeDiceFace(3)} //Queen of Hearts
+            { 3, () => ChangeDiceFace(3)}, //Queen of Hearts
+            { 4, () => ActivateShield(20, 1)} // Ace of Hearts
         };
     }
     bool ApplyEffect()
@@ -192,6 +193,12 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         {
             diceRoller.SetDiceNumber(i, 3);
         }
+        return true;
+    }
+
+    bool ActivateShield(int amt, int numTurns)
+    {
+        fm.ActivateShield(amt, numTurns);
         return true;
     }
 }
