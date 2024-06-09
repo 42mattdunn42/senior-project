@@ -46,6 +46,12 @@ public class FightManager : MonoBehaviour
 
     public TextMeshProUGUI diceresult;
 
+    // damage delay
+    private int damageDelay = 0;  // must be initialized to zero to prevent damage from being dealt prematurely
+    public TextMeshProUGUI incomingDamage;
+    public TextMeshProUGUI outgoingDamage;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -91,7 +97,11 @@ public class FightManager : MonoBehaviour
                 enemyAutomaticActions = true;
             }
 
-            player.TakeDamage(CalculateDamage());
+            // damage delay stuff
+            enemy.TakeDamage(damageDelay);
+            damageDelay = CalculateDamage();
+            incomingDamage.text = "Incoming: " + damageDelay;
+            outgoingDamage.text = "";
 
             playerAutomaticActions = false;
             enemyAutomaticActions = false;
@@ -236,13 +246,19 @@ public class FightManager : MonoBehaviour
 
     public void EndTurn()
     {
-        if (playerTurn)
+        if (playerTurn)  // due to ddamage delay, at the end of the player's turn they will take damage and vice versa
         {
-            enemy.TakeDamage(CalculateDamage());
+            player.TakeDamage(damageDelay);
+            damageDelay = CalculateDamage();
+            outgoingDamage.text = "Incoming: " + damageDelay;
+            incomingDamage.text = "";
         }
         else
         {
-            player.TakeDamage(CalculateDamage());
+            enemy.TakeDamage(damageDelay);
+            damageDelay = CalculateDamage();
+            incomingDamage.text = "Incoming: " + damageDelay;
+            outgoingDamage.text = "";
         }
         Debug.Log("End Turn");
         playerTurn = false;
