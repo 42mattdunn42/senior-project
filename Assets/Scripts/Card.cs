@@ -117,6 +117,34 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         }
     }
 
+    void EnemyPlayCard(GameObject playedCard, int actionPointCost)
+    {
+        if (actionPointCost <= fm.enemyActionPoints)
+        {
+            if (ApplyEffect() == true)
+            {
+                fm.discardPile.Add(this);
+                playedCard.SetActive(false);
+                for (int i = 0; i < actionPointCost; i++)
+                {
+                    fm.enemyActionPoints--;
+                    fm.UpdateActionPoints();
+                }
+                hasBeenPlayed = true;
+                fm.enemyAvailableCardSlots[handIndex] = true;
+                Debug.Log("Enemy card played");
+            }
+            else
+            {
+                Debug.Log("Card conditions not met and cannot be played!");
+            }
+        }
+        else
+        {
+            Debug.Log("Card cannot be played due to insufficient AP!");
+        }
+    }
+
     void BurnCard()
     {
         if (fm.actionPoints <= 4)
