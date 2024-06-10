@@ -103,11 +103,6 @@ public class FightManager : MonoBehaviour
                 enemyAutomaticActions = true;
             }
 
-            // damage delay stuff
-            enemy.TakeDamage(damageDelay);
-            damageDelay = CalculateDamage();
-            incomingDamage.text = "Incoming: " + damageDelay;
-            outgoingDamage.text = "";
             EndTurn();
         }
         else  // someone was defeated
@@ -248,7 +243,7 @@ public class FightManager : MonoBehaviour
 
     public void EndTurn()
     {
-        if (playerTurn)  // due to ddamage delay, at the end of the player's turn they will take damage and vice versa
+        if (playerTurn)  // due to damage delay, at the end of the player's turn they will take damage and vice versa
         {
             player.TakeDamage(damageDelay);
             damageDelay = CalculateDamage();
