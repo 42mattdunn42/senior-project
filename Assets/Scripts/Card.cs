@@ -1,9 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Build.Content;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Random = UnityEngine.Random;
 
 public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -40,13 +39,14 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     {
         cardDictionary = new Dictionary<int, Func<bool>>()
         {
+            { 0, () => NoEffect()},
             { 1, () => Heal(10)}, //Jack of Clubs
             { 2, () => Reroll(5)}, //King of Diamonds
             { 3, () => ChangeDiceFace(3)}, //Queen of Hearts
             { 4, () => ActivateShield(20, 1)} // Ace of Hearts
         };
     }
-    bool ApplyEffect()
+    public bool ApplyEffect()
     {
         if (cardDictionary.TryGetValue(cardID, out Func<bool> effect))
         {
@@ -117,14 +117,20 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         }
     }
 
-    void EnemyPlayCard(GameObject playedCard, int actionPointCost)
+    /*void EnemyPlayRandom()
+    {
+        Card randCard = fm.enemyHand[Random.Range(0, fm.enemyHand.Count)];
+        EnemyPlayCard(randCard, randCard.apCost);
+    }
+
+    void EnemyPlayCard(Card playedCard, int actionPointCost)
     {
         if (actionPointCost <= fm.enemyActionPoints)
         {
             if (ApplyEffect() == true)
             {
                 fm.discardPile.Add(this);
-                playedCard.SetActive(false);
+                playedCard.gameObject.SetActive(false);
                 for (int i = 0; i < actionPointCost; i++)
                 {
                     fm.enemyActionPoints--;
@@ -143,7 +149,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         {
             Debug.Log("Card cannot be played due to insufficient AP!");
         }
-    }
+    }*/
 
     void BurnCard()
     {
@@ -227,6 +233,11 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     bool ActivateShield(int amt, int numTurns)
     {
         fm.ActivateShield(amt, numTurns);
+        return true;
+    }
+
+    bool NoEffect()
+    {
         return true;
     }
 }

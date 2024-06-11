@@ -430,7 +430,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: 
   cardID: 0
-  apCost: 0
+  apCost: 1
   effectText: 
   hasBeenPlayed: 0
   handIndex: 0
@@ -692,7 +692,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: 
   cardID: 0
-  apCost: 0
+  apCost: 1
   effectText: 
   hasBeenPlayed: 0
   handIndex: 0
@@ -1097,6 +1097,7 @@ MonoBehaviour:
   - {fileID: 1213301079}
   - {fileID: 28657720}
   - {fileID: 692561511}
+  enemyHand: []
   enemyCardSlots:
   - {fileID: 20356997}
   - {fileID: 1078198782}
@@ -1526,7 +1527,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: 
   cardID: 0
-  apCost: 0
+  apCost: 1
   effectText: 
   hasBeenPlayed: 0
   handIndex: 0
@@ -2613,7 +2614,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: 
   cardID: 0
-  apCost: 0
+  apCost: 1
   effectText: 
   hasBeenPlayed: 0
   handIndex: 0
@@ -2866,7 +2867,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: 
   cardID: 0
-  apCost: 0
+  apCost: 1
   effectText: 
   hasBeenPlayed: 0
   handIndex: 0
@@ -3015,7 +3016,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: 
   cardID: 0
-  apCost: 0
+  apCost: 1
   effectText: 
   hasBeenPlayed: 0
   handIndex: 0
@@ -3622,7 +3623,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: 
   cardID: 0
-  apCost: 0
+  apCost: 1
   effectText: 
   hasBeenPlayed: 0
   handIndex: 0
@@ -5139,7 +5140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: 
   cardID: 0
-  apCost: 0
+  apCost: 1
   effectText: 
   hasBeenPlayed: 0
   handIndex: 0
@@ -5363,7 +5364,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: 
   cardID: 0
-  apCost: 0
+  apCost: 1
   effectText: 
   hasBeenPlayed: 0
   handIndex: 0
@@ -5466,7 +5467,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: 
   cardID: 0
-  apCost: 0
+  apCost: 1
   effectText: 
   hasBeenPlayed: 0
   handIndex: 0
@@ -7395,7 +7396,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: 
   cardID: 0
-  apCost: 0
+  apCost: 1
   effectText: 
   hasBeenPlayed: 0
   handIndex: 0
@@ -9248,7 +9249,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: 
   cardID: 0
-  apCost: 0
+  apCost: 1
   effectText: 
   hasBeenPlayed: 0
   handIndex: 0

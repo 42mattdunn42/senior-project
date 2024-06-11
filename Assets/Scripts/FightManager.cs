@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using Random = UnityEngine.Random;
 using UnityEngine.SceneManagement;
 using TMPro;
+using Unity.VisualScripting;
 
 public class FightManager : MonoBehaviour
 {
@@ -26,6 +27,7 @@ public class FightManager : MonoBehaviour
 
     //enemy deck variables, arrays, and lists
     public List<Card> enemyDeck = new List<Card>();
+    public List<Card> enemyHand = new List<Card>();
     public Transform[] enemyCardSlots;
     public bool[] enemyAvailableCardSlots;
 
@@ -100,6 +102,11 @@ public class FightManager : MonoBehaviour
                 AddActionPoints();
                 UpdateActionPoints();
                 roller.Roll();
+                for (int i = 0; i < 3; i++)
+                {
+                    EnemyPlayRandom();
+                    Debug.Log("Current Enemy AP"+ enemyActionPoints);
+                }
                 enemyAutomaticActions = true;
             }
 
@@ -297,6 +304,7 @@ public class FightManager : MonoBehaviour
                     {
                         randCard.gameObject.SetActive(true);
                         randCard.transform.position = enemyCardSlots[i].position;
+                        enemyHand.Add(randCard);
                         enemyAvailableCardSlots[i] = false;
                         enemyDeck.Remove(randCard);
                         return;
@@ -403,6 +411,39 @@ public class FightManager : MonoBehaviour
         {
             enemyShield.gameObject.SetActive(false);
         }
-        
+    }
+
+    void EnemyPlayRandom()
+    {
+        Card randCard = enemyHand[Random.Range(0, enemyHand.Count)];
+        EnemyPlayCard(randCard, randCard.apCost);
+    }
+
+    void EnemyPlayCard(Card playedCard, int actionPointCost)
+    {
+        if (actionPointCost <= enemyActionPoints)
+        {
+            if (playedCard.ApplyEffect())
+            {
+                discardPile.Add(playedCard); // Add the card to the discard pile
+                playedCard.gameObject.SetActive(false); // Deactivate the GameObject
+                for (int i = 0; i < actionPointCost; i++)
+                {
+                    enemyActionPoints--;
+                    UpdateActionPoints();
+                }
+                playedCard.hasBeenPlayed = true;
+                enemyAvailableCardSlots[playedCard.handIndex] = true;
+                Debug.Log("Enemy card played");
+            }
+            else
+            {
+                Debug.Log("Card conditions not met and cannot be played!");
+            }
+        }
+        else
+        {
+            Debug.Log("Card cannot be played due to insufficient AP!");
+        }
     }
 }
