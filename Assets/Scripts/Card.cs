@@ -14,6 +14,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     public int apCost;
     public string effectText;
 
+    //Tooltip Stuff
     public TextMeshProUGUI tooltipText;
     public GameObject tooltipPanel;
     private bool isTooltipActive;
@@ -30,6 +31,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     private RectTransform playRectTransform;
     private RectTransform burnRectTransform;
     private Dictionary<int, Func<bool>> cardDictionary;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -42,7 +44,6 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         IntializeCardDictionary();
         HideTooltip();
     }
-
     void Update()
     {
         if (isTooltipActive)
@@ -51,6 +52,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         }
     }
 
+    //ALL PLAYING/BURNING/CARD CONTROLLERS//
     void IntializeCardDictionary()
     {
         cardDictionary = new Dictionary<int, Func<bool>>()
@@ -74,40 +76,6 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             return false;
         }
     }
-
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        HideTooltip();
-    }
-
-    public void OnDrag(PointerEventData eventData)
-    {
-        this.transform.position = eventData.position;
-        HideTooltip();
-    }
-
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        if (IsPointerOverUIObject(eventData, playRectTransform))
-        {
-            PlayCard(apCost);
-        }
-        else if (IsPointerOverUIObject(eventData, burnRectTransform))
-        {
-            BurnCard();
-        }
-        else
-        {
-            ShowTooltip(effectText);
-        }
-    }
-
-    private bool IsPointerOverUIObject(PointerEventData eventData, RectTransform target)
-    {
-        Vector2 localMousePosition = target.InverseTransformPoint(eventData.position);
-        return target.rect.Contains(localMousePosition);
-    }
-
     void PlayCard(int actionPointCost)
     {
         if(actionPointCost <= fm.actionPoints)
@@ -138,7 +106,6 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             ShowTooltip(effectText);
         }
     }
-
     void BurnCard()
     {
         if (fm.actionPoints <= 4)
@@ -158,6 +125,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         fm.availableCardSlots[handIndex] = true;
     }
 
+    //ALL CARD EFFECTS FUNCTIONS//
     bool Heal(int amount) //needs to check if you are allowed to play the card
     {
         if(fm.playerTurn == true)
@@ -199,7 +167,6 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         }
         else { return false; }
     }
-
     bool Reroll (int numberOfDice)
     {
         //probably doesn't need to check for player or enemy turn?
@@ -209,7 +176,6 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         }
         return true; //always returns true b/c I see no reason why it cant always reroll? AP is checked elsewhere
     }
-
     bool ChangeDiceFace(int numberOfDice)
     {
         for (int i = 0; i < numberOfDice; i++)
@@ -218,30 +184,58 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         }
         return true;
     }
-
     bool ActivateShield(int amt, int numTurns)
     {
         fm.ActivateShield(amt, numTurns);
         return true;
     }
-
     bool NoEffect()
     {
         return true;
     }
 
+    //ALL DRAG/UI FUNCTIONS//
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        HideTooltip();
+    }
+    public void OnDrag(PointerEventData eventData)
+    {
+        this.transform.position = eventData.position;
+        HideTooltip();
+    }
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        if (IsPointerOverUIObject(eventData, playRectTransform))
+        {
+            PlayCard(apCost);
+        }
+        else if (IsPointerOverUIObject(eventData, burnRectTransform))
+        {
+            BurnCard();
+        }
+        else
+        {
+            ShowTooltip(effectText);
+        }
+    }
+    private bool IsPointerOverUIObject(PointerEventData eventData, RectTransform target)
+    {
+        Vector2 localMousePosition = target.InverseTransformPoint(eventData.position);
+        return target.rect.Contains(localMousePosition);
+    }
     public void OnPointerEnter(PointerEventData eventData)
     {
         Debug.Log("Mouse entered card area");
         ShowTooltip(effectText);
     }
-
     public void OnPointerExit(PointerEventData eventData)
     {
         Debug.Log("Mouse exited card area");
         HideTooltip();
     }
 
+    //ALL TOOLTIP FUNCTIONS//
     void ShowTooltip(string message)
     {
         Debug.Log($"Showing tooltip with message: {message}");

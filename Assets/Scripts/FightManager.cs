@@ -17,7 +17,6 @@ public class FightManager : MonoBehaviour
     public bool playerTurn = true; //start with player turn
     bool playerAutomaticActions = false; //checks if the automatic actions have been completed yet
     bool enemyAutomaticActions = false; //same but for enemy
-    bool firstTurnActions = false;
 
     //deck variables, arrays, and lists
     public List<Card> deck = new List<Card>();

@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager _instance = null;
     private Player player;
-    private Enemy enemy;
+    //private Enemy enemy;
     private FightManager fightManager;
     public int maxNumTurns;  // here for the example fight handler
     bool playerTurn = true; //start with player turn
@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Fight Initiated >:)");
         // get enemy in fight here
-        enemy = null;
+        //enemy = null;
 
         // example of how a fight manager might handle the turns
         
