@@ -70,6 +70,7 @@ public class FightManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //TURN CYCLING
         if (playerTurn && player.IsAlive() && enemy.IsAlive())  // player turn
         {
             // draw cards
@@ -125,7 +126,174 @@ public class FightManager : MonoBehaviour
             }
         }
     }
+    public void EndTurn()
+    {
+        if (playerTurn)  // due to damage delay, at the end of the player's turn they will take damage and vice versa
+        {
+            player.TakeDamage(damageDelay);
+            damageDelay = CalculateDamage();
+            outgoingDamage.text = "Incoming: " + damageDelay;
+            incomingDamage.text = "";
+            Debug.Log("Player End Turn");
+            playerTurn = false;
+            playerAutomaticActions = false;
+        }
+        else
+        {
+            enemy.TakeDamage(damageDelay);
+            damageDelay = CalculateDamage();
+            incomingDamage.text = "Incoming: " + damageDelay;
+            outgoingDamage.text = "";
+            Debug.Log("Enemy End Turn");
+            playerTurn = true;
+            enemyAutomaticActions = false;
+        }
+    }
 
+
+
+
+    //CARD STUFF
+    public void DrawCards()
+    {
+        if (playerTurn == true)
+        {
+            if (deck.Count >= 1)
+            {
+                Card randCard = deck[Random.Range(0, deck.Count)];
+                for (int i = 0; i < availableCardSlots.Length; i++)
+                {
+                    if (availableCardSlots[i] == true)
+                    {
+                        randCard.gameObject.SetActive(true);
+                        randCard.handIndex = i;
+                        randCard.transform.position = cardSlots[i].position;
+                        availableCardSlots[i] = false;
+                        deck.Remove(randCard);
+                        return;
+                    }
+                }
+            }
+        }
+        else if(playerTurn==false) 
+        {
+            if (enemyDeck.Count >= 1)
+            {
+                Card randCard = enemyDeck[Random.Range(0, enemyDeck.Count)];
+                for (int i = 0; i < enemyAvailableCardSlots.Length; i++)
+                {
+                    if (enemyAvailableCardSlots[i] == true)
+                    {
+                        randCard.gameObject.SetActive(true);
+                        randCard.transform.position = enemyCardSlots[i].position;
+                        enemyHand.Add(randCard);
+                        enemyAvailableCardSlots[i] = false;
+                        enemyDeck.Remove(randCard);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    void EnemyPlayRandom()
+    {
+        Card randCard = enemyHand[Random.Range(0, enemyHand.Count)];
+        EnemyPlayCard(randCard, randCard.apCost);
+    }
+
+    void EnemyPlayCard(Card playedCard, int actionPointCost)
+    {
+        if (actionPointCost <= enemyActionPoints)
+        {
+            if (playedCard.ApplyEffect())
+            {
+                discardPile.Add(playedCard); // Add the card to the discard pile
+                playedCard.gameObject.SetActive(false); // Deactivate the GameObject
+                for (int i = 0; i < actionPointCost; i++)
+                {
+                    enemyActionPoints--;
+                    UpdateActionPoints();
+                }
+                playedCard.hasBeenPlayed = true;
+                enemyAvailableCardSlots[playedCard.handIndex] = true;
+                Debug.Log("Enemy card played");
+            }
+            else
+            {
+                Debug.Log("Card conditions not met and cannot be played!");
+            }
+        }
+        else
+        {
+            Debug.Log("Card cannot be played due to insufficient AP!");
+        }
+    }
+
+
+
+    //ACTION POINT STUFF
+    public void AddActionPoints() //Need to make a function that removes AP when card is played
+    {
+        if(playerTurn==true)
+        {
+            if (actionPoints <= 2)
+            {
+               actionPoints = actionPoints + 3;
+            }
+            else
+            {
+                actionPoints = maxActionPoints;
+            }
+        }
+        if(playerTurn==false) //add AP for enemy turns
+        {
+            if (enemyActionPoints <= 2)
+            {
+                enemyActionPoints = enemyActionPoints + 3;
+            }
+            else
+            {
+                enemyActionPoints = maxEnemyActionPoints;
+            }
+        }
+    }
+    public void UpdateActionPoints()
+    {
+        if (playerTurn == true)
+        {
+            for (int i = 0; i < actionPointsPips.Length; i++)
+            {
+                if (i < actionPoints)
+                {
+                    actionPointsPips[i].sprite = APFull;
+                }
+                else
+                {
+                    actionPointsPips[i].sprite = APEmpty;
+                }
+            }
+        }
+        if (playerTurn == false) //add AP for enemy turns
+        {
+            for (int i = 0; i < enemyActionPointsPips.Length; i++)
+            {
+                if (i < enemyActionPoints)
+                {
+                    enemyActionPointsPips[i].sprite = APFull;
+                }
+                else
+                {
+                    enemyActionPointsPips[i].sprite = APEmpty;
+                }
+            }
+        }
+    }    
+
+
+
+
+    //DAMAGE STUFF
     /// <summary>
     /// Calculates the damage from the dice rolling to be dealt.
     /// </summary>
@@ -184,7 +352,7 @@ public class FightManager : MonoBehaviour
         for (int i = 0; i < rolls.Length; i++)
         {
             int numSame = 0;
-            for(int k = 0; k < rolls.Length; k++)
+            for (int k = 0; k < rolls.Length; k++)
             {
                 if (rolls[i] == rolls[k])
                 {
@@ -242,134 +410,6 @@ public class FightManager : MonoBehaviour
         return 0;
     }
 
-    public void DebugCalculatedamage()
-    {
-        Debug.Log(CalculateDamage());
-    }
-
-    public void EndTurn()
-    {
-        if (playerTurn)  // due to damage delay, at the end of the player's turn they will take damage and vice versa
-        {
-            player.TakeDamage(damageDelay);
-            damageDelay = CalculateDamage();
-            outgoingDamage.text = "Incoming: " + damageDelay;
-            incomingDamage.text = "";
-            Debug.Log("Player End Turn");
-            playerTurn = false;
-            playerAutomaticActions = false;
-        }
-        else
-        {
-            enemy.TakeDamage(damageDelay);
-            damageDelay = CalculateDamage();
-            incomingDamage.text = "Incoming: " + damageDelay;
-            outgoingDamage.text = "";
-            Debug.Log("Enemy End Turn");
-            playerTurn = true;
-            enemyAutomaticActions = false;
-        }
-    }
-
-    public void DrawCards()
-    {
-        if (playerTurn == true)
-        {
-            if (deck.Count >= 1)
-            {
-                Card randCard = deck[Random.Range(0, deck.Count)];
-                for (int i = 0; i < availableCardSlots.Length; i++)
-                {
-                    if (availableCardSlots[i] == true)
-                    {
-                        randCard.gameObject.SetActive(true);
-                        randCard.handIndex = i;
-                        randCard.transform.position = cardSlots[i].position;
-                        availableCardSlots[i] = false;
-                        deck.Remove(randCard);
-                        return;
-                    }
-                }
-            }
-        }
-        else if(playerTurn==false) 
-        {
-            if (enemyDeck.Count >= 1)
-            {
-                Card randCard = enemyDeck[Random.Range(0, enemyDeck.Count)];
-                for (int i = 0; i < enemyAvailableCardSlots.Length; i++)
-                {
-                    if (enemyAvailableCardSlots[i] == true)
-                    {
-                        randCard.gameObject.SetActive(true);
-                        randCard.transform.position = enemyCardSlots[i].position;
-                        enemyHand.Add(randCard);
-                        enemyAvailableCardSlots[i] = false;
-                        enemyDeck.Remove(randCard);
-                        return;
-                    }
-                }
-            }
-        }
-    }
-
-    public void AddActionPoints() //Need to make a function that removes AP when card is played
-    {
-        if(playerTurn==true)
-        {
-            if (actionPoints <= 2)
-            {
-               actionPoints = actionPoints + 3;
-            }
-            else
-            {
-                actionPoints = maxActionPoints;
-            }
-        }
-        if(playerTurn==false) //add AP for enemy turns
-        {
-            if (enemyActionPoints <= 2)
-            {
-                enemyActionPoints = enemyActionPoints + 3;
-            }
-            else
-            {
-                enemyActionPoints = maxEnemyActionPoints;
-            }
-        }
-    }
-    public void UpdateActionPoints()
-    {
-        if (playerTurn == true)
-        {
-            for (int i = 0; i < actionPointsPips.Length; i++)
-            {
-                if (i < actionPoints)
-                {
-                    actionPointsPips[i].sprite = APFull;
-                }
-                else
-                {
-                    actionPointsPips[i].sprite = APEmpty;
-                }
-            }
-        }
-        if (playerTurn == false) //add AP for enemy turns
-        {
-            for (int i = 0; i < enemyActionPointsPips.Length; i++)
-            {
-                if (i < enemyActionPoints)
-                {
-                    enemyActionPointsPips[i].sprite = APFull;
-                }
-                else
-                {
-                    enemyActionPointsPips[i].sprite = APEmpty;
-                }
-            }
-        }
-    }
-
     public void ActivateShield(int amt, int numTurns)
     {
         if (playerTurn)
@@ -412,37 +452,8 @@ public class FightManager : MonoBehaviour
         }
     }
 
-    void EnemyPlayRandom()
+    public void DebugCalculatedamage()
     {
-        Card randCard = enemyHand[Random.Range(0, enemyHand.Count)];
-        EnemyPlayCard(randCard, randCard.apCost);
-    }
-
-    void EnemyPlayCard(Card playedCard, int actionPointCost)
-    {
-        if (actionPointCost <= enemyActionPoints)
-        {
-            if (playedCard.ApplyEffect())
-            {
-                discardPile.Add(playedCard); // Add the card to the discard pile
-                playedCard.gameObject.SetActive(false); // Deactivate the GameObject
-                for (int i = 0; i < actionPointCost; i++)
-                {
-                    enemyActionPoints--;
-                    UpdateActionPoints();
-                }
-                playedCard.hasBeenPlayed = true;
-                enemyAvailableCardSlots[playedCard.handIndex] = true;
-                Debug.Log("Enemy card played");
-            }
-            else
-            {
-                Debug.Log("Card conditions not met and cannot be played!");
-            }
-        }
-        else
-        {
-            Debug.Log("Card cannot be played due to insufficient AP!");
-        }
+        Debug.Log(CalculateDamage());
     }
 }
