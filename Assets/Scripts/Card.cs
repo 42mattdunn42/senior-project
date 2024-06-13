@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
     //Class Stuff
     public string cardName;
@@ -12,6 +14,12 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     public int apCost;
     public string effectText;
 
+    public TextMeshProUGUI tooltipText;
+    public GameObject tooltipPanel;
+    private bool isTooltipActive;
+    //Adjust these numbers if you need to change where the tooltip is
+    private const float tooltipOffsetX = 0f; // Tooltip Offset in the X axis
+    private const float tooltipOffsetY = 150f; // Tooltip Offset in the Y axis
 
     public bool hasBeenPlayed;
     public int handIndex;
@@ -31,8 +39,16 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         diceRoller = FindObjectOfType<DiceRoller>();
         playRectTransform = GameObject.Find("Play Area").GetComponent<RectTransform>();
         burnRectTransform = GameObject.Find("Burn Card Area").GetComponent<RectTransform>();
-
         IntializeCardDictionary();
+        HideTooltip();
+    }
+
+    void Update()
+    {
+        if (isTooltipActive)
+        {
+            UpdateTooltipPosition();
+        }
     }
 
     void IntializeCardDictionary()
@@ -97,6 +113,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             {
                 fm.discardPile.Add(this);
                 gameObject.SetActive(false);
+                HideTooltip();
                 for (int i = 0; i < actionPointCost; i++)
                 {
                     fm.actionPoints--;
@@ -117,40 +134,6 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         }
     }
 
-    /*void EnemyPlayRandom()
-    {
-        Card randCard = fm.enemyHand[Random.Range(0, fm.enemyHand.Count)];
-        EnemyPlayCard(randCard, randCard.apCost);
-    }
-
-    void EnemyPlayCard(Card playedCard, int actionPointCost)
-    {
-        if (actionPointCost <= fm.enemyActionPoints)
-        {
-            if (ApplyEffect() == true)
-            {
-                fm.discardPile.Add(this);
-                playedCard.gameObject.SetActive(false);
-                for (int i = 0; i < actionPointCost; i++)
-                {
-                    fm.enemyActionPoints--;
-                    fm.UpdateActionPoints();
-                }
-                hasBeenPlayed = true;
-                fm.enemyAvailableCardSlots[handIndex] = true;
-                Debug.Log("Enemy card played");
-            }
-            else
-            {
-                Debug.Log("Card conditions not met and cannot be played!");
-            }
-        }
-        else
-        {
-            Debug.Log("Card cannot be played due to insufficient AP!");
-        }
-    }*/
-
     void BurnCard()
     {
         if (fm.actionPoints <= 4)
@@ -165,6 +148,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         }
         fm.discardPile.Add(this);
         gameObject.SetActive(false);
+        HideTooltip();
         hasBeenPlayed = true;
         fm.availableCardSlots[handIndex] = true;
     }
@@ -239,5 +223,53 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     bool NoEffect()
     {
         return true;
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        Debug.Log("Mouse entered card area");
+        ShowTooltip(effectText);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        Debug.Log("Mouse exited card area");
+        HideTooltip();
+    }
+
+    void ShowTooltip(string message)
+    {
+        Debug.Log($"Showing tooltip with message: {message}");
+        tooltipText.text = message;
+        tooltipPanel.SetActive(true);
+        isTooltipActive = true;
+        UpdateTooltipPosition();
+    }
+
+    void HideTooltip()
+    {
+        Debug.Log("Hiding tooltip");
+        tooltipPanel.SetActive(false);
+        isTooltipActive = false;
+    }
+    void UpdateTooltipPosition()
+    {
+        Vector2 mousePos = Input.mousePosition;
+        float tooltipWidth = tooltipPanel.GetComponent<RectTransform>().rect.width;
+        float tooltipHeight = tooltipPanel.GetComponent<RectTransform>().rect.height;
+
+        // Calculate new position with offset
+        Vector2 newPos = new Vector2(mousePos.x + tooltipOffsetX, mousePos.y + tooltipOffsetY);
+
+        // Adjust position to stay within screen bounds
+        float screenWidth = Screen.width;
+        float screenHeight = Screen.height;
+        float maxX = screenWidth - tooltipWidth;
+        float maxY = screenHeight - tooltipHeight;
+
+        newPos.x = Mathf.Clamp(newPos.x, 0f, maxX);
+        newPos.y = Mathf.Clamp(newPos.y, 0f, maxY);
+
+        tooltipPanel.transform.position = newPos;
     }
 }
