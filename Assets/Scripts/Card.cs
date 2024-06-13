@@ -77,25 +77,28 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-
+        HideTooltip();
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         this.transform.position = eventData.position;
+        HideTooltip();
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         if (IsPointerOverUIObject(eventData, playRectTransform))
         {
-            
             PlayCard(apCost);
         }
-
-        if (IsPointerOverUIObject(eventData, burnRectTransform))
+        else if (IsPointerOverUIObject(eventData, burnRectTransform))
         {
             BurnCard();
+        }
+        else
+        {
+            ShowTooltip(effectText);
         }
     }
 
@@ -126,11 +129,13 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             else
             {
                 Debug.Log("Card conditions not met and cannot be played!");
+                ShowTooltip(effectText);
             }
         }
         else
         {
             Debug.Log("Card cannot be played due to insufficient AP!");
+            ShowTooltip(effectText);
         }
     }
 
