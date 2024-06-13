@@ -102,10 +102,10 @@ public class FightManager : MonoBehaviour
                 AddActionPoints();
                 UpdateActionPoints();
                 roller.Roll();
-                for (int i = 0; i < 2; i++)
+                for (int i = 0; i < 1; i++)
                 {
                     EnemyPlayRandom();
-                    Debug.Log("Current Enemy AP"+ enemyActionPoints);
+                    //Debug.Log("Current Enemy AP"+ enemyActionPoints);
                 }
                 enemyAutomaticActions = true;
             }
@@ -185,10 +185,12 @@ public class FightManager : MonoBehaviour
                     if (enemyAvailableCardSlots[i] == true)
                     {
                         randCard.gameObject.SetActive(true);
+                        randCard.handIndex = i;
                         randCard.transform.position = enemyCardSlots[i].position;
-                        enemyHand.Add(randCard);
                         enemyAvailableCardSlots[i] = false;
+                        enemyHand.Add(randCard);
                         enemyDeck.Remove(randCard);
+                        //Debug.Log($"Enemy drew card: {randCard.name} to slot {i}");
                         return;
                     }
                 }
@@ -199,17 +201,12 @@ public class FightManager : MonoBehaviour
     void EnemyPlayRandom()
     {
         Card randCard = enemyHand[Random.Range(0, enemyHand.Count)];
+        //Debug.Log($"Enemy plays card: {randCard.name} from slot {randCard.handIndex}");
         EnemyPlayCard(randCard, randCard.apCost);
     }
 
     void EnemyPlayCard(Card playedCard, int actionPointCost)
     {
-        if (playedCard == null)
-        {
-            Debug.LogError("Played card is null!");
-            return;
-        }
-
         if (actionPointCost <= enemyActionPoints)
         {
             if (playedCard.ApplyEffect())
@@ -223,6 +220,7 @@ public class FightManager : MonoBehaviour
                 }
                 playedCard.hasBeenPlayed = true;
                 enemyAvailableCardSlots[playedCard.handIndex] = true;
+                //Debug.Log($"Slot {playedCard.handIndex} re-enabled for use.");
                 Debug.Log("Enemy card played");
             }
             else

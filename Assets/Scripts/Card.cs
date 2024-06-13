@@ -13,6 +13,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     public int cardID;
     public int apCost;
     public string effectText;
+    public bool playerCard;
 
     //Tooltip Stuff
     public TextMeshProUGUI tooltipText;
@@ -201,27 +202,36 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     //ALL DRAG/UI FUNCTIONS//
     public void OnBeginDrag(PointerEventData eventData)
     {
-        HideTooltip();
+        if (playerCard)
+        {
+            HideTooltip();
+        }
     }
     public void OnDrag(PointerEventData eventData)
     {
-        this.transform.position = eventData.position;
-        HideTooltip();
+        if (playerCard)
+        {
+            this.transform.position = eventData.position;
+            HideTooltip();
+        }
     }
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (IsPointerOverUIObject(eventData, playRectTransform))
+        if (playerCard)
         {
-            PlayCard(apCost);
-        }
-        else if (IsPointerOverUIObject(eventData, burnRectTransform))
-        {
-            BurnCard();
-        }
-        else
-        {
-            ShowTooltip(effectText);
-        }
+            if (IsPointerOverUIObject(eventData, playRectTransform))
+            {
+                PlayCard(apCost);
+            }
+            else if (IsPointerOverUIObject(eventData, burnRectTransform))
+            {
+                BurnCard();
+            }
+            else
+            {
+                ShowTooltip(effectText);
+            }
+        }   
     }
     private bool IsPointerOverUIObject(PointerEventData eventData, RectTransform target)
     {
@@ -242,37 +252,46 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     //ALL TOOLTIP FUNCTIONS//
     void ShowTooltip(string message)
     {
-        //Debug.Log($"Showing tooltip with message: {message}");
-        tooltipText.text = message;
-        tooltipPanel.SetActive(true);
-        isTooltipActive = true;
-        UpdateTooltipPosition();
+        if (playerCard)
+        {
+            //Debug.Log($"Showing tooltip with message: {message}");
+            tooltipText.text = message;
+            tooltipPanel.SetActive(true);
+            isTooltipActive = true;
+            UpdateTooltipPosition();
+        }
     }
 
     void HideTooltip()
     {
         //Debug.Log("Hiding tooltip");
-        tooltipPanel.SetActive(false);
-        isTooltipActive = false;
+        if (playerCard)
+        {
+            tooltipPanel.SetActive(false);
+            isTooltipActive = false;
+        }
     }
     void UpdateTooltipPosition()
     {
-        Vector2 mousePos = Input.mousePosition;
-        float tooltipWidth = tooltipPanel.GetComponent<RectTransform>().rect.width;
-        float tooltipHeight = tooltipPanel.GetComponent<RectTransform>().rect.height;
+        if (playerCard)
+        {
+            Vector2 mousePos = Input.mousePosition;
+            float tooltipWidth = tooltipPanel.GetComponent<RectTransform>().rect.width;
+            float tooltipHeight = tooltipPanel.GetComponent<RectTransform>().rect.height;
 
-        // Calculate new position with offset
-        Vector2 newPos = new Vector2(mousePos.x + tooltipOffsetX, mousePos.y + tooltipOffsetY);
+            // Calculate new position with offset
+            Vector2 newPos = new Vector2(mousePos.x + tooltipOffsetX, mousePos.y + tooltipOffsetY);
 
-        // Adjust position to stay within screen bounds
-        float screenWidth = Screen.width;
-        float screenHeight = Screen.height;
-        float maxX = screenWidth - tooltipWidth;
-        float maxY = screenHeight - tooltipHeight;
+            // Adjust position to stay within screen bounds
+            float screenWidth = Screen.width;
+            float screenHeight = Screen.height;
+            float maxX = screenWidth - tooltipWidth;
+            float maxY = screenHeight - tooltipHeight;
 
-        newPos.x = Mathf.Clamp(newPos.x, 0f, maxX);
-        newPos.y = Mathf.Clamp(newPos.y, 0f, maxY);
+            newPos.x = Mathf.Clamp(newPos.x, 0f, maxX);
+            newPos.y = Mathf.Clamp(newPos.y, 0f, maxY);
 
-        tooltipPanel.transform.position = newPos;
+            tooltipPanel.transform.position = newPos;
+        }
     }
 }
