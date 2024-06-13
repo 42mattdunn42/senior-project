@@ -32,6 +32,11 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     private RectTransform burnRectTransform;
     private Dictionary<int, Func<bool>> cardDictionary;
 
+
+    void Awake()
+    {
+        IntializeCardDictionary();
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -41,7 +46,6 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         diceRoller = FindObjectOfType<DiceRoller>();
         playRectTransform = GameObject.Find("Play Area").GetComponent<RectTransform>();
         burnRectTransform = GameObject.Find("Burn Card Area").GetComponent<RectTransform>();
-        IntializeCardDictionary();
         HideTooltip();
     }
     void Update()
@@ -226,19 +230,19 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log("Mouse entered card area");
+        //Debug.Log("Mouse entered card area");
         ShowTooltip(effectText);
     }
     public void OnPointerExit(PointerEventData eventData)
     {
-        Debug.Log("Mouse exited card area");
+        //Debug.Log("Mouse exited card area");
         HideTooltip();
     }
 
     //ALL TOOLTIP FUNCTIONS//
     void ShowTooltip(string message)
     {
-        Debug.Log($"Showing tooltip with message: {message}");
+        //Debug.Log($"Showing tooltip with message: {message}");
         tooltipText.text = message;
         tooltipPanel.SetActive(true);
         isTooltipActive = true;
@@ -247,7 +251,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     void HideTooltip()
     {
-        Debug.Log("Hiding tooltip");
+        //Debug.Log("Hiding tooltip");
         tooltipPanel.SetActive(false);
         isTooltipActive = false;
     }

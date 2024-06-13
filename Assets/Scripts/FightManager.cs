@@ -102,7 +102,7 @@ public class FightManager : MonoBehaviour
                 AddActionPoints();
                 UpdateActionPoints();
                 roller.Roll();
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < 2; i++)
                 {
                     EnemyPlayRandom();
                     Debug.Log("Current Enemy AP"+ enemyActionPoints);
@@ -204,6 +204,12 @@ public class FightManager : MonoBehaviour
 
     void EnemyPlayCard(Card playedCard, int actionPointCost)
     {
+        if (playedCard == null)
+        {
+            Debug.LogError("Played card is null!");
+            return;
+        }
+
         if (actionPointCost <= enemyActionPoints)
         {
             if (playedCard.ApplyEffect())
