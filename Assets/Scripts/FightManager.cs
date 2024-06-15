@@ -56,6 +56,9 @@ public class FightManager : MonoBehaviour
     // Shield
     public RawImage playerShield;
     public RawImage enemyShield;
+
+    //Card Dictionary
+    private Dictionary<int ,int> enemyCardCount;
     
 
 
@@ -65,6 +68,7 @@ public class FightManager : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         roller = GameObject.FindGameObjectWithTag("Roller").GetComponent<DiceRoller>();
         enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>();
+        enemyCardCount = new Dictionary<int ,int>();
     }
 
     // Update is called once per frame
@@ -104,13 +108,13 @@ public class FightManager : MonoBehaviour
                 roller.Roll();
                 for (int i = 0; i < 1; i++)
                 {
-                    EnemyPlayRandom();
+                    //EnemyPlayRandom();
+                    EnemyPlayLogic(); //Currently only looks to play the Jack of Clubs if the HP of the AI is less than 100.
                     //Debug.Log("Current Enemy AP"+ enemyActionPoints);
                 }
                 enemyAutomaticActions = true;
+                EndTurn();
             }
-
-            EndTurn();
         }
         else  // someone was defeated
         {
@@ -198,6 +202,49 @@ public class FightManager : MonoBehaviour
         }
     }
 
+    void EnemyCheckHand()
+    {
+        enemyCardCount.Clear();
+        foreach (Card card in enemyHand)
+        {
+            if (enemyCardCount.ContainsKey(card.cardID))
+            {
+                enemyCardCount[card.cardID]++;
+            }
+            else
+            {
+                enemyCardCount[card.cardID] = 1;
+            }
+        }
+
+        // Print out the contents of the dictionary for debugging
+        foreach (KeyValuePair<int, int> entry in enemyCardCount)
+        {
+            Debug.Log($"CardID: {entry.Key}, Count: {entry.Value}");
+        }
+    }
+
+    void EnemyPlayLogic()
+    {
+        EnemyCheckHand();
+
+        if(enemyCardCount.ContainsKey(1) && enemyCardCount[1] > 0 && enemy.hp < 100)
+        {
+            foreach (Card card in enemyHand)
+            {
+                if (card.cardID == 1)
+                {
+                    if(card.apCost <= enemyActionPoints)
+                    {
+                        EnemyPlayCard(card, card.apCost);
+                        Debug.Log("Enemy playing Jack of Clubs");
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     void EnemyPlayRandom()
     {
         Card randCard = enemyHand[Random.Range(0, enemyHand.Count)];
@@ -212,6 +259,7 @@ public class FightManager : MonoBehaviour
             if (playedCard.ApplyEffect())
             {
                 discardPile.Add(playedCard); // Add the card to the discard pile
+                enemyHand.Remove(playedCard); //Remove card from hand
                 playedCard.gameObject.SetActive(false); // Deactivate the GameObject
                 for (int i = 0; i < actionPointCost; i++)
                 {
