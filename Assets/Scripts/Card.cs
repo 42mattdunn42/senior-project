@@ -185,7 +185,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     {
         for (int i = 0; i < numberOfDice; i++)
         {
-            diceRoller.SetDiceNumber(i, 3);
+            diceRoller.SetDiceValue(i, 3);
         }
         return true;
     }

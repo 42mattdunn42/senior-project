@@ -82,6 +82,7 @@ public class FightManager : MonoBehaviour
             // Roll dice
             if(!playerAutomaticActions)
             {
+                roller.ResetDiceNumbers();
                 for (int i = 0; i<3; i++)
                 {
                     DrawCards();
@@ -99,6 +100,7 @@ public class FightManager : MonoBehaviour
             // enemy stuff
             if (!enemyAutomaticActions)
             {
+                roller.ResetDiceNumbers();
                 for (int i = 0; i < 3; i++)
                 {
                     DrawCards();

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Xml.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -38,7 +39,7 @@ public class DiceRoller : MonoBehaviour
     }
 
     /// <summary>
-    /// Sets all dice faces to zero
+    /// Sets all dice faces to ""
     /// </summary>
     public void ClearDice()
     {
@@ -171,10 +172,48 @@ public class DiceRoller : MonoBehaviour
     /// </summary>
     /// <param name="diceIndex"></param>
     /// <param name="val"></param>
-    public void SetDiceNumber(int diceIndex, int val)
+    public void SetDiceValue(int diceIndex, int val)
     {
         dice[diceIndex].GetComponentInChildren<TextMeshProUGUI>().text = val.ToString();
         results[diceIndex] = val;
         fm.CalculateDamage();  // color dice
+    }
+
+    /// <summary>
+    /// Sets the number of faces for all dice to 6
+    /// </summary>
+    public void ResetDiceNumbers()
+    {
+        foreach(Button die in dice)
+        {
+            foreach (var tmp in die.GetComponentsInChildren<TextMeshProUGUI>())
+            {
+                if (tmp.name == "NumFaces")
+                {
+                    tmp.text = "6";
+                }
+            }
+        }
+        for(int i = 0; i < faces.Count; i++)
+        {
+            faces[i] = 6;
+        }
+    }
+
+    /// <summary>
+    /// Sets the number of faces for a die at the given index
+    /// </summary>
+    /// <param name="diceIndex"></param>
+    /// <param name="numFaces"></param>
+    public void SetDiceNumber(int diceIndex, int numFaces)
+    {
+        faces[diceIndex] = numFaces;
+        foreach (var tmp in dice[diceIndex].GetComponentsInChildren<TextMeshProUGUI>())
+        {
+            if (tmp.name == "NumFaces")
+            {
+                tmp.text = numFaces.ToString();
+            }
+        }
     }
 }
