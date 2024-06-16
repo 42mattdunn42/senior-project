@@ -59,8 +59,12 @@ public class FightManager : MonoBehaviour
 
     //Card Dictionary
     private Dictionary<int ,int> enemyCardCount;
-    
 
+    // pause menu variables
+    public GameObject pauseMenu;
+    private bool isPaused = false;
+    public GameObject helpMenu;
+    private bool isHelp = false;
 
     // Start is called before the first frame update
     void Start()
@@ -74,6 +78,24 @@ public class FightManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Pause menu stuff
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            if (isHelp)
+            {
+                ToggleHelpMenu();
+            }
+            else {
+                isPaused = !isPaused;
+                Time.timeScale = isPaused ? 1 : 0;
+                pauseMenu.SetActive(isPaused);
+            }
+        }
+        if (isPaused)
+        {
+            return;
+        }
+
         //TURN CYCLING
         if (playerTurn && player.IsAlive() && enemy.IsAlive())  // player turn
         {
@@ -509,5 +531,19 @@ public class FightManager : MonoBehaviour
     public void DebugCalculatedamage()
     {
         Debug.Log(CalculateDamage());
+    }
+
+    public void Resume()
+    {
+        isPaused = false;
+        Time.timeScale = 1;
+        pauseMenu.SetActive(isPaused);
+    }
+
+    public void ToggleHelpMenu()
+    {
+        isHelp = !isHelp;
+        helpMenu.SetActive(isHelp);
+        pauseMenu.SetActive(!isHelp);
     }
 }

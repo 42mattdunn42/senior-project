@@ -13,4 +13,8 @@ public class Menus : MonoBehaviour
     {
         SceneManager.LoadScene("FightScene");
     }
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
 }
