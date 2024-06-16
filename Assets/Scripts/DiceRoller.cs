@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Xml.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +11,7 @@ public class DiceRoller : MonoBehaviour
     public List<Button> dice;
     public List<int> faces;
     public int[] results { get; private set; }
+    public List<DiceAnimation> animators;
 
     public void SetDice(List<Button> dice) { this.dice = dice; }
     public List<Button> GetDice() { return this.dice; }
@@ -19,6 +22,10 @@ public class DiceRoller : MonoBehaviour
     private void Start()
     {
         fm = GameObject.FindGameObjectWithTag("FightManager").GetComponent<FightManager>();
+        foreach(Button die in dice)
+        {
+            animators.Add(die.GetComponent<DiceAnimation>());
+        }
     }
     /// <summary>
     /// Uses the list of TextMeshPro and numFaces to roll dice and display to the user
@@ -30,9 +37,9 @@ public class DiceRoller : MonoBehaviour
         int[] output = new int[dice.Count];
         for (int i = 0; i < dice.Count; i++)
         {
-            output[i] = (Random.Range(0, faces[i]) + 1);
-            dice[i].GetComponentInChildren<TextMeshProUGUI>().text = output[i].ToString();
-
+            output[i] = (UnityEngine.Random.Range(0, faces[i]) + 1);
+            //dice[i].GetComponentInChildren<TextMeshProUGUI>().text = output[i].ToString();
+            animators[i].AnimateRoll();
         }
         this.results =  output;
         fm.CalculateDamage();
@@ -56,8 +63,9 @@ public class DiceRoller : MonoBehaviour
     public void ReRoll(int die_number)
     {
         ResetColor();
-        int temp = (Random.Range(0, faces[die_number]) + 1);
-        dice[die_number].GetComponentInChildren<TextMeshProUGUI>().text = temp.ToString();
+        dice[die_number].gameObject.transform.GetChild(0).gameObject.SetActive(false);
+        animators[die_number].AnimateRoll();
+        int temp = (UnityEngine.Random.Range(0, faces[die_number]) + 1);
         results[die_number] = temp;
         fm.CalculateDamage();
     }
@@ -215,5 +223,14 @@ public class DiceRoller : MonoBehaviour
                 tmp.text = numFaces.ToString();
             }
         }
+    }
+
+    /// <summary>
+    /// Used to show the results after animating
+    /// </summary>
+    /// <param name="index"></param>
+    public void SetFace(int index)
+    {
+        dice[index].GetComponentInChildren<TextMeshProUGUI>().text = results[index].ToString();
     }
 }
