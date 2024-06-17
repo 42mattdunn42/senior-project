@@ -10,6 +10,8 @@ public class Enemy : MonoBehaviour
     public int shield;
     public int shieldLength;
     public FightManager fm;
+    public ParticleSystem damageEfx;
+    public Transform damageEfxSpawnPos;
 
     public Enemy(int hp) { 
         this.hp = hp; 
@@ -55,5 +57,9 @@ public class Enemy : MonoBehaviour
             hp -= damage;
         }
         healthBars.updateEnemyBar();
+        if (damage != 0)
+        {
+            Instantiate(damageEfx, damageEfxSpawnPos.position, transform.rotation);
+        }
     }
 }

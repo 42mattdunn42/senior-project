@@ -10,6 +10,8 @@ public class Player : MonoBehaviour
     public int shield;
     public int shieldLength;
     public FightManager fm;
+    public ParticleSystem damageEfx;
+    public Transform damageEfxSpawnPos;
 
     // Start is called before the first frame update
     void Start()
@@ -55,5 +57,9 @@ public class Player : MonoBehaviour
             hp -= damage;
         }
         healthBars.updatePlayerBar();
+        if(damage != 0)
+        {
+            Instantiate(damageEfx, damageEfxSpawnPos.position, transform.rotation);
+        }
     }
 }
