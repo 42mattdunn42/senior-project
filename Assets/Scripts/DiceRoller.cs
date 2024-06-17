@@ -38,7 +38,6 @@ public class DiceRoller : MonoBehaviour
         for (int i = 0; i < dice.Count; i++)
         {
             output[i] = (UnityEngine.Random.Range(0, faces[i]) + 1);
-            //dice[i].GetComponentInChildren<TextMeshProUGUI>().text = output[i].ToString();
             animators[i].AnimateRoll();
         }
         this.results =  output;
@@ -182,8 +181,8 @@ public class DiceRoller : MonoBehaviour
     /// <param name="val"></param>
     public void SetDiceValue(int diceIndex, int val)
     {
-        dice[diceIndex].GetComponentInChildren<TextMeshProUGUI>().text = val.ToString();
-        results[diceIndex] = val;
+        //dice[diceIndex].GetComponentInChildren<TextMeshProUGUI>().text = val.ToString();
+        SetFace(diceIndex, val);
         fm.CalculateDamage();  // color dice
     }
 
@@ -231,6 +230,23 @@ public class DiceRoller : MonoBehaviour
     /// <param name="index"></param>
     public void SetFace(int index)
     {
-        dice[index].GetComponentInChildren<TextMeshProUGUI>().text = results[index].ToString();
+        foreach (var tmp in dice[index].GetComponentsInChildren<TextMeshProUGUI>())
+        {
+            if (tmp.name == "Text (TMP)")
+            {
+                tmp.text = results[index].ToString();
+            }
+        }
+    }
+    public void SetFace(int index, int value)
+    {
+        foreach (var tmp in dice[index].GetComponentsInChildren<TextMeshProUGUI>())
+        {
+            if (tmp.name == "Text (TMP)")
+            {
+                tmp.text = value.ToString();
+            }
+        }
+        results[index] = value;
     }
 }
