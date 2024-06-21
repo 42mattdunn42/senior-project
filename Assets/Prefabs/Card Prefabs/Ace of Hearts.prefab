@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6990137725018452919
+--- !u!1 &6388351519591168656
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,24 +8,24 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3073583712003068835}
-  - component: {fileID: 1375877229463127379}
-  - component: {fileID: 8828083884035535100}
-  - component: {fileID: 2326751186409522919}
+  - component: {fileID: 2713369520984995207}
+  - component: {fileID: 5342007370495932384}
+  - component: {fileID: 4997514446775794272}
+  - component: {fileID: 3918426503170555543}
   m_Layer: 0
-  m_Name: Jack of Clubs
+  m_Name: Ace of Hearts
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!224 &3073583712003068835
+--- !u!224 &2713369520984995207
 RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6990137725018452919}
+  m_GameObject: {fileID: 6388351519591168656}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.20137033, y: 0.20137033, z: 0.20137033}
@@ -35,46 +35,46 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 473.27185, y: 836.23975}
+  m_AnchoredPosition: {x: 1103.9559, y: 177.81174}
   m_SizeDelta: {x: 572.9586, y: 831.9364}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1375877229463127379
+--- !u!114 &5342007370495932384
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6990137725018452919}
+  m_GameObject: {fileID: 6388351519591168656}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fca8a17e9c412764c9a744c5e171d615, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardName: Jack of Clubs
-  cardID: 1
-  apCost: 2
-  effectText: Restores 10 Hit Points
+  cardName: Ace of Hearts
+  cardID: 4
+  apCost: 3
+  effectText: Shields 20 damage for one turn
   playerCard: 0
   tooltipText: {fileID: 0}
   tooltipPanel: {fileID: 0}
   hasBeenPlayed: 0
   handIndex: 0
-  playEfx: {fileID: 6650199810314842004, guid: 5220e0546708b4041b983dfc6c41e881, type: 3}
---- !u!222 &8828083884035535100
+  playEfx: {fileID: 1110556030845387871, guid: 87ee5838b8fee7243859cfe3567827cf, type: 3}
+--- !u!222 &4997514446775794272
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6990137725018452919}
+  m_GameObject: {fileID: 6388351519591168656}
   m_CullTransparentMesh: 1
---- !u!114 &2326751186409522919
+--- !u!114 &3918426503170555543
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6990137725018452919}
+  m_GameObject: {fileID: 6388351519591168656}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
@@ -88,7 +88,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 593a8981b0f72464e8b2e76fa18e028a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 52ba5727147b22d44a699ed92cf501ca, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

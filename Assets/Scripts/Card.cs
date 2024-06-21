@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -21,7 +22,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     private bool isTooltipActive;
     //Adjust these numbers if you need to change where the tooltip is
     private const float tooltipOffsetX = 0f; // Tooltip Offset in the X axis
-    private const float tooltipOffsetY = 5f; // Tooltip Offset in the Y axis
+    private const float tooltipOffsetY = 7.5f; // Tooltip Offset in the Y axis
 
     public bool hasBeenPlayed;
     public int handIndex;
@@ -90,9 +91,9 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         {
             if (ApplyEffect()==true)
             {
+                Vector3 cardPosition = transform.position;
                 fm.discardPile.Add(this);
                 gameObject.SetActive(false);
-                Vector3 cardPosition = transform.position;
                 Instantiate(playEfx, cardPosition, Quaternion.identity);
 
                 HideTooltip();
