@@ -252,7 +252,7 @@ public class FightManager : MonoBehaviour
     {
         EnemyCheckHand();
 
-        if (enemyCardCount.ContainsKey(2) && enemyCardCount[2] > 0 && CalculateDamage() == 0)
+        if (enemyCardCount.ContainsKey(2) && enemyCardCount[2] > 0 && CalculateDamage() == 0) //Will attempt to get damage using cheaper card first
         {
             foreach (Card card in enemyHand)
             {
@@ -268,7 +268,7 @@ public class FightManager : MonoBehaviour
             }
         }
 
-        if (enemyCardCount.ContainsKey(3) && enemyCardCount[3] > 0 && CalculateDamage()==0)
+        if (enemyCardCount.ContainsKey(3) && enemyCardCount[3] > 0 && CalculateDamage()==0) //Will guareentee damage if it cannot get a good roll with a King of Diamonds
         {
             foreach (Card card in enemyHand)
             {
@@ -284,7 +284,7 @@ public class FightManager : MonoBehaviour
             }
         }
 
-        if (enemyCardCount.ContainsKey(4) && enemyCardCount[4] > 0 && damageDelay > 0)
+        if (enemyCardCount.ContainsKey(4) && enemyCardCount[4] > 0 && damageDelay > 0) //Will shield itself first if it is going to take damage
         {
             foreach (Card card in enemyHand)
             {
@@ -300,7 +300,7 @@ public class FightManager : MonoBehaviour
             }
         }
 
-        if (enemyCardCount.ContainsKey(1) && enemyCardCount[1] > 0 && enemy.hp < 100)
+        if (enemyCardCount.ContainsKey(1) && enemyCardCount[1] > 0 && enemy.hp < 100) //Will heal itself if it has taken damage
         {
             foreach (Card card in enemyHand)
             {
