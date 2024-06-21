@@ -54,8 +54,12 @@ MonoBehaviour:
   cardID: 2
   apCost: 3
   effectText: Rerolls all dice
+  playerCard: 0
+  tooltipText: {fileID: 0}
+  tooltipPanel: {fileID: 0}
   hasBeenPlayed: 0
   handIndex: 0
+  playEfx: {fileID: 6650199810314842004, guid: 5220e0546708b4041b983dfc6c41e881, type: 3}
 --- !u!222 &2566002362702338671
 CanvasRenderer:
   m_ObjectHideFlags: 0

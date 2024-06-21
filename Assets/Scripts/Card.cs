@@ -21,7 +21,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     private bool isTooltipActive;
     //Adjust these numbers if you need to change where the tooltip is
     private const float tooltipOffsetX = 0f; // Tooltip Offset in the X axis
-    private const float tooltipOffsetY = 150f; // Tooltip Offset in the Y axis
+    private const float tooltipOffsetY = 5f; // Tooltip Offset in the Y axis
 
     public bool hasBeenPlayed;
     public int handIndex;
@@ -32,6 +32,9 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     private RectTransform playRectTransform;
     private RectTransform burnRectTransform;
     private Dictionary<int, Func<bool>> cardDictionary;
+
+    //Particle FX
+    public ParticleSystem playEfx;
 
 
     void Awake()
@@ -89,6 +92,9 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             {
                 fm.discardPile.Add(this);
                 gameObject.SetActive(false);
+                Vector3 cardPosition = transform.position;
+                Instantiate(playEfx, cardPosition, Quaternion.identity);
+
                 HideTooltip();
                 for (int i = 0; i < actionPointCost; i++)
                 {
@@ -211,7 +217,17 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     {
         if (playerCard)
         {
-            this.transform.position = eventData.position;
+            Vector3 worldPoint;
+            RectTransform canvasRectTransform = GetComponentInParent<Canvas>().GetComponent<RectTransform>();
+
+            if (RectTransformUtility.ScreenPointToWorldPointInRectangle(
+                canvasRectTransform,
+                eventData.position,
+                eventData.pressEventCamera,
+                out worldPoint))
+            {
+                transform.position = worldPoint;
+            }
             HideTooltip();
         }
     }
@@ -235,7 +251,13 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     }
     private bool IsPointerOverUIObject(PointerEventData eventData, RectTransform target)
     {
-        Vector2 localMousePosition = target.InverseTransformPoint(eventData.position);
+        Vector2 localMousePosition;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            target,
+            eventData.position,
+            eventData.pressEventCamera,
+            out localMousePosition);
+
         return target.rect.Contains(localMousePosition);
     }
     public void OnPointerEnter(PointerEventData eventData)
@@ -275,7 +297,13 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     {
         if (playerCard)
         {
-            Vector2 mousePos = Input.mousePosition;
+            // Calculate the position of the tooltip in world space relative to the card's position
+            Vector3 newPos = transform.position + new Vector3(tooltipOffsetX, tooltipOffsetY, 0f);
+
+            // Update the tooltip position directly in world space
+            tooltipPanel.transform.position = newPos;
+
+            /* Vector2 mousePos = Input.mousePosition;
             float tooltipWidth = tooltipPanel.GetComponent<RectTransform>().rect.width;
             float tooltipHeight = tooltipPanel.GetComponent<RectTransform>().rect.height;
 
@@ -291,7 +319,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             newPos.x = Mathf.Clamp(newPos.x, 0f, maxX);
             newPos.y = Mathf.Clamp(newPos.y, 0f, maxY);
 
-            tooltipPanel.transform.position = newPos;
+            tooltipPanel.transform.position = newPos;*/
         }
     }
 }

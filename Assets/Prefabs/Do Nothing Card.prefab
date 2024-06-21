@@ -54,10 +54,12 @@ MonoBehaviour:
   cardID: 0
   apCost: 1
   effectText: 
+  playerCard: 0
   tooltipText: {fileID: 0}
   tooltipPanel: {fileID: 0}
   hasBeenPlayed: 0
   handIndex: 0
+  playEfx: {fileID: 6650199810314842004, guid: 5220e0546708b4041b983dfc6c41e881, type: 3}
 --- !u!222 &1003154110983131844
 CanvasRenderer:
   m_ObjectHideFlags: 0
