@@ -42,14 +42,14 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     void Awake()
     {
         IntializeCardDictionary();
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
         fm = FindObjectOfType<FightManager>();
         player = FindObjectOfType<Player>();
         enemy = FindObjectOfType<Enemy>();
         diceRoller = FindObjectOfType<DiceRoller>();
+    }
+    // Start is called before the first frame update
+    void Start()
+    {
         playRectTransform = GameObject.Find("Play Area").GetComponent<RectTransform>();
         burnRectTransform = GameObject.Find("Burn Card Area").GetComponent<RectTransform>();
         HideTooltip();

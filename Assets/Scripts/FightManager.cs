@@ -252,7 +252,55 @@ public class FightManager : MonoBehaviour
     {
         EnemyCheckHand();
 
-        if(enemyCardCount.ContainsKey(1) && enemyCardCount[1] > 0 && enemy.hp < 100)
+        if (enemyCardCount.ContainsKey(2) && enemyCardCount[2] > 0 && CalculateDamage() == 0)
+        {
+            foreach (Card card in enemyHand)
+            {
+                if (card.cardID == 2)
+                {
+                    if (card.apCost <= enemyActionPoints)
+                    {
+                        EnemyPlayCard(card, card.apCost);
+                        Debug.Log("Enemy playing King of Diamonds");
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (enemyCardCount.ContainsKey(3) && enemyCardCount[3] > 0 && CalculateDamage()==0)
+        {
+            foreach (Card card in enemyHand)
+            {
+                if (card.cardID == 3)
+                {
+                    if (card.apCost <= enemyActionPoints)
+                    {
+                        EnemyPlayCard(card, card.apCost);
+                        Debug.Log("Enemy playing Queen of Hearts");
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (enemyCardCount.ContainsKey(4) && enemyCardCount[4] > 0 && damageDelay > 0)
+        {
+            foreach (Card card in enemyHand)
+            {
+                if (card.cardID == 4)
+                {
+                    if (card.apCost <= enemyActionPoints)
+                    {
+                        EnemyPlayCard(card, card.apCost);
+                        Debug.Log("Enemy playing Ace of Hearts");
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (enemyCardCount.ContainsKey(1) && enemyCardCount[1] > 0 && enemy.hp < 100)
         {
             foreach (Card card in enemyHand)
             {
