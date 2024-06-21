@@ -36,6 +36,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     //Particle FX
     public ParticleSystem playEfx;
+    public ParticleSystem burnEfx;
 
 
     void Awake()
@@ -70,7 +71,8 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             { 1, () => Heal(10)}, //Jack of Clubs
             { 2, () => Reroll(5)}, //King of Diamonds
             { 3, () => ChangeDiceFace(3)}, //Queen of Hearts
-            { 4, () => ActivateShield(20, 1)} // Ace of Hearts
+            { 4, () => ActivateShield(20, 1)}, // Ace of Hearts
+            { 5, () => ChangeMaxAP(1) } //Two of Diamonds
         };
     }
     public bool ApplyEffect()
@@ -120,7 +122,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     }
     void BurnCard()
     {
-        if (fm.actionPoints <= 4)
+        if (fm.actionPoints < fm.maxActionPoints)
         {
             fm.actionPoints = fm.actionPoints + 1;
             fm.UpdateActionPoints();
@@ -130,8 +132,10 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         {
             Debug.Log("AP already at maximum value. Discarding Card.");
         }
+        Vector3 cardPosition = transform.position;
         fm.discardPile.Add(this);
         gameObject.SetActive(false);
+        Instantiate(burnEfx, cardPosition, Quaternion.identity);
         HideTooltip();
         hasBeenPlayed = true;
         fm.availableCardSlots[handIndex] = true;
@@ -200,6 +204,40 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     {
         fm.ActivateShield(amt, numTurns);
         return true;
+    }
+
+    bool ChangeMaxAP(int amount)
+    {
+        if (fm.playerTurn)
+        {
+            if(amount + fm.maxActionPoints <= 10)
+            {
+                fm.maxActionPoints++;
+                fm.UpdateActionPoints();
+                Debug.Log("Action Point Slot Added");
+                return true;
+            }
+            else
+            {
+                Debug.Log("Cannot add any more AP! Max AP is 10!");
+                return false;
+            }
+        }
+        else
+        {
+            if (amount + fm.maxEnemyActionPoints <= 10)
+            {
+                fm.maxEnemyActionPoints++;
+                fm.UpdateActionPoints();
+                Debug.Log("Enemy Action Point Slot Added");
+                return true;
+            }
+            else
+            {
+                Debug.Log("Cannot add any more AP! Max AP is 10!");
+                return false;
+            }
+        }
     }
     bool NoEffect()
     {

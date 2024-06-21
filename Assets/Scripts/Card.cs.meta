@@ -3,7 +3,11 @@ guid: fca8a17e9c412764c9a744c5e171d615
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - tooltipText: {instanceID: 0}
+  - tooltipPanel: {instanceID: 0}
+  - playEfx: {fileID: 1110556030845387871, guid: 87ee5838b8fee7243859cfe3567827cf, type: 3}
+  - burnEfx: {fileID: 6650199810314842004, guid: 8a5bb07fa1c03184182bbdfaef2684e7, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

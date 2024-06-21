@@ -42,7 +42,7 @@ public class FightManager : MonoBehaviour
     //enemy action point variables
     public int enemyActionPoints;
     public int enemyNumOfActionPoints;
-    private int maxEnemyActionPoints = 5;
+    public int maxEnemyActionPoints = 5;
 
     public Image[] enemyActionPointsPips;
 
@@ -338,28 +338,44 @@ public class FightManager : MonoBehaviour
     {
         if (playerTurn == true)
         {
-            for (int i = 0; i < actionPointsPips.Length; i++)
+            for (int i = 0; i < maxActionPoints; i++)
             {
                 if (i < actionPoints)
                 {
+                    if (!actionPointsPips[i].enabled)
+                    {
+                        actionPointsPips[i].enabled = true;
+                    }
                     actionPointsPips[i].sprite = APFull;
                 }
                 else
                 {
+                    if (!actionPointsPips[i].enabled)
+                    {
+                        actionPointsPips[i].enabled = true;
+                    }
                     actionPointsPips[i].sprite = APEmpty;
                 }
             }
         }
         if (playerTurn == false) //add AP for enemy turns
         {
-            for (int i = 0; i < enemyActionPointsPips.Length; i++)
+            for (int i = 0; i < maxEnemyActionPoints; i++)
             {
                 if (i < enemyActionPoints)
                 {
+                    if (!enemyActionPointsPips[i].enabled)
+                    {
+                        actionPointsPips[i].enabled = true;
+                    }
                     enemyActionPointsPips[i].sprite = APFull;
                 }
                 else
                 {
+                    if (!enemyActionPointsPips[i].enabled)
+                    {
+                        actionPointsPips[i].enabled = true;
+                    }
                     enemyActionPointsPips[i].sprite = APEmpty;
                 }
             }
