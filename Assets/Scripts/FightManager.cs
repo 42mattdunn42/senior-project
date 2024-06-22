@@ -50,6 +50,7 @@ public class FightManager : MonoBehaviour
 
     // Damage delay
     private int damageDelay = 0;  // must be initialized to zero to prevent damage from being dealt prematurely
+    public bool doubleDamage = false; //starts with damage being normal at start
     public TextMeshProUGUI incomingDamage;
     public TextMeshProUGUI outgoingDamage;
 
@@ -160,6 +161,11 @@ public class FightManager : MonoBehaviour
         {
             player.TakeDamage(damageDelay);
             damageDelay = CalculateDamage();
+            if (doubleDamage)
+            {
+                damageDelay = damageDelay * 2;
+                doubleDamage = false;
+            }
             outgoingDamage.text = "Incoming: " + damageDelay;
             incomingDamage.text = "";
             Debug.Log("Player End Turn");
@@ -170,6 +176,11 @@ public class FightManager : MonoBehaviour
         {
             enemy.TakeDamage(damageDelay);
             damageDelay = CalculateDamage();
+            if (doubleDamage)
+            {
+                damageDelay = damageDelay * 2;
+                doubleDamage = false;
+            }
             incomingDamage.text = "Incoming: " + damageDelay;
             outgoingDamage.text = "";
             Debug.Log("Enemy End Turn");

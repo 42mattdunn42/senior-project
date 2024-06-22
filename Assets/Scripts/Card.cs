@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
@@ -72,7 +73,8 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             { 2, () => Reroll(5)}, //King of Diamonds
             { 3, () => ChangeDiceFace(3)}, //Queen of Hearts
             { 4, () => ActivateShield(20, 1)}, // Ace of Hearts
-            { 5, () => ChangeMaxAP(1) } //Two of Diamonds
+            { 5, () => ChangeMaxAP(1) }, //Two of Diamonds
+            { 6, () => DoubleDamage() }
         };
     }
     public bool ApplyEffect()
@@ -239,6 +241,24 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             }
         }
     }
+
+    bool DoubleDamage()
+    {
+        {
+            if(fm.CalculateDamage() > 0)
+            {
+                fm.doubleDamage = true;
+                return true;
+            }
+            else
+            {
+                Debug.Log("No outgoing damage! Card cannot be played!");
+                return false;
+            }
+        }
+        
+    }
+
     bool NoEffect()
     {
         return true;
