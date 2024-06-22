@@ -357,11 +357,11 @@ public class FightManager : MonoBehaviour
 
 
     //ACTION POINT STUFF
-    public void AddActionPoints() //Need to make a function that removes AP when card is played
+    public void AddActionPoints()
     {
         if(playerTurn==true)
         {
-            if (actionPoints <= 2)
+            if (actionPoints <= maxActionPoints-3)
             {
                actionPoints = actionPoints + 3;
             }
