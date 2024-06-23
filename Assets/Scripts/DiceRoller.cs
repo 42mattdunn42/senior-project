@@ -12,6 +12,9 @@ public class DiceRoller : MonoBehaviour
     public List<int> faces;
     public int[] results { get; private set; }
     public List<DiceAnimation> animators;
+    public bool[] rerollEligibility;
+    int maxRerolls;
+    bool allowSameReroll = false;
 
     public void SetDice(List<Button> dice) { this.dice = dice; }
     public List<Button> GetDice() { return this.dice; }
@@ -26,6 +29,7 @@ public class DiceRoller : MonoBehaviour
         {
             animators.Add(die.GetComponent<DiceAnimation>());
         }
+        rerollEligibility = new bool[dice.Count];
     }
     /// <summary>
     /// Uses the list of TextMeshPro and numFaces to roll dice and display to the user
@@ -61,12 +65,20 @@ public class DiceRoller : MonoBehaviour
     /// <param name="die_number"></param>
     public void ReRoll(int die_number)
     {
-        ResetColor();
-        dice[die_number].gameObject.transform.GetChild(0).gameObject.SetActive(false);
-        animators[die_number].AnimateRoll();
-        int temp = (UnityEngine.Random.Range(0, faces[die_number]) + 1);
-        results[die_number] = temp;
-        fm.CalculateDamage();
+        if (rerollEligibility[die_number] && maxRerolls > 0)
+        {
+            if (!allowSameReroll)
+            {
+                rerollEligibility[die_number] = false;
+            }
+            ResetColor();
+            dice[die_number].gameObject.transform.GetChild(0).gameObject.SetActive(false);
+            animators[die_number].AnimateRoll();
+            int temp = (UnityEngine.Random.Range(0, faces[die_number]) + 1);
+            results[die_number] = temp;
+            fm.CalculateDamage();
+            maxRerolls--;
+        }
     }
 
     // These are needed for the dice if they are buttons.
@@ -238,6 +250,12 @@ public class DiceRoller : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// Sets the face of a die at the index to the value
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="value"></param>
     public void SetFace(int index, int value)
     {
         foreach (var tmp in dice[index].GetComponentsInChildren<TextMeshProUGUI>())
@@ -248,5 +266,18 @@ public class DiceRoller : MonoBehaviour
             }
         }
         results[index] = value;
+    }
+
+    /// <summary>
+    /// Sets all values of rerollEligibility to true (this array allows a die to be rerolled when its index is true) and sets the max number of rerolls.
+    /// </summary>
+    public void allowRerolls(int maxRolls, bool allowSameRerolls)
+    {
+        for (int i = 0; i < rerollEligibility.Length; i++)
+        {
+            rerollEligibility[i] = true;
+        }
+        maxRerolls = maxRolls;
+        allowSameReroll = allowSameRerolls;
     }
 }

@@ -70,11 +70,13 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         {
             { 0, () => NoEffect()},
             { 1, () => Heal(10)}, //Jack of Clubs
-            { 2, () => Reroll(5)}, //King of Diamonds
+            { 2, () => Reroll(5)}, // King of Diamonds
             { 3, () => ChangeDiceFace(3)}, //Queen of Hearts
             { 4, () => ActivateShield(20, 1)}, // Ace of Hearts
-            { 5, () => ChangeMaxAP(1) }, //Two of Diamonds
-            { 6, () => DoubleDamage() }
+            { 5, () => ChangeMaxAP(1) }, // Two of Diamonds
+            { 6, () => DoubleDamage() },  // Ace of Spades?
+            { 7, () => ChooseReroll(3,false) },  // 3 of clubs
+            { 8, () => ChooseReroll(3,true) },  // 3 of diamonds
         };
     }
     public bool ApplyEffect()
@@ -185,10 +187,13 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         }
         else { return false; }
     }
+
+    // rerolls all dice
     bool Reroll (int numberOfDice)
     {
+        diceRoller.allowRerolls(numberOfDice, false);
         //probably doesn't need to check for player or enemy turn?
-        for(int i = 0; i < numberOfDice; i++)
+        for (int i = 0; i < numberOfDice; i++)
         {
             diceRoller.ReRoll(i);
         }
@@ -257,6 +262,12 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             }
         }
         
+    }
+
+    bool ChooseReroll(int numDie, bool allowSameRerolls)
+    {
+        diceRoller.allowRerolls(numDie, allowSameRerolls);
+        return true;
     }
 
     bool NoEffect()
