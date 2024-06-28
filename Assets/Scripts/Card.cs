@@ -21,9 +21,10 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     public TextMeshProUGUI tooltipText;
     public GameObject tooltipPanel;
     private bool isTooltipActive;
+    Vector3 offScreenPosition = new Vector3(-10000, -10000, 0);
     //Adjust these numbers if you need to change where the tooltip is
     private const float tooltipOffsetX = 0f; // Tooltip Offset in the X axis
-    private const float tooltipOffsetY = 7.5f; // Tooltip Offset in the Y axis
+    private const float tooltipOffsetY = 9.5f; // Tooltip Offset in the Y axis
 
     public bool hasBeenPlayed;
     public int handIndex;
@@ -47,6 +48,8 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         player = FindObjectOfType<Player>();
         enemy = FindObjectOfType<Enemy>();
         diceRoller = FindObjectOfType<DiceRoller>();
+        tooltipPanel = GameObject.Find("TooltipPanel");
+        tooltipText = tooltipPanel.GetComponentInChildren<TextMeshProUGUI>();
     }
     // Start is called before the first frame update
     void Start()
@@ -356,10 +359,11 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     void HideTooltip()
     {
-        //Debug.Log("Hiding tooltip");
+        
         if (playerCard)
         {
-            tooltipPanel.SetActive(false);
+            //tooltipPanel.SetActive(false);
+            tooltipPanel.transform.position = offScreenPosition;
             isTooltipActive = false;
         }
     }
