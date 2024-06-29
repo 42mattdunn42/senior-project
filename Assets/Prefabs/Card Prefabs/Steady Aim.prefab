@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4286336030362392560}
   - component: {fileID: 5208324068695446279}
   m_Layer: 0
-  m_Name: Queen of Hearts
+  m_Name: Steady Aim
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50,10 +50,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fca8a17e9c412764c9a744c5e171d615, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardName: Queen of Hearts
+  cardName: Steady Aim
   cardID: 3
   apCost: 4
-  effectText: Sets 3 dice to value 3
+  effectText: Immediately gain a Full House
   playerCard: 0
   tooltipText: {fileID: 0}
   tooltipPanel: {fileID: 0}
@@ -89,7 +89,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 0fa1bcfa0c29495449dbde48f18be6c9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 987fa1b956061244397de70ea6623e6c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

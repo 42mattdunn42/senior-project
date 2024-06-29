@@ -72,13 +72,13 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         cardDictionary = new Dictionary<int, Func<bool>>()
         {
             { 0, () => NoEffect()},
-            { 1, () => Heal(10)}, //Jack of Clubs
-            { 2, () => Reroll(5)}, // King of Diamonds
-            { 3, () => ChangeDiceFace(3)}, //Queen of Hearts
-            { 4, () => ActivateShield(20, 1)}, // Ace of Hearts
-            { 5, () => ChangeMaxAP(1) }, // Two of Diamonds
-            { 6, () => DoubleDamage() },  // Ace of Spades?
-            { 7, () => ChooseReroll(3,false) },  // 3 of clubs
+            { 1, () => Heal(10)}, //Recover
+            { 2, () => Reroll(5)}, //Loaded Dice
+            { 3, () => GrantFullHouse()}, //Steady Aim
+            { 4, () => ActivateShield(20, 1)}, //Fortify
+            { 5, () => ChangeMaxAP(1) }, //Booster Energy
+            { 6, () => DoubleDamage() },  //Deadeye
+            { 7, () => ChooseReroll(3,false) },  //Weighted Dice
             { 8, () => ChooseReroll(3,true) },  // 3 of diamonds
         };
     }
@@ -96,9 +96,9 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     }
     void PlayCard(int actionPointCost)
     {
-        if(actionPointCost <= fm.actionPoints)
+        if (actionPointCost <= fm.actionPoints)
         {
-            if (ApplyEffect()==true)
+            if (ApplyEffect() == true)
             {
                 Vector3 cardPosition = transform.position;
                 fm.discardPile.Add(this);
@@ -151,13 +151,13 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     //ALL CARD EFFECTS FUNCTIONS//
     bool Heal(int amount) //needs to check if you are allowed to play the card
     {
-        if(fm.playerTurn == true)
+        if (fm.playerTurn == true)
         {
             if (player.hp == player.maxhp)
             {
                 return false;
             }
-            else if(player.hp + amount >= player.maxhp)
+            else if (player.hp + amount >= player.maxhp)
             {
                 player.hp = player.maxhp;
                 player.healthBars.updatePlayerBar();
@@ -170,7 +170,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
                 return true;
             }
         }
-        else if(fm.playerTurn == false)
+        else if (fm.playerTurn == false)
         {
             if (enemy.hp == enemy.maxhp)
             {
@@ -192,7 +192,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     }
 
     // rerolls all dice
-    bool Reroll (int numberOfDice)
+    bool Reroll(int numberOfDice)
     {
         diceRoller.allowRerolls(numberOfDice, false);
         //probably doesn't need to check for player or enemy turn?
@@ -201,6 +201,16 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             diceRoller.ReRoll(i);
         }
         return true; //always returns true b/c I see no reason why it cant always reroll? AP is checked elsewhere
+    }
+
+    bool GrantFullHouse()
+    {
+        diceRoller.SetDiceValue(0, 3);
+        diceRoller.SetDiceValue(1, 3);
+        diceRoller.SetDiceValue(2, 3);
+        diceRoller.SetDiceValue(3, 2);
+        diceRoller.SetDiceValue(4, 2);
+        return true;
     }
     bool ChangeDiceFace(int numberOfDice)
     {
