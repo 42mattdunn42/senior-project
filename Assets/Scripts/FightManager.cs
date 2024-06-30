@@ -396,8 +396,8 @@ public class FightManager : MonoBehaviour
     }
     public void UpdateActionPoints()
     {
-        if (playerTurn == true)
-        {
+        //if (playerTurn == true || energyDrain == true)
+        //{
             for (int i = 0; i < player.maxActionPoints; i++)
             {
                 if (i < player.actionPoints)
@@ -417,9 +417,9 @@ public class FightManager : MonoBehaviour
                     actionPointsPips[i].sprite = APEmpty;
                 }
             }
-        }
-        if (playerTurn == false) //add AP for enemy turns
-        {
+        //}
+        //if (playerTurn == false || energyDrain == true) //add AP for enemy turns
+        //{
             for (int i = 0; i < enemy.maxEnemyActionPoints; i++)
             {
                 if (i < enemy.enemyActionPoints)
@@ -439,7 +439,7 @@ public class FightManager : MonoBehaviour
                     enemyActionPointsPips[i].sprite = APEmpty;
                 }
             }
-        }
+        //}
     }    
 
 

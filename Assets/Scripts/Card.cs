@@ -80,6 +80,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             { 6, () => DoubleDamage() },  //Deadeye
             { 7, () => ChooseReroll(3,false) },  //Weighted Dice
             { 8, () => ChooseReroll(3,true) },  // 3 of diamonds
+            { 9, () => EnergyDrain(1) }
         };
     }
     public bool ApplyEffect()
@@ -281,6 +282,21 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     {
         diceRoller.allowRerolls(numDie, allowSameRerolls);
         return true;
+    }
+
+    bool EnergyDrain(int num)
+    {
+        if(enemy.enemyActionPoints > 0)
+        {
+            enemy.enemyActionPoints = enemy.enemyActionPoints - num;
+            fm.UpdateActionPoints();
+            return true;
+        }
+        else
+        {
+            Debug.Log("Cannot Drain AP. Target has no AP!");
+            return false;
+        }
     }
 
     bool NoEffect()
