@@ -13,6 +13,15 @@ public class Player : MonoBehaviour
     public ParticleSystem damageEfx;
     public Transform damageEfxSpawnPos;
 
+    //player deck variables
+    public List<Card> deck = new List<Card>();
+    public List<Card> discardPile = new List<Card>();
+
+    //action point variables
+    public int actionPoints;
+    public int numOfActionPoints;
+    public int maxActionPoints = 5;
+
     // Start is called before the first frame update
     void Start()
     {

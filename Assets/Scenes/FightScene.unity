@@ -250,6 +250,46 @@ MonoBehaviour:
   fm: {fileID: 0}
   damageEfx: {fileID: 9004509820100501915, guid: e89b4bc29323d204cabda461801cf4b3, type: 3}
   damageEfxSpawnPos: {fileID: 1934684440}
+  deck:
+  - {fileID: 2141607994}
+  - {fileID: 1145201071}
+  - {fileID: 788286767}
+  - {fileID: 1369749049}
+  - {fileID: 1592571519}
+  - {fileID: 96337206}
+  - {fileID: 2047911664}
+  - {fileID: 107029715}
+  - {fileID: 1111701827}
+  - {fileID: 1298548366}
+  - {fileID: 1827803108}
+  - {fileID: 624704351}
+  - {fileID: 1208542297}
+  - {fileID: 1811503497}
+  - {fileID: 519761839}
+  - {fileID: 1092980612}
+  - {fileID: 58985169}
+  - {fileID: 803947430}
+  - {fileID: 1166233707}
+  - {fileID: 1326562911}
+  - {fileID: 1937504017}
+  - {fileID: 625600896}
+  - {fileID: 631629749}
+  - {fileID: 1650184620}
+  - {fileID: 1544638122}
+  - {fileID: 1075322531}
+  - {fileID: 2145848277}
+  - {fileID: 577999104}
+  - {fileID: 1866360171}
+  - {fileID: 127343340}
+  - {fileID: 1017759810}
+  - {fileID: 1154332437}
+  - {fileID: 398210546}
+  - {fileID: 581618302}
+  - {fileID: 1392866099}
+  discardPile: []
+  actionPoints: 0
+  numOfActionPoints: 0
+  maxActionPoints: 5
 --- !u!1 &31188169
 GameObject:
   m_ObjectHideFlags: 0
@@ -1434,43 +1474,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTurn: 1
-  deck:
-  - {fileID: 2141607994}
-  - {fileID: 1145201071}
-  - {fileID: 788286767}
-  - {fileID: 1369749049}
-  - {fileID: 1592571519}
-  - {fileID: 96337206}
-  - {fileID: 2047911664}
-  - {fileID: 107029715}
-  - {fileID: 1111701827}
-  - {fileID: 1298548366}
-  - {fileID: 1827803108}
-  - {fileID: 624704351}
-  - {fileID: 1208542297}
-  - {fileID: 1811503497}
-  - {fileID: 519761839}
-  - {fileID: 1092980612}
-  - {fileID: 58985169}
-  - {fileID: 803947430}
-  - {fileID: 1166233707}
-  - {fileID: 1326562911}
-  - {fileID: 1937504017}
-  - {fileID: 625600896}
-  - {fileID: 631629749}
-  - {fileID: 1650184620}
-  - {fileID: 1544638122}
-  - {fileID: 1075322531}
-  - {fileID: 2145848277}
-  - {fileID: 577999104}
-  - {fileID: 1866360171}
-  - {fileID: 127343340}
-  - {fileID: 1017759810}
-  - {fileID: 1154332437}
-  - {fileID: 398210546}
-  - {fileID: 581618302}
-  - {fileID: 1392866099}
-  discardPile: []
   cardSlots:
   - {fileID: 31188171}
   - {fileID: 1077629789}
@@ -1478,25 +1481,6 @@ MonoBehaviour:
   - {fileID: 885257747}
   - {fileID: 1863702173}
   availableCardSlots: 0101010101
-  enemyDeck:
-  - {fileID: 612539104}
-  - {fileID: 1473879043}
-  - {fileID: 88631251}
-  - {fileID: 1824525410}
-  - {fileID: 1815681976}
-  - {fileID: 1715253413}
-  - {fileID: 1503846628}
-  - {fileID: 1954842904}
-  - {fileID: 546622299}
-  - {fileID: 249583937}
-  - {fileID: 1290319754}
-  - {fileID: 1217301056}
-  - {fileID: 81084901}
-  - {fileID: 1382159625}
-  - {fileID: 177327715}
-  - {fileID: 1891075101}
-  - {fileID: 1054676873}
-  enemyHand: []
   enemyCardSlots:
   - {fileID: 1862526831}
   - {fileID: 2013104496}
@@ -1504,9 +1488,6 @@ MonoBehaviour:
   - {fileID: 1257450606}
   - {fileID: 852838009}
   enemyAvailableCardSlots: 0101010101
-  actionPoints: 0
-  numOfActionPoints: 5
-  maxActionPoints: 5
   actionPointsPips:
   - {fileID: 199927114}
   - {fileID: 388358801}
@@ -1520,9 +1501,6 @@ MonoBehaviour:
   - {fileID: 1580072491}
   APFull: {fileID: 21300000, guid: 8dabdc637b34f8645ad10bf91f9c1439, type: 3}
   APEmpty: {fileID: 21300000, guid: 9e8f9621d941a4847b0ba934382e6cc2, type: 3}
-  enemyActionPoints: 0
-  enemyNumOfActionPoints: 5
-  maxEnemyActionPoints: 5
   enemyActionPointsPips:
   - {fileID: 1926772746}
   - {fileID: 2025544609}
@@ -12258,6 +12236,29 @@ MonoBehaviour:
   fm: {fileID: 0}
   damageEfx: {fileID: 9004509820100501915, guid: e89b4bc29323d204cabda461801cf4b3, type: 3}
   damageEfxSpawnPos: {fileID: 1092184317}
+  enemyDeck:
+  - {fileID: 612539104}
+  - {fileID: 1473879043}
+  - {fileID: 88631251}
+  - {fileID: 1824525410}
+  - {fileID: 1815681976}
+  - {fileID: 1715253413}
+  - {fileID: 1503846628}
+  - {fileID: 1954842904}
+  - {fileID: 546622299}
+  - {fileID: 249583937}
+  - {fileID: 1290319754}
+  - {fileID: 1217301056}
+  - {fileID: 81084901}
+  - {fileID: 1382159625}
+  - {fileID: 177327715}
+  - {fileID: 1891075101}
+  - {fileID: 1054676873}
+  enemyHand: []
+  enemyDiscardPile: []
+  enemyActionPoints: 0
+  enemyNumOfActionPoints: 0
+  maxEnemyActionPoints: 5
 --- !u!4 &1589057290
 Transform:
   m_ObjectHideFlags: 0
@@ -16618,9 +16619,9 @@ SceneRoots:
   - {fileID: 104228391}
   - {fileID: 1489125223}
   - {fileID: 8002255}
+  - {fileID: 1589057290}
   - {fileID: 930444306}
   - {fileID: 1956863254}
   - {fileID: 46791615}
   - {fileID: 141836679}
   - {fileID: 169966920}
-  - {fileID: 1589057290}

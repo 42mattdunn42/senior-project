@@ -13,6 +13,16 @@ public class Enemy : MonoBehaviour
     public ParticleSystem damageEfx;
     public Transform damageEfxSpawnPos;
 
+    //enemy deck variables
+    public List<Card> enemyDeck = new List<Card>();
+    public List<Card> enemyHand = new List<Card>();
+    public List<Card> enemyDiscardPile = new List<Card>();
+
+    //enemy action point variables
+    public int enemyActionPoints;
+    public int enemyNumOfActionPoints;
+    public int maxEnemyActionPoints = 5;
+
     public Enemy(int hp) { 
         this.hp = hp; 
         maxhp = hp; 

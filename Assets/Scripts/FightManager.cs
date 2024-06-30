@@ -19,30 +19,31 @@ public class FightManager : MonoBehaviour
     bool enemyAutomaticActions = false; //same but for enemy
 
     //deck variables, arrays, and lists
-    public List<Card> deck = new List<Card>();
-    public List<Card> discardPile = new List<Card>();
+    //public List<Card> deck = new List<Card>();
+    //public List<Card> discardPile = new List<Card>();
     public Transform[] cardSlots;
     public bool[] availableCardSlots;
 
     //enemy deck variables, arrays, and lists
-    public List<Card> enemyDeck = new List<Card>();
-    public List<Card> enemyHand = new List<Card>();
+    //public List<Card> enemyDeck = new List<Card>();
+    //public List<Card> enemyHand = new List<Card>();
+    //public List<Card> enemyDiscardPile = new List<Card>();
     public Transform[] enemyCardSlots;
     public bool[] enemyAvailableCardSlots;
 
     //action point variables
-    public int actionPoints;
-    public int numOfActionPoints;
-    public int maxActionPoints = 5;
+    //public int actionPoints;
+    //public int numOfActionPoints;
+    //public int maxActionPoints = 5;
 
     public Image[] actionPointsPips;
     public Sprite APFull;
     public Sprite APEmpty;
 
     //enemy action point variables
-    public int enemyActionPoints;
-    public int enemyNumOfActionPoints;
-    public int maxEnemyActionPoints = 5;
+    //public int enemyActionPoints;
+    //public int enemyNumOfActionPoints;
+    //public int maxEnemyActionPoints = 5;
 
     public Image[] enemyActionPointsPips;
 
@@ -197,9 +198,9 @@ public class FightManager : MonoBehaviour
     {
         if (playerTurn == true)
         {
-            if (deck.Count >= 1)
+            if (player.deck.Count >= 1)
             {
-                Card randCard = deck[Random.Range(0, deck.Count)];
+                Card randCard = player.deck[Random.Range(0, player.deck.Count)];
                 for (int i = 0; i < availableCardSlots.Length; i++)
                 {
                     if (availableCardSlots[i] == true)
@@ -208,7 +209,7 @@ public class FightManager : MonoBehaviour
                         randCard.handIndex = i;
                         randCard.transform.position = cardSlots[i].position;
                         availableCardSlots[i] = false;
-                        deck.Remove(randCard);
+                        player.deck.Remove(randCard);
                         return;
                     }
                 }
@@ -216,9 +217,9 @@ public class FightManager : MonoBehaviour
         }
         else if(playerTurn==false) 
         {
-            if (enemyDeck.Count >= 1)
+            if (enemy.enemyDeck.Count >= 1)
             {
-                Card randCard = enemyDeck[Random.Range(0, enemyDeck.Count)];
+                Card randCard = enemy.enemyDeck[Random.Range(0, enemy.enemyDeck.Count)];
                 for (int i = 0; i < enemyAvailableCardSlots.Length; i++)
                 {
                     if (enemyAvailableCardSlots[i] == true)
@@ -227,8 +228,8 @@ public class FightManager : MonoBehaviour
                         randCard.handIndex = i;
                         randCard.transform.position = enemyCardSlots[i].position;
                         enemyAvailableCardSlots[i] = false;
-                        enemyHand.Add(randCard);
-                        enemyDeck.Remove(randCard);
+                        enemy.enemyHand.Add(randCard);
+                        enemy.enemyDeck.Remove(randCard);
                         //Debug.Log($"Enemy drew card: {randCard.name} to slot {i}");
                         return;
                     }
@@ -240,7 +241,7 @@ public class FightManager : MonoBehaviour
     void EnemyCheckHand()
     {
         enemyCardCount.Clear();
-        foreach (Card card in enemyHand)
+        foreach (Card card in enemy.enemyHand)
         {
             if (enemyCardCount.ContainsKey(card.cardID))
             {
@@ -265,11 +266,11 @@ public class FightManager : MonoBehaviour
 
         if (enemyCardCount.ContainsKey(2) && enemyCardCount[2] > 0 && CalculateDamage() == 0) //Will attempt to get damage using cheaper card first
         {
-            foreach (Card card in enemyHand)
+            foreach (Card card in enemy.enemyHand)
             {
                 if (card.cardID == 2)
                 {
-                    if (card.apCost <= enemyActionPoints)
+                    if (card.apCost <= enemy.enemyActionPoints)
                     {
                         EnemyPlayCard(card, card.apCost);
                         Debug.Log("Enemy playing King of Diamonds");
@@ -281,11 +282,11 @@ public class FightManager : MonoBehaviour
 
         if (enemyCardCount.ContainsKey(3) && enemyCardCount[3] > 0 && CalculateDamage()==0) //Will guareentee damage if it cannot get a good roll with a King of Diamonds
         {
-            foreach (Card card in enemyHand)
+            foreach (Card card in enemy.enemyHand)
             {
                 if (card.cardID == 3)
                 {
-                    if (card.apCost <= enemyActionPoints)
+                    if (card.apCost <= enemy.enemyActionPoints)
                     {
                         EnemyPlayCard(card, card.apCost);
                         Debug.Log("Enemy playing Queen of Hearts");
@@ -297,11 +298,11 @@ public class FightManager : MonoBehaviour
 
         if (enemyCardCount.ContainsKey(4) && enemyCardCount[4] > 0 && damageDelay > 0) //Will shield itself first if it is going to take damage
         {
-            foreach (Card card in enemyHand)
+            foreach (Card card in enemy.enemyHand)
             {
                 if (card.cardID == 4)
                 {
-                    if (card.apCost <= enemyActionPoints)
+                    if (card.apCost <= enemy.enemyActionPoints)
                     {
                         EnemyPlayCard(card, card.apCost);
                         Debug.Log("Enemy playing Ace of Hearts");
@@ -313,11 +314,11 @@ public class FightManager : MonoBehaviour
 
         if (enemyCardCount.ContainsKey(1) && enemyCardCount[1] > 0 && enemy.hp < 100) //Will heal itself if it has taken damage
         {
-            foreach (Card card in enemyHand)
+            foreach (Card card in enemy.enemyHand)
             {
                 if (card.cardID == 1)
                 {
-                    if(card.apCost <= enemyActionPoints)
+                    if(card.apCost <= enemy.enemyActionPoints)
                     {
                         EnemyPlayCard(card, card.apCost);
                         Debug.Log("Enemy playing Jack of Clubs");
@@ -330,23 +331,23 @@ public class FightManager : MonoBehaviour
 
     void EnemyPlayRandom()
     {
-        Card randCard = enemyHand[Random.Range(0, enemyHand.Count)];
+        Card randCard = enemy.enemyHand[Random.Range(0, enemy.enemyHand.Count)];
         //Debug.Log($"Enemy plays card: {randCard.name} from slot {randCard.handIndex}");
         EnemyPlayCard(randCard, randCard.apCost);
     }
 
     void EnemyPlayCard(Card playedCard, int actionPointCost)
     {
-        if (actionPointCost <= enemyActionPoints)
+        if (actionPointCost <= enemy.enemyActionPoints)
         {
             if (playedCard.ApplyEffect())
             {
-                discardPile.Add(playedCard); // Add the card to the discard pile
-                enemyHand.Remove(playedCard); //Remove card from hand
+                enemy.enemyDiscardPile.Add(playedCard); // Add the card to the discard pile
+                enemy.enemyHand.Remove(playedCard); //Remove card from hand
                 playedCard.gameObject.SetActive(false); // Deactivate the GameObject
                 for (int i = 0; i < actionPointCost; i++)
                 {
-                    enemyActionPoints--;
+                    enemy.enemyActionPoints--;
                     UpdateActionPoints();
                 }
                 playedCard.hasBeenPlayed = true;
@@ -372,24 +373,24 @@ public class FightManager : MonoBehaviour
     {
         if(playerTurn==true)
         {
-            if (actionPoints <= maxActionPoints-3)
+            if (player.actionPoints <= player.maxActionPoints-3)
             {
-               actionPoints = actionPoints + 3;
+                player.actionPoints = player.actionPoints + 3;
             }
             else
             {
-                actionPoints = maxActionPoints;
+                player.actionPoints = player.maxActionPoints;
             }
         }
         if(playerTurn==false) //add AP for enemy turns
         {
-            if (enemyActionPoints <= 2)
+            if (enemy.enemyActionPoints <= 2)
             {
-                enemyActionPoints = enemyActionPoints + 3;
+                enemy.enemyActionPoints = enemy.enemyActionPoints + 3;
             }
             else
             {
-                enemyActionPoints = maxEnemyActionPoints;
+                enemy.enemyActionPoints = enemy.maxEnemyActionPoints;
             }
         }
     }
@@ -397,9 +398,9 @@ public class FightManager : MonoBehaviour
     {
         if (playerTurn == true)
         {
-            for (int i = 0; i < maxActionPoints; i++)
+            for (int i = 0; i < player.maxActionPoints; i++)
             {
-                if (i < actionPoints)
+                if (i < player.actionPoints)
                 {
                     if (!actionPointsPips[i].enabled)
                     {
@@ -419,9 +420,9 @@ public class FightManager : MonoBehaviour
         }
         if (playerTurn == false) //add AP for enemy turns
         {
-            for (int i = 0; i < maxEnemyActionPoints; i++)
+            for (int i = 0; i < enemy.maxEnemyActionPoints; i++)
             {
-                if (i < enemyActionPoints)
+                if (i < enemy.enemyActionPoints)
                 {
                     if (!enemyActionPointsPips[i].enabled)
                     {

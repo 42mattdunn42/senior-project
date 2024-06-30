@@ -96,19 +96,19 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     }
     void PlayCard(int actionPointCost)
     {
-        if (actionPointCost <= fm.actionPoints)
+        if (actionPointCost <= player.actionPoints)
         {
             if (ApplyEffect() == true)
             {
                 Vector3 cardPosition = transform.position;
-                fm.discardPile.Add(this);
+                player.discardPile.Add(this);
                 gameObject.SetActive(false);
                 Instantiate(playEfx, cardPosition, Quaternion.identity);
 
                 HideTooltip();
                 for (int i = 0; i < actionPointCost; i++)
                 {
-                    fm.actionPoints--;
+                    player.actionPoints--;
                     fm.UpdateActionPoints();
                 }
                 hasBeenPlayed = true;
@@ -129,9 +129,9 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     }
     void BurnCard()
     {
-        if (fm.actionPoints < fm.maxActionPoints)
+        if (player.actionPoints < player.maxActionPoints)
         {
-            fm.actionPoints = fm.actionPoints + 1;
+            player.actionPoints = player.actionPoints + 1;
             fm.UpdateActionPoints();
             Debug.Log("Card burned");
         }
@@ -140,7 +140,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             Debug.Log("AP already at maximum value. Discarding Card.");
         }
         Vector3 cardPosition = transform.position;
-        fm.discardPile.Add(this);
+        player.discardPile.Add(this);
         gameObject.SetActive(false);
         Instantiate(burnEfx, cardPosition, Quaternion.identity);
         HideTooltip();
@@ -230,9 +230,9 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     {
         if (fm.playerTurn)
         {
-            if(amount + fm.maxActionPoints <= 10)
+            if(amount + player.maxActionPoints <= 10)
             {
-                fm.maxActionPoints++;
+                player.maxActionPoints++;
                 fm.UpdateActionPoints();
                 Debug.Log("Action Point Slot Added");
                 return true;
@@ -245,9 +245,9 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         }
         else
         {
-            if (amount + fm.maxEnemyActionPoints <= 10)
+            if (amount + enemy.maxEnemyActionPoints <= 10)
             {
-                fm.maxEnemyActionPoints++;
+                enemy.maxEnemyActionPoints++;
                 fm.UpdateActionPoints();
                 Debug.Log("Enemy Action Point Slot Added");
                 return true;
