@@ -2,11 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
+using Scene = UnityEngine.SceneManagement.Scene;
 
 public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
@@ -34,6 +37,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     private DiceRoller diceRoller;
     private RectTransform playRectTransform;
     private RectTransform burnRectTransform;
+    private RectTransform upgradeRectTransform;
     private Dictionary<int, Func<bool>> cardDictionary;
 
     //Particle FX
@@ -54,8 +58,13 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     // Start is called before the first frame update
     void Start()
     {
+        Scene scene = SceneManager.GetActiveScene();
         playRectTransform = GameObject.Find("Play Area").GetComponent<RectTransform>();
         burnRectTransform = GameObject.Find("Burn Card Area").GetComponent<RectTransform>();
+        if(scene.name == "Shop")
+        {
+            upgradeRectTransform = GameObject.Find("Upgrade Area").GetComponent<RectTransform>();
+        }
         HideTooltip();
     }
     void Update()
@@ -147,6 +156,11 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         HideTooltip();
         hasBeenPlayed = true;
         fm.availableCardSlots[handIndex] = true;
+    }
+
+    void UpgradeCard()
+    {
+
     }
 
     //ALL CARD EFFECTS FUNCTIONS//
@@ -341,6 +355,10 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             else if (IsPointerOverUIObject(eventData, burnRectTransform))
             {
                 BurnCard();
+            }
+            else if(IsPointerOverUIObject(eventData, upgradeRectTransform))
+            {
+                UpgradeCard();
             }
             else
             {
