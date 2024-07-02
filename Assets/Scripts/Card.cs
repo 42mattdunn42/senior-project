@@ -364,7 +364,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             }
             else if(IsPointerOverUIObject(eventData, upgradeRectTransform))
             {
-                UpgradeCard();
+                UpgradeCard(upgradable, cardID);
             }
             else
             {
