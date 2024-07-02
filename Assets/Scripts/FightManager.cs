@@ -66,6 +66,11 @@ public class FightManager : MonoBehaviour
         enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>();
         playRectTransform = GameObject.Find("Play Area").GetComponent<RectTransform>();
         burnRectTransform = GameObject.Find("Burn Card Area").GetComponent<RectTransform>();
+        Scene scene = SceneManager.GetActiveScene();
+        if (scene.name == "Shop")
+        {
+            //upgradeRectTransform = GameObject.Find("Upgrade Area").GetComponent<RectTransform>();
+        }
     }
 
     // Update is called once per frame
