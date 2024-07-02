@@ -34,6 +34,11 @@ public class FightManager : MonoBehaviour
     //enemy action point variables
     public Image[] enemyActionPointsPips;
 
+    //card zones
+    public RectTransform playRectTransform;
+    public RectTransform burnRectTransform;
+    public RectTransform upgradeRectTransform;
+
     public TextMeshProUGUI diceresult;
 
     // Damage delay
@@ -59,6 +64,8 @@ public class FightManager : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         roller = GameObject.FindGameObjectWithTag("Roller").GetComponent<DiceRoller>();
         enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>();
+        playRectTransform = GameObject.Find("Play Area").GetComponent<RectTransform>();
+        burnRectTransform = GameObject.Find("Burn Card Area").GetComponent<RectTransform>();
     }
 
     // Update is called once per frame

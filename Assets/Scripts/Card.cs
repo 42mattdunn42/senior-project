@@ -36,9 +36,9 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     private Player player;
     private Enemy enemy;
     private DiceRoller diceRoller;
-    private RectTransform playRectTransform;
-    private RectTransform burnRectTransform;
-    private RectTransform upgradeRectTransform;
+    //private RectTransform playRectTransform;
+    //private RectTransform burnRectTransform;
+    //private RectTransform upgradeRectTransform;
     private Dictionary<int, Func<bool>> cardDictionary;
 
     //Particle FX
@@ -59,13 +59,6 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     // Start is called before the first frame update
     void Start()
     {
-        Scene scene = SceneManager.GetActiveScene();
-        playRectTransform = GameObject.Find("Play Area").GetComponent<RectTransform>();
-        burnRectTransform = GameObject.Find("Burn Card Area").GetComponent<RectTransform>();
-        if(scene.name == "Shop")
-        {
-            upgradeRectTransform = GameObject.Find("Upgrade Area").GetComponent<RectTransform>();
-        }
         HideTooltip();
     }
     void Update()
@@ -357,15 +350,15 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     {
         if (playerCard)
         {
-            if (IsPointerOverUIObject(eventData, playRectTransform))
+            if (IsPointerOverUIObject(eventData, fm.playRectTransform))
             {
                 PlayCard(apCost);
             }
-            else if (IsPointerOverUIObject(eventData, burnRectTransform))
+            else if (IsPointerOverUIObject(eventData, fm.burnRectTransform))
             {
                 BurnCard();
             }
-            /*else if(IsPointerOverUIObject(eventData, upgradeRectTransform))
+            /*else if(IsPointerOverUIObject(eventData, fm.upgradeRectTransform))
             {
                 UpgradeCard(upgradable, cardID);
             }*/
