@@ -19,6 +19,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     public int apCost;
     public string effectText;
     public bool playerCard;
+    private bool upgradable;
 
     //Tooltip Stuff
     public TextMeshProUGUI tooltipText;
@@ -158,9 +159,14 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         fm.availableCardSlots[handIndex] = true;
     }
 
-    void UpgradeCard()
+    void UpgradeCard(bool canUpgrade, int cardID)
     {
-
+        if(canUpgrade)
+        {
+            //do stuff
+            player.deck.Remove(this);
+            gameObject.SetActive(false);
+        }
     }
 
     //ALL CARD EFFECTS FUNCTIONS//
