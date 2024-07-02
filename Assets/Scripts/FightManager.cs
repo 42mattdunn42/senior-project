@@ -18,39 +18,26 @@ public class FightManager : MonoBehaviour
     bool playerAutomaticActions = false; //checks if the automatic actions have been completed yet
     bool enemyAutomaticActions = false; //same but for enemy
 
-    //deck variables, arrays, and lists
-    //public List<Card> deck = new List<Card>();
-    //public List<Card> discardPile = new List<Card>();
+    //player deck
     public Transform[] cardSlots;
     public bool[] availableCardSlots;
 
-    //enemy deck variables, arrays, and lists
-    //public List<Card> enemyDeck = new List<Card>();
-    //public List<Card> enemyHand = new List<Card>();
-    //public List<Card> enemyDiscardPile = new List<Card>();
+    //enemy deck
     public Transform[] enemyCardSlots;
     public bool[] enemyAvailableCardSlots;
 
     //action point variables
-    //public int actionPoints;
-    //public int numOfActionPoints;
-    //public int maxActionPoints = 5;
-
     public Image[] actionPointsPips;
     public Sprite APFull;
     public Sprite APEmpty;
 
     //enemy action point variables
-    //public int enemyActionPoints;
-    //public int enemyNumOfActionPoints;
-    //public int maxEnemyActionPoints = 5;
-
     public Image[] enemyActionPointsPips;
 
     public TextMeshProUGUI diceresult;
 
     // Damage delay
-    private int damageDelay = 0;  // must be initialized to zero to prevent damage from being dealt prematurely
+    public int damageDelay = 0;  // must be initialized to zero to prevent damage from being dealt prematurely
     public bool doubleDamage = false; //starts with damage being normal at start
     public TextMeshProUGUI incomingDamage;
     public TextMeshProUGUI outgoingDamage;
@@ -59,8 +46,6 @@ public class FightManager : MonoBehaviour
     public RawImage playerShield;
     public RawImage enemyShield;
 
-    //Card Dictionary
-    private Dictionary<int ,int> enemyCardCount;
 
     // pause menu variables
     public GameObject pauseMenu;
@@ -74,7 +59,6 @@ public class FightManager : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         roller = GameObject.FindGameObjectWithTag("Roller").GetComponent<DiceRoller>();
         enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>();
-        enemyCardCount = new Dictionary<int ,int>();
     }
 
     // Update is called once per frame
@@ -134,9 +118,7 @@ public class FightManager : MonoBehaviour
                 roller.Roll();
                 for (int i = 0; i < 1; i++)
                 {
-                    //EnemyPlayRandom();
-                    EnemyPlayLogic(); //Currently only looks to play the Jack of Clubs if the HP of the AI is less than 100.
-                    //Debug.Log("Current Enemy AP"+ enemyActionPoints);
+                    enemy.EnemyPlayLogic();
                 }
                 enemyAutomaticActions = true;
                 EndTurn();
@@ -238,136 +220,6 @@ public class FightManager : MonoBehaviour
         }
     }
 
-    void EnemyCheckHand()
-    {
-        enemyCardCount.Clear();
-        foreach (Card card in enemy.enemyHand)
-        {
-            if (enemyCardCount.ContainsKey(card.cardID))
-            {
-                enemyCardCount[card.cardID]++;
-            }
-            else
-            {
-                enemyCardCount[card.cardID] = 1;
-            }
-        }
-
-        // Print out the contents of the dictionary for debugging
-        foreach (KeyValuePair<int, int> entry in enemyCardCount)
-        {
-            Debug.Log($"CardID: {entry.Key}, Count: {entry.Value}");
-        }
-    }
-
-    void EnemyPlayLogic()
-    {
-        EnemyCheckHand();
-
-        if (enemyCardCount.ContainsKey(2) && enemyCardCount[2] > 0 && CalculateDamage() == 0) //Will attempt to get damage using cheaper card first
-        {
-            foreach (Card card in enemy.enemyHand)
-            {
-                if (card.cardID == 2)
-                {
-                    if (card.apCost <= enemy.enemyActionPoints)
-                    {
-                        EnemyPlayCard(card, card.apCost);
-                        Debug.Log("Enemy playing King of Diamonds");
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (enemyCardCount.ContainsKey(3) && enemyCardCount[3] > 0 && CalculateDamage()==0) //Will guareentee damage if it cannot get a good roll with a King of Diamonds
-        {
-            foreach (Card card in enemy.enemyHand)
-            {
-                if (card.cardID == 3)
-                {
-                    if (card.apCost <= enemy.enemyActionPoints)
-                    {
-                        EnemyPlayCard(card, card.apCost);
-                        Debug.Log("Enemy playing Queen of Hearts");
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (enemyCardCount.ContainsKey(4) && enemyCardCount[4] > 0 && damageDelay > 0) //Will shield itself first if it is going to take damage
-        {
-            foreach (Card card in enemy.enemyHand)
-            {
-                if (card.cardID == 4)
-                {
-                    if (card.apCost <= enemy.enemyActionPoints)
-                    {
-                        EnemyPlayCard(card, card.apCost);
-                        Debug.Log("Enemy playing Ace of Hearts");
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (enemyCardCount.ContainsKey(1) && enemyCardCount[1] > 0 && enemy.hp < 100) //Will heal itself if it has taken damage
-        {
-            foreach (Card card in enemy.enemyHand)
-            {
-                if (card.cardID == 1)
-                {
-                    if(card.apCost <= enemy.enemyActionPoints)
-                    {
-                        EnemyPlayCard(card, card.apCost);
-                        Debug.Log("Enemy playing Jack of Clubs");
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    void EnemyPlayRandom()
-    {
-        Card randCard = enemy.enemyHand[Random.Range(0, enemy.enemyHand.Count)];
-        //Debug.Log($"Enemy plays card: {randCard.name} from slot {randCard.handIndex}");
-        EnemyPlayCard(randCard, randCard.apCost);
-    }
-
-    void EnemyPlayCard(Card playedCard, int actionPointCost)
-    {
-        if (actionPointCost <= enemy.enemyActionPoints)
-        {
-            if (playedCard.ApplyEffect())
-            {
-                enemy.enemyDiscardPile.Add(playedCard); // Add the card to the discard pile
-                enemy.enemyHand.Remove(playedCard); //Remove card from hand
-                playedCard.gameObject.SetActive(false); // Deactivate the GameObject
-                for (int i = 0; i < actionPointCost; i++)
-                {
-                    enemy.enemyActionPoints--;
-                    UpdateActionPoints();
-                }
-                playedCard.hasBeenPlayed = true;
-                enemyAvailableCardSlots[playedCard.handIndex] = true;
-                //Debug.Log($"Slot {playedCard.handIndex} re-enabled for use.");
-                Debug.Log("Enemy card played");
-            }
-            else
-            {
-                Debug.Log("Card conditions not met and cannot be played!");
-            }
-        }
-        else
-        {
-            Debug.Log("Card cannot be played due to insufficient AP!");
-        }
-    }
-
-
-
     //ACTION POINT STUFF
     public void AddActionPoints()
     {
@@ -441,10 +293,6 @@ public class FightManager : MonoBehaviour
             }
         //}
     }    
-
-
-
-
     //DAMAGE STUFF
     /// <summary>
     /// Calculates the damage from the dice rolling to be dealt.

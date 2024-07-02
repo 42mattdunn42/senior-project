@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     public FightManager fm;
     public ParticleSystem damageEfx;
     public Transform damageEfxSpawnPos;
+    public int funds;
 
     //player deck variables
     public List<Card> deck = new List<Card>();
@@ -28,12 +29,6 @@ public class Player : MonoBehaviour
         maxhp = hp;
         healthBars = GameObject.FindGameObjectWithTag("HealthManager").GetComponent<HealthBarManager>();
         fm = GameObject.FindGameObjectWithTag("FightManager").GetComponent<FightManager>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public bool IsAlive()

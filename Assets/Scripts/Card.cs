@@ -324,6 +324,9 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         return true;
     }
 
+    //CARD ANIMATION FUNCTIONS//
+
+
     //ALL DRAG/UI FUNCTIONS//
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -362,10 +365,10 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             {
                 BurnCard();
             }
-            else if(IsPointerOverUIObject(eventData, upgradeRectTransform))
+            /*else if(IsPointerOverUIObject(eventData, upgradeRectTransform))
             {
                 UpgradeCard(upgradable, cardID);
-            }
+            }*/
             else
             {
                 ShowTooltip(effectText);
@@ -426,24 +429,6 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
             // Update the tooltip position directly in world space
             tooltipPanel.transform.position = newPos;
-
-            /* Vector2 mousePos = Input.mousePosition;
-            float tooltipWidth = tooltipPanel.GetComponent<RectTransform>().rect.width;
-            float tooltipHeight = tooltipPanel.GetComponent<RectTransform>().rect.height;
-
-            // Calculate new position with offset
-            Vector2 newPos = new Vector2(mousePos.x + tooltipOffsetX, mousePos.y + tooltipOffsetY);
-
-            // Adjust position to stay within screen bounds
-            float screenWidth = Screen.width;
-            float screenHeight = Screen.height;
-            float maxX = screenWidth - tooltipWidth;
-            float maxY = screenHeight - tooltipHeight;
-
-            newPos.x = Mathf.Clamp(newPos.x, 0f, maxX);
-            newPos.y = Mathf.Clamp(newPos.y, 0f, maxY);
-
-            tooltipPanel.transform.position = newPos;*/
         }
     }
 }
