@@ -250,6 +250,7 @@ MonoBehaviour:
   fm: {fileID: 0}
   damageEfx: {fileID: 9004509820100501915, guid: e89b4bc29323d204cabda461801cf4b3, type: 3}
   damageEfxSpawnPos: {fileID: 1934684440}
+  funds: 0
   deck:
   - {fileID: 2141607994}
   - {fileID: 1145201071}
@@ -1517,7 +1518,11 @@ MonoBehaviour:
   - {fileID: 2074314107}
   - {fileID: 597292110}
   - {fileID: 2047501974}
+  playRectTransform: {fileID: 0}
+  burnRectTransform: {fileID: 0}
+  upgradeRectTransform: {fileID: 0}
   diceresult: {fileID: 1782316130}
+  damageDelay: 0
   doubleDamage: 0
   incomingDamage: {fileID: 186510854}
   outgoingDamage: {fileID: 350233357}
@@ -1525,6 +1530,7 @@ MonoBehaviour:
   enemyShield: {fileID: 299383836}
   pauseMenu: {fileID: 558399960}
   helpMenu: {fileID: 1203865853}
+  endTurnButton: {fileID: 0}
 --- !u!4 &169966920
 Transform:
   m_ObjectHideFlags: 0

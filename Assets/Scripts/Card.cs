@@ -36,9 +36,6 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     private Player player;
     private Enemy enemy;
     private DiceRoller diceRoller;
-    //private RectTransform playRectTransform;
-    //private RectTransform burnRectTransform;
-    //private RectTransform upgradeRectTransform;
     private Dictionary<int, Func<bool>> cardDictionary;
 
     //Particle FX

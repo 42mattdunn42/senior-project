@@ -52,11 +52,13 @@ public class FightManager : MonoBehaviour
     public RawImage enemyShield;
 
 
-    // pause menu variables
+    // pause menu and UI variables
     public GameObject pauseMenu;
     private bool isPaused = false;
     public GameObject helpMenu;
     private bool isHelp = false;
+    public Button endTurnButton;
+
 
     // Start is called before the first frame update
     void Start()
@@ -64,6 +66,7 @@ public class FightManager : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         roller = GameObject.FindGameObjectWithTag("Roller").GetComponent<DiceRoller>();
         enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>();
+        endTurnButton = GameObject.Find("End Turn Button").GetComponent<Button>();
         playRectTransform = GameObject.Find("Play Area").GetComponent<RectTransform>();
         burnRectTransform = GameObject.Find("Burn Card Area").GetComponent<RectTransform>();
         Scene scene = SceneManager.GetActiveScene();
@@ -154,6 +157,7 @@ public class FightManager : MonoBehaviour
     {
         if (playerTurn)  // due to damage delay, at the end of the player's turn they will take damage and vice versa
         {
+            endTurnButton.interactable = false;
             player.TakeDamage(damageDelay);
             damageDelay = CalculateDamage();
             if (doubleDamage)
@@ -169,18 +173,20 @@ public class FightManager : MonoBehaviour
         }
         else
         {
-            enemy.TakeDamage(damageDelay);
-            damageDelay = CalculateDamage();
-            if (doubleDamage)
+            StartCoroutine(WaitForEnemyCardAnimations(() =>
             {
-                damageDelay = damageDelay * 2;
-                doubleDamage = false;
-            }
-            incomingDamage.text = "Incoming: " + damageDelay;
-            outgoingDamage.text = "";
-            Debug.Log("Enemy End Turn");
-            playerTurn = true;
-            enemyAutomaticActions = false;
+                enemy.TakeDamage(damageDelay);
+                damageDelay = CalculateDamage();
+                if (doubleDamage)
+                {
+                    damageDelay = damageDelay * 2;
+                    doubleDamage = false;
+                }
+                incomingDamage.text = "Incoming: " + damageDelay;
+                outgoingDamage.text = "";
+                Debug.Log("Enemy End Turn");
+                StartCoroutine(DelayBeforePlayerTurn());
+            }));
         }
     }
 
@@ -481,5 +487,25 @@ public class FightManager : MonoBehaviour
         isHelp = !isHelp;
         helpMenu.SetActive(isHelp);
         pauseMenu.SetActive(!isHelp);
+    }
+
+    //Animation and Delay Stuff
+    private IEnumerator WaitForEnemyCardAnimations(Action onComplete)
+    {
+        // Wait for all enemy card animations to complete
+        EnemyCardAnimation[] animators = FindObjectsOfType<EnemyCardAnimation>();
+        foreach (var animator in animators)
+        {
+            yield return new WaitUntil(() => animator.AnimationComplete);
+        }
+        onComplete?.Invoke();
+    }
+
+    private IEnumerator DelayBeforePlayerTurn()
+    {
+        yield return new WaitForSeconds(1.5f);
+        playerTurn = true;
+        enemyAutomaticActions = false;
+        endTurnButton.interactable = true;
     }
 }

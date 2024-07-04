@@ -102,68 +102,50 @@ public class Enemy : MonoBehaviour
 
     public void EnemyPlayLogic()
     {
+        StartCoroutine(EnemyPlayLogicCoroutine());
+    }
+
+    private IEnumerator EnemyPlayLogicCoroutine()
+    {
         EnemyCheckHand();
 
-        if (enemyCardCount.ContainsKey(2) && enemyCardCount[2] > 0 && fm.CalculateDamage() == 0) //Will attempt to get damage using cheaper card first
+        // Try to play King of Diamonds (cardID 2)
+        if (enemyCardCount.ContainsKey(2) && enemyCardCount[2] > 0 && fm.CalculateDamage() == 0)
         {
-            foreach (Card card in enemyHand)
-            {
-                if (card.cardID == 2)
-                {
-                    if (card.apCost <= enemyActionPoints)
-                    {
-                        EnemyPlayCard(card, card.apCost);
-                        Debug.Log("Enemy playing King of Diamonds");
-                        break;
-                    }
-                }
-            }
+            yield return PlayCardIfPossible(2, "Loaded Dice");
         }
 
-        if (enemyCardCount.ContainsKey(3) && enemyCardCount[3] > 0 && fm.CalculateDamage() == 0) //Will guareentee damage if it cannot get a good roll with a King of Diamonds
+        // Try to play Queen of Hearts (cardID 3)
+        if (enemyCardCount.ContainsKey(3) && enemyCardCount[3] > 0 && fm.CalculateDamage() == 0)
         {
-            foreach (Card card in enemyHand)
-            {
-                if (card.cardID == 3)
-                {
-                    if (card.apCost <= enemyActionPoints)
-                    {
-                        EnemyPlayCard(card, card.apCost);
-                        Debug.Log("Enemy playing Queen of Hearts");
-                        break;
-                    }
-                }
-            }
+            yield return PlayCardIfPossible(3, "Steady Aim");
         }
 
-        if (enemyCardCount.ContainsKey(4) && enemyCardCount[4] > 0 && fm.damageDelay > 0) //Will shield itself first if it is going to take damage
+        // Try to play Ace of Hearts (cardID 4)
+        if (enemyCardCount.ContainsKey(4) && enemyCardCount[4] > 0 && fm.damageDelay > 0)
         {
-            foreach (Card card in enemyHand)
-            {
-                if (card.cardID == 4)
-                {
-                    if (card.apCost <= enemyActionPoints)
-                    {
-                        EnemyPlayCard(card, card.apCost);
-                        Debug.Log("Enemy playing Ace of Hearts");
-                        break;
-                    }
-                }
-            }
+            yield return PlayCardIfPossible(4, "Fortify");
         }
 
-        if (enemyCardCount.ContainsKey(1) && enemyCardCount[1] > 0 && hp < 100) //Will heal itself if it has taken damage
+        // Try to play Jack of Clubs (cardID 1)
+        if (enemyCardCount.ContainsKey(1) && enemyCardCount[1] > 0 && hp < 100)
         {
-            foreach (Card card in enemyHand)
+            yield return PlayCardIfPossible(1, "Recover");
+        }
+    }
+
+    private IEnumerator PlayCardIfPossible(int cardID, string cardName)
+    {
+        foreach (Card card in enemyHand)
+        {
+            if (card.cardID == cardID)
             {
-                if (card.cardID == 1)
+                if (card.apCost <= enemyActionPoints)
                 {
-                    if (card.apCost <= enemyActionPoints)
-                    {
-                        EnemyPlayCard(card, card.apCost);
-                        Debug.Log("Enemy playing Jack of Clubs");
-                        break;
-                    }
+                    EnemyPlayCard(card, card.apCost);
+                    Debug.Log($"Enemy playing {cardName}");
+                    yield return new WaitForSeconds(0.75f); // Adjust the delay as needed
+                    break;
                 }
             }
         }
@@ -175,18 +157,24 @@ public class Enemy : MonoBehaviour
         {
             if (playedCard.ApplyEffect())
             {
-                enemyDiscardPile.Add(playedCard); // Add the card to the discard pile
-                enemyHand.Remove(playedCard); //Remove card from hand
-                playedCard.gameObject.SetActive(false); // Deactivate the GameObject
+                // Deduct action points immediately
                 for (int i = 0; i < actionPointCost; i++)
                 {
                     enemyActionPoints--;
                     fm.UpdateActionPoints();
                 }
-                playedCard.hasBeenPlayed = true;
-                fm.enemyAvailableCardSlots[playedCard.handIndex] = true;
-                //Debug.Log($"Slot {playedCard.handIndex} re-enabled for use.");
-                Debug.Log("Enemy card played");
+                // Start the animation
+                var animator = playedCard.gameObject.AddComponent<EnemyCardAnimation>();
+                animator.onAnimationComplete += () =>
+                {
+                    // Move card to discard pile and other post-play logic
+                    enemyDiscardPile.Add(playedCard);
+                    enemyHand.Remove(playedCard);
+                    playedCard.hasBeenPlayed = true;
+                    playedCard.gameObject.SetActive(false);
+                    fm.enemyAvailableCardSlots[playedCard.handIndex] = true;
+                    //Debug.Log("Enemy card played");
+                };
             }
             else
             {
@@ -198,6 +186,8 @@ public class Enemy : MonoBehaviour
             Debug.Log("Card cannot be played due to insufficient AP!");
         }
     }
+
+
     void EnemyPlayRandom()
     {
         Card randCard = enemyHand[Random.Range(0, enemyHand.Count)];
