@@ -31,13 +31,13 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-
-        switch (SceneManager.GetActiveScene().name)  // needs to be here to assure that player is initialized
+        switch (SceneManager.GetActiveScene().name)
         {
             case "FightScene":
-                // InitiateFight();  // maybe change to initiate a fight in a fight manager
-                // don't need to call it b/c it will be iitialized with the scene
+                if(player == null)
+                {
+                    player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+                }
                 break;
             default: break;
         }
