@@ -9,6 +9,7 @@ TagManager:
   - HealthManager
   - Enemy
   - EnemyHealthBar
+  - GameManager
   layers:
   - Default
   - TransparentFX

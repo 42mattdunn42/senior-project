@@ -8,11 +8,13 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager _instance = null;
     private Player player;
+    private Enemy enemy;
     //private Enemy enemy;
     private FightManager fightManager;
-    public int maxNumTurns;  // here for the example fight handler
-    bool playerTurn = true; //start with player turn
-    int turnNum = 0;
+    public int NumBattles;
+    public int MaxFights;
+    public List<Card> playerDeck = new List<Card>();
+    public List<Card> enemyDeck = new List<Card>();
 
 
     private void Awake()
@@ -21,7 +23,8 @@ public class GameManager : MonoBehaviour
         {
             _instance = this;
         }
-        DontDestroyOnLoad(this.gameObject);  // not sure if this is neccessary, but would be nice
+        DontDestroyOnLoad(this.gameObject);
+        NumBattles = MaxFights;
     }
 
     public static GameManager instance()
@@ -37,7 +40,15 @@ public class GameManager : MonoBehaviour
                 if(player == null)
                 {
                     player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+                    playerDeck = player.deck;
                 }
+                else
+                {
+                    player.deck = playerDeck;
+                }
+                enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>();
+                enemyDeck = enemy.enemyDeck;
+                NumBattles--;
                 break;
             default: break;
         }
@@ -55,32 +66,15 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        Start();
     }
 
-    // initiates turn order
-    void InitiateFight()
+    public void AddCardToPlayerDeck(Card c)
     {
-        Debug.Log("Fight Initiated >:)");
-        // get enemy in fight here
-        //enemy = null;
-
-        // example of how a fight manager might handle the turns
-        
-        // get enemy
-        while (player.IsAlive() && turnNum < maxNumTurns)
-        {
-            if (playerTurn)
-            {
-                // do player turn here
-                playerTurn = false;
-                turnNum++;
-            }
-            else
-            {
-                // do enemy turn here
-
-                playerTurn = true;
-            }
-        }
+        playerDeck.Add(c);
+    }
+    public List<Card> GetEnemyDeck()
+    {
+        return enemyDeck;
     }
 }

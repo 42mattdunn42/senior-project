@@ -14,6 +14,7 @@ public class FightManager : MonoBehaviour
     private DiceRoller roller;
     private Player player;
     private Enemy enemy;
+    private GameManager gm;
     public bool playerTurn = true; //start with player turn
     bool playerAutomaticActions = false; //checks if the automatic actions have been completed yet
     bool enemyAutomaticActions = false; //same but for enemy
@@ -63,6 +64,7 @@ public class FightManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         roller = GameObject.FindGameObjectWithTag("Roller").GetComponent<DiceRoller>();
         enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>();
@@ -144,12 +146,21 @@ public class FightManager : MonoBehaviour
             if (!player.IsAlive())  // player lost
             {
                 // do lose stuff
+                gm.NumBattles = gm.MaxFights;
                 SceneManager.LoadScene("LoseScreen");
             }
             else  // player won
             {
                 // do win stuff
-                SceneManager.LoadScene("WinScreen");
+                if (gm.NumBattles <= 0)
+                {
+                    gm.NumBattles = gm.MaxFights;
+                    SceneManager.LoadScene("WinScreen");
+                }
+                else
+                {
+                    SceneManager.LoadScene("Shop");
+                }
             }
         }
     }
