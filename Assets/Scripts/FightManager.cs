@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 using UnityEngine.SceneManagement;
 using TMPro;
 using Unity.VisualScripting;
+using JetBrains.Annotations;
 
 public class FightManager : MonoBehaviour
 {
@@ -59,21 +60,39 @@ public class FightManager : MonoBehaviour
     private bool isHelp = false;
     public Button endTurnButton;
 
-
+    private void Awake()
+    {
+        DontDestroyOnLoad(this);
+    }
     // Start is called before the first frame update
     void Start()
     {
+<<<<<<< Updated upstream
+=======
+        FindObjects();
+        FullReset();
+    }
+
+    private void OnEnable()
+    {
+        FindObjects();
+    }
+
+
+    public void FindObjects()
+    {
+        gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+>>>>>>> Stashed changes
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         roller = GameObject.FindGameObjectWithTag("Roller").GetComponent<DiceRoller>();
         enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>();
         endTurnButton = GameObject.Find("End Turn Button").GetComponent<Button>();
         playRectTransform = GameObject.Find("Play Area").GetComponent<RectTransform>();
         burnRectTransform = GameObject.Find("Burn Card Area").GetComponent<RectTransform>();
-        Scene scene = SceneManager.GetActiveScene();
-        if (scene.name == "Shop")
-        {
-            //upgradeRectTransform = GameObject.Find("Upgrade Area").GetComponent<RectTransform>();
-        }
+        incomingDamage = GameObject.FindGameObjectWithTag("IncomingDamage").GetComponent<TextMeshProUGUI>();
+        outgoingDamage = GameObject.FindGameObjectWithTag("OutgoingDamage").GetComponent<TextMeshProUGUI>();
+        pauseMenu = GameObject.Find("PauseMenu");
+        helpMenu = GameObject.Find("HelpMenu");
     }
 
     // Update is called once per frame
@@ -144,12 +163,30 @@ public class FightManager : MonoBehaviour
             if (!player.IsAlive())  // player lost
             {
                 // do lose stuff
+<<<<<<< Updated upstream
                 SceneManager.LoadScene("LoseScreen");
+=======
+                gm.NumBattles = gm.MaxFights;
+                gm.LoadLoss();
+>>>>>>> Stashed changes
             }
             else  // player won
             {
                 // do win stuff
+<<<<<<< Updated upstream
                 SceneManager.LoadScene("WinScreen");
+=======
+                if (gm.NumBattles <= 0)
+                {
+                    gm.NumBattles = gm.MaxFights;
+                    gm.LoadWin();
+                }
+                else
+                {
+                    FullReset();
+                    gm.LoadShop();
+                }
+>>>>>>> Stashed changes
             }
         }
     }
@@ -190,7 +227,22 @@ public class FightManager : MonoBehaviour
         }
     }
 
-
+    //GameEndStuff
+    public void FullReset()
+    {
+        player.hp = player.maxhp;
+        enemy.hp = enemy.maxhp;
+        player.actionPoints = 0;
+        player.maxActionPoints = 5;
+        enemy.enemyActionPoints = 0;
+        enemy.maxEnemyActionPoints = 5;
+        for (int i = 0; i < availableCardSlots.Length; i++)
+        {
+            availableCardSlots[i] = true;
+            enemyAvailableCardSlots[i] = true;
+        }
+        DiscardPileToDeck();
+    }
 
 
     //CARD STUFF
@@ -236,6 +288,11 @@ public class FightManager : MonoBehaviour
                 }
             }
         }
+    }
+    public void DiscardPileToDeck()
+    {
+        player.deck.AddRange(player.discardPile);
+        player.discardPile.Clear();
     }
 
     //ACTION POINT STUFF
@@ -474,7 +531,9 @@ public class FightManager : MonoBehaviour
     {
         Debug.Log(CalculateDamage());
     }
+    
 
+    //Delay and Pause
     public void Resume()
     {
         isPaused = false;

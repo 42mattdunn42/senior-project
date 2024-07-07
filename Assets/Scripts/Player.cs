@@ -23,6 +23,11 @@ public class Player : MonoBehaviour
     public int numOfActionPoints;
     public int maxActionPoints = 5;
 
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
