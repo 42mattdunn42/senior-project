@@ -151,7 +151,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     void UpgradeCard(bool canUpgrade, int cardID)
     {
-        if(canUpgrade)
+        if (canUpgrade)
         {
             //do stuff
             player.deck.Remove(this);
@@ -241,7 +241,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     {
         if (fm.playerTurn)
         {
-            if(amount + player.maxActionPoints <= 10)
+            if (amount + player.maxActionPoints <= 10)
             {
                 player.maxActionPoints++;
                 fm.UpdateActionPoints();
@@ -274,7 +274,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     bool DoubleDamage()
     {
         {
-            if(fm.CalculateDamage() > 0)
+            if (fm.CalculateDamage() > 0)
             {
                 fm.doubleDamage = true;
                 return true;
@@ -285,7 +285,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
                 return false;
             }
         }
-        
+
     }
 
     bool ChooseReroll(int numDie, bool allowSameRerolls)
@@ -296,7 +296,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     bool EnergyDrain(int num)
     {
-        if(enemy.enemyActionPoints > 0)
+        if (enemy.enemyActionPoints > 0)
         {
             enemy.enemyActionPoints = enemy.enemyActionPoints - num;
             fm.UpdateActionPoints();
@@ -363,7 +363,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             {
                 ShowTooltip(effectText);
             }
-        }   
+        }
     }
     private bool IsPointerOverUIObject(PointerEventData eventData, RectTransform target)
     {
@@ -402,7 +402,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     void HideTooltip()
     {
-        
+
         if (playerCard)
         {
             //tooltipPanel.SetActive(false);

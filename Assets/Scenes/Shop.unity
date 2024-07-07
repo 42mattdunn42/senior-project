@@ -509,7 +509,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1491825693}
         m_TargetAssemblyTypeName: Menus, Assembly-CSharp
-        m_MethodName: LoadFightScene
+        m_MethodName: LoadNextFight
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

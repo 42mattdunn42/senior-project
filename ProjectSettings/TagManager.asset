@@ -10,6 +10,11 @@ TagManager:
   - Enemy
   - EnemyHealthBar
   - GameManager
+  - PlayerHealthBar
+  - IncomingDamage
+  - OutgoingDamage
+  - Deck
+  - HUD
   layers:
   - Default
   - TransparentFX

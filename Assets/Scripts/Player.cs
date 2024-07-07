@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    // Singleton instance
+    private static Player _instance;
+    public static Player Instance { get { return _instance; } }
+
     public int hp;
     public int maxhp;
     public HealthBarManager healthBars;
@@ -23,9 +27,20 @@ public class Player : MonoBehaviour
     public int numOfActionPoints;
     public int maxActionPoints = 5;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
+        // Singleton implementation
+        if (_instance == null)
+        {
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+        // Initialize attributes
         maxhp = hp;
         healthBars = GameObject.FindGameObjectWithTag("HealthManager").GetComponent<HealthBarManager>();
         fm = GameObject.FindGameObjectWithTag("FightManager").GetComponent<FightManager>();
@@ -40,7 +55,7 @@ public class Player : MonoBehaviour
     {
         if (shieldLength > 0 && damage != 0)
         {
-            if(damage > shield)
+            if (damage > shield)
             {
                 hp -= (damage - shield);
                 fm.DeactivateShield(true);
@@ -51,7 +66,7 @@ public class Player : MonoBehaviour
                 fm.UpdateShield(true, shield);
             }
             shieldLength--;
-            if(shieldLength < 1)
+            if (shieldLength < 1)
             {
                 fm.DeactivateShield(true);
             }
@@ -61,7 +76,7 @@ public class Player : MonoBehaviour
             hp -= damage;
         }
         healthBars.updatePlayerBar();
-        if(damage != 0)
+        if (damage != 0)
         {
             Instantiate(damageEfx, damageEfxSpawnPos.position, transform.rotation);
         }

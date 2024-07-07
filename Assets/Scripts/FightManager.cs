@@ -60,9 +60,52 @@ public class FightManager : MonoBehaviour
     private bool isHelp = false;
     public Button endTurnButton;
 
+    private static FightManager instance;
 
+    public static FightManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<FightManager>();
+                if (instance == null)
+                {
+                    GameObject go = new GameObject("FightManager");
+                    instance = go.AddComponent<FightManager>();
+                }
+            }
+            return instance;
+        }
+    }
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+        FindObjects();
+    }
     // Start is called before the first frame update
     void Start()
+    {
+        FindObjects();
+        FullReset();
+    }
+
+    private void OnEnable()
+    {
+        FindObjects();
+    }
+
+
+    public void FindObjects()
     {
         gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
@@ -71,11 +114,11 @@ public class FightManager : MonoBehaviour
         endTurnButton = GameObject.Find("End Turn Button").GetComponent<Button>();
         playRectTransform = GameObject.Find("Play Area").GetComponent<RectTransform>();
         burnRectTransform = GameObject.Find("Burn Card Area").GetComponent<RectTransform>();
-        Scene scene = SceneManager.GetActiveScene();
         if (scene.name == "Shop")
-        {
-            //upgradeRectTransform = GameObject.Find("Upgrade Area").GetComponent<RectTransform>();
-        }
+        incomingDamage = GameObject.FindGameObjectWithTag("IncomingDamage").GetComponent<TextMeshProUGUI>();
+        outgoingDamage = GameObject.FindGameObjectWithTag("OutgoingDamage").GetComponent<TextMeshProUGUI>();
+        pauseMenu = GameObject.Find("PauseMenu");
+        helpMenu = GameObject.Find("HelpMenu");
     }
 
     // Update is called once per frame
@@ -88,7 +131,8 @@ public class FightManager : MonoBehaviour
             {
                 ToggleHelpMenu();
             }
-            else {
+            else
+            {
                 isPaused = !isPaused;
                 Time.timeScale = isPaused ? 1 : 0;
                 pauseMenu.SetActive(isPaused);
@@ -105,10 +149,10 @@ public class FightManager : MonoBehaviour
             // draw cards
             // add AP
             // Roll dice
-            if(!playerAutomaticActions)
+            if (!playerAutomaticActions)
             {
                 roller.ResetDiceNumbers();
-                for (int i = 0; i<3; i++)
+                for (int i = 0; i < 3; i++)
                 {
                     DrawCards();
                 }
@@ -120,7 +164,7 @@ public class FightManager : MonoBehaviour
 
             //playerTurn = false;
         }
-        else if(!playerTurn && player.IsAlive() && enemy.IsAlive())  // enemy turn
+        else if (!playerTurn && player.IsAlive() && enemy.IsAlive())  // enemy turn
         {
             // enemy stuff
             if (!enemyAutomaticActions)
@@ -146,20 +190,23 @@ public class FightManager : MonoBehaviour
             if (!player.IsAlive())  // player lost
             {
                 // do lose stuff
-                gm.NumBattles = gm.MaxFights;
                 SceneManager.LoadScene("LoseScreen");
+                gm.NumBattles = gm.MaxFights;
+                gm.LoadLoss();
             }
             else  // player won
             {
                 // do win stuff
+                SceneManager.LoadScene("WinScreen");
                 if (gm.NumBattles <= 0)
                 {
                     gm.NumBattles = gm.MaxFights;
-                    SceneManager.LoadScene("WinScreen");
+                    gm.LoadWin();
                 }
                 else
                 {
-                    SceneManager.LoadScene("Shop");
+                    FullReset();
+                    gm.LoadShop();
                 }
             }
         }
@@ -201,7 +248,24 @@ public class FightManager : MonoBehaviour
         }
     }
 
-
+    //GameEndStuff
+    public void FullReset()
+    {
+        player.hp = player.maxhp;
+        enemy.hp = enemy.maxhp;
+        player.actionPoints = 0;
+        player.maxActionPoints = 5;
+        enemy.enemyActionPoints = 0;
+        enemy.maxEnemyActionPoints = 5;
+        playerTurn = true;
+        playerAutomaticActions = false;
+        for (int i = 0; i < availableCardSlots.Length; i++)
+        {
+            availableCardSlots[i] = true;
+            enemyAvailableCardSlots[i] = true;
+        }
+        DiscardPileToDeck();
+    }
 
 
     //CARD STUFF
@@ -226,7 +290,7 @@ public class FightManager : MonoBehaviour
                 }
             }
         }
-        else if(playerTurn==false) 
+        else if (playerTurn == false)
         {
             if (enemy.enemyDeck.Count >= 1)
             {
@@ -248,13 +312,18 @@ public class FightManager : MonoBehaviour
             }
         }
     }
+    public void DiscardPileToDeck()
+    {
+        player.deck.AddRange(player.discardPile);
+        player.discardPile.Clear();
+    }
 
     //ACTION POINT STUFF
     public void AddActionPoints()
     {
-        if(playerTurn==true)
+        if (playerTurn == true)
         {
-            if (player.actionPoints <= player.maxActionPoints-3)
+            if (player.actionPoints <= player.maxActionPoints - 3)
             {
                 player.actionPoints = player.actionPoints + 3;
             }
@@ -263,7 +332,7 @@ public class FightManager : MonoBehaviour
                 player.actionPoints = player.maxActionPoints;
             }
         }
-        if(playerTurn==false) //add AP for enemy turns
+        if (playerTurn == false) //add AP for enemy turns
         {
             if (enemy.enemyActionPoints <= 2)
             {
@@ -279,49 +348,49 @@ public class FightManager : MonoBehaviour
     {
         //if (playerTurn == true || energyDrain == true)
         //{
-            for (int i = 0; i < player.maxActionPoints; i++)
+        for (int i = 0; i < player.maxActionPoints; i++)
+        {
+            if (i < player.actionPoints)
             {
-                if (i < player.actionPoints)
+                if (!actionPointsPips[i].enabled)
                 {
-                    if (!actionPointsPips[i].enabled)
-                    {
-                        actionPointsPips[i].enabled = true;
-                    }
-                    actionPointsPips[i].sprite = APFull;
+                    actionPointsPips[i].enabled = true;
                 }
-                else
-                {
-                    if (!actionPointsPips[i].enabled)
-                    {
-                        actionPointsPips[i].enabled = true;
-                    }
-                    actionPointsPips[i].sprite = APEmpty;
-                }
+                actionPointsPips[i].sprite = APFull;
             }
+            else
+            {
+                if (!actionPointsPips[i].enabled)
+                {
+                    actionPointsPips[i].enabled = true;
+                }
+                actionPointsPips[i].sprite = APEmpty;
+            }
+        }
         //}
         //if (playerTurn == false || energyDrain == true) //add AP for enemy turns
         //{
-            for (int i = 0; i < enemy.maxEnemyActionPoints; i++)
+        for (int i = 0; i < enemy.maxEnemyActionPoints; i++)
+        {
+            if (i < enemy.enemyActionPoints)
             {
-                if (i < enemy.enemyActionPoints)
+                if (!enemyActionPointsPips[i].enabled)
                 {
-                    if (!enemyActionPointsPips[i].enabled)
-                    {
-                        actionPointsPips[i].enabled = true;
-                    }
-                    enemyActionPointsPips[i].sprite = APFull;
+                    actionPointsPips[i].enabled = true;
                 }
-                else
-                {
-                    if (!enemyActionPointsPips[i].enabled)
-                    {
-                        actionPointsPips[i].enabled = true;
-                    }
-                    enemyActionPointsPips[i].sprite = APEmpty;
-                }
+                enemyActionPointsPips[i].sprite = APFull;
             }
+            else
+            {
+                if (!enemyActionPointsPips[i].enabled)
+                {
+                    actionPointsPips[i].enabled = true;
+                }
+                enemyActionPointsPips[i].sprite = APEmpty;
+            }
+        }
         //}
-    }    
+    }
     //DAMAGE STUFF
     /// <summary>
     /// Calculates the damage from the dice rolling to be dealt.
@@ -486,6 +555,8 @@ public class FightManager : MonoBehaviour
         Debug.Log(CalculateDamage());
     }
 
+
+    //Delay and Pause
     public void Resume()
     {
         isPaused = false;

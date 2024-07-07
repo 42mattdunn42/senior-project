@@ -12,10 +12,9 @@ public class Shop : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-        availableCards = gm.GetEnemyDeck();
+        //gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
 
-        Card randCard = availableCards[Random.Range(0, availableCards.Count)];
+        /*Card randCard = availableCards[Random.Range(0, availableCards.Count)];
         for (int i = 0; i < availableCardSlots.Length; i++)
         {
             if (availableCardSlots[i] == true)
@@ -26,12 +25,6 @@ public class Shop : MonoBehaviour
                 availableCardSlots[i] = false;
                 return;
             }
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        }*/
     }
 }
