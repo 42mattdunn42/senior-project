@@ -114,7 +114,6 @@ public class FightManager : MonoBehaviour
         endTurnButton = GameObject.Find("End Turn Button").GetComponent<Button>();
         playRectTransform = GameObject.Find("Play Area").GetComponent<RectTransform>();
         burnRectTransform = GameObject.Find("Burn Card Area").GetComponent<RectTransform>();
-        if (scene.name == "Shop")
         incomingDamage = GameObject.FindGameObjectWithTag("IncomingDamage").GetComponent<TextMeshProUGUI>();
         outgoingDamage = GameObject.FindGameObjectWithTag("OutgoingDamage").GetComponent<TextMeshProUGUI>();
         pauseMenu = GameObject.Find("PauseMenu");
