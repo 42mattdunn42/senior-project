@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class Menus : MonoBehaviour
 {
-    private static Menus _instance = null;
     public AudioSource buttonClick;
     private GameManager gm;
 

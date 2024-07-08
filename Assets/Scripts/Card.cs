@@ -42,6 +42,8 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     public ParticleSystem playEfx;
     public ParticleSystem burnEfx;
 
+    public int shopCost;
+
 
     void Awake()
     {

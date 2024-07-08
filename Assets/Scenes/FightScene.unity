@@ -4494,6 +4494,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Booster Energy
       objectReference: {fileID: 0}
+    - target: {fileID: 239067614922133156, guid: 0c591cfcbf607ee4db5a70321536461d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8524349575702592721, guid: 0c591cfcbf607ee4db5a70321536461d, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

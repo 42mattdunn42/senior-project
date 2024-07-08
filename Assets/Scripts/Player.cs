@@ -16,7 +16,6 @@ public class Player : MonoBehaviour
     public FightManager fm;
     public ParticleSystem damageEfx;
     public Transform damageEfxSpawnPos;
-    public int funds;
 
     //player deck variables
     public List<Card> deck = new List<Card>();

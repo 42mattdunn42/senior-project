@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     private bool isPlaying;
 
     public AudioSource fightSound;
+    private int playerCredits = 0;
 
     private void Awake()
     {
@@ -72,8 +73,10 @@ public class GameManager : MonoBehaviour
                 enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>();
                 enemyDeck = enemy.enemyDeck;
                 NumBattles--;
+                playerCredits += 100;
                 break;
             case "ShopScene":
+                break;
             default: break;
         }
     }
@@ -155,4 +158,7 @@ public class GameManager : MonoBehaviour
     {
         fightSound.Play();
     }
+
+    public int getPlayerCredits() {  return playerCredits; }
+    public void spendCredits(int amount) { playerCredits -= amount; }
 }
