@@ -206,10 +206,11 @@ public class FightManager : MonoBehaviour
             else  // player won
             {
                 // do win stuff
-                SceneManager.LoadScene("WinScreen");
+                //SceneManager.LoadScene("WinScreen");
                 if (gm.NumBattles <= 0)
                 {
                     gm.NumBattles = gm.MaxFights;
+                    FullReset();
                     gm.LoadWin();
                 }
                 else

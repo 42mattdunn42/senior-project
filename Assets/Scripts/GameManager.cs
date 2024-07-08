@@ -102,6 +102,9 @@ public class GameManager : MonoBehaviour
 
     public void LoadWin()
     {
+        deck.DisableDeckChildren();
+        deck.UnparentDeck();
+        deck.ReparentDeckToGM();
         SceneManager.LoadScene("WinScreen");
     }
 
