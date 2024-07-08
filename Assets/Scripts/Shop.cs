@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Shop : MonoBehaviour
 {
     private GameManager gm;
     public List<Card> availableCards = new List<Card>();
+    private List<Card> cardsInShop = new List<Card>();
     public Transform[] cardSlots;
     public bool[] availableCardSlots;
     public List<TextMeshProUGUI> priceTags = new List<TextMeshProUGUI>();
@@ -49,9 +51,49 @@ public class Shop : MonoBehaviour
 
                 // display price
                 priceTags[i].text = randCard.shopCost.ToString();
+
+                cardsInShop.Add(randCard);
             }
         }
 
         credits.text = "Credits: " + gm.getPlayerCredits();
+    }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonUp(0))
+        {
+            OnMouseUp();
+        }
+    }
+
+    private void OnMouseUp()
+    {
+        Debug.Log("MouseUp");
+        foreach(Card c in cardsInShop)
+        {
+            Vector2 mousePos = Input.mousePosition;
+            if(RectTransformUtility.RectangleContainsScreenPoint(c.transform.GetComponent<RectTransform>(), mousePos))
+            {
+                // check for funds
+                if(gm.getPlayerCredits() >= c.shopCost)
+                {
+                    // buy card
+                    Debug.Log("Bought card: " + c.name);
+
+                    gm.spendCredits(c.shopCost);
+                    // add card to deck
+
+                    // back to fight scene
+                    gm.playFightSound();
+                    gm.LoadFightScene();
+                    return;
+                }
+                else
+                {
+                    Debug.Log("Insufficient funds");
+                }
+            }
+        }
     }
 }

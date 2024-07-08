@@ -48,6 +48,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("Start called: " + SceneManager.GetActiveScene().name);
         switch (SceneManager.GetActiveScene().name)  // needs to be here to assure that player is initialized
         {
             case "MainMenu":
@@ -111,7 +112,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadFightScene()
     {
-        playerDeck = player.deck;
+        //playerDeck = player.deck;
         //deck = GameObject.FindGameObjectWithTag("Deck").GetComponent<DeckManager>();
         //HUD = GameObject.FindGameObjectWithTag("HUD").GetComponent<HUDManager>();
         //deck.DisableDeckChildren();

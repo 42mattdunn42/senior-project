@@ -990,7 +990,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxNumTurns: 0
   NumBattles: 0
-  MaxFights: 2
+  MaxFights: 3
   playerDeck: []
   enemyDeck: []
   firstLoad: 1

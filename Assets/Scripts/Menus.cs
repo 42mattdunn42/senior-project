@@ -23,7 +23,7 @@ public class Menus : MonoBehaviour
     public void LoadFightScene() //loads the first fight scene initially
     {
         gm.playFightSound();
-        SceneManager.LoadScene("FightScene");
+        gm.LoadFightScene();
         gm.firstLoad = false;
     }
     public void LoadNextFight()
