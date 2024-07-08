@@ -70,18 +70,31 @@ public class FightManager : MonoBehaviour
     private void Awake()
     {
         FindObjects();
+        FullReset();
     }
     // Start is called before the first frame update
     void Start()
     {
-        FindObjects();
-        FullReset();
+        //FindObjects();
+        //FullReset();
         Shuffles[Random.Range(0, Shuffles.Count)].Play();
     }
 
-    private void OnEnable()
+    void OnEnable()
     {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        RemoveObjects();
         FindObjects();
+        player.deck = gm.playerDeck;
     }
 
 
@@ -96,6 +109,21 @@ public class FightManager : MonoBehaviour
         burnRectTransform = GameObject.Find("Burn Card Area").GetComponent<RectTransform>();
         incomingDamage = GameObject.FindGameObjectWithTag("IncomingDamage").GetComponent<TextMeshProUGUI>();
         outgoingDamage = GameObject.FindGameObjectWithTag("OutgoingDamage").GetComponent<TextMeshProUGUI>();
+        //pauseMenu = GameObject.FindGameObjectWithTag("PauseMenu");
+        //helpMenu = GameObject.FindGameObjectWithTag("HelpMenu");
+    }
+
+    public void RemoveObjects()
+    {
+        gm = null;
+        player = null;
+        roller = null;
+        enemy = null;
+        endTurnButton = null;
+        playRectTransform = null;
+        burnRectTransform = null;
+        incomingDamage = null;
+        outgoingDamage = null;
         //pauseMenu = GameObject.FindGameObjectWithTag("PauseMenu");
         //helpMenu = GameObject.FindGameObjectWithTag("HelpMenu");
     }
@@ -170,8 +198,9 @@ public class FightManager : MonoBehaviour
             if (!player.IsAlive())  // player lost
             {
                 // do lose stuff
-                SceneManager.LoadScene("LoseScreen");
+                //SceneManager.LoadScene("LoseScreen");
                 gm.NumBattles = gm.MaxFights;
+                FullReset();
                 gm.LoadLoss();
             }
             else  // player won

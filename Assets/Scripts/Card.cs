@@ -47,6 +47,11 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     void Awake()
     {
+        FindRef();
+    }
+
+    void FindRef()
+    {
         IntializeCardDictionary();
         fm = FindObjectOfType<FightManager>();
         player = FindObjectOfType<Player>();
@@ -54,6 +59,36 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         diceRoller = FindObjectOfType<DiceRoller>();
         tooltipPanel = GameObject.Find("TooltipPanel");
         tooltipText = tooltipPanel.GetComponentInChildren<TextMeshProUGUI>();
+    }
+    void RemoveRef()
+    {
+        fm = null;
+        player = null;
+        enemy = null;
+        diceRoller = null;
+        tooltipPanel = null;
+        tooltipText = null;
+    }
+
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Clear old references and update new references
+        if (scene.name == "FightScene")
+        {
+            RemoveRef();
+            FindRef();
+        }
+        // Find ref again after scene change
     }
     // Start is called before the first frame update
     void Start()
@@ -371,6 +406,11 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     }
     private bool IsPointerOverUIObject(PointerEventData eventData, RectTransform target)
     {
+        if (target == null)
+        {
+            return false;
+        }
+
         Vector2 localMousePosition;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             target,
@@ -394,6 +434,11 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     //ALL TOOLTIP FUNCTIONS//
     void ShowTooltip(string message)
     {
+        if(tooltipPanel == null || tooltipText ==null)
+        {
+            tooltipPanel = GameObject.Find("TooltipPanel");
+            tooltipText = tooltipPanel.GetComponentInChildren<TextMeshProUGUI>();
+        }
         if (playerCard)
         {
             //Debug.Log($"Showing tooltip with message: {message}");
@@ -406,7 +451,11 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     void HideTooltip()
     {
-
+        if (tooltipPanel == null || tooltipText == null)
+        {
+            tooltipPanel = GameObject.Find("TooltipPanel");
+            tooltipText = tooltipPanel.GetComponentInChildren<TextMeshProUGUI>();
+        }
         if (playerCard)
         {
             //tooltipPanel.SetActive(false);
@@ -416,6 +465,11 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     }
     void UpdateTooltipPosition()
     {
+        if (tooltipPanel == null || tooltipText == null)
+        {
+            tooltipPanel = GameObject.Find("TooltipPanel");
+            tooltipText = tooltipPanel.GetComponentInChildren<TextMeshProUGUI>();
+        }
         if (playerCard)
         {
             // Calculate the position of the tooltip in world space relative to the card's position
