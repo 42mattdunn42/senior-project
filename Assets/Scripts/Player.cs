@@ -4,10 +4,6 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    // Singleton instance
-    private static Player _instance;
-    public static Player Instance { get { return _instance; } }
-
     public int hp;
     public int maxhp;
     public HealthBarManager healthBars;
@@ -28,17 +24,6 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
-        // Singleton implementation
-        if (_instance == null)
-        {
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-
         // Initialize attributes
         maxhp = hp;
         healthBars = GameObject.FindGameObjectWithTag("HealthManager").GetComponent<HealthBarManager>();

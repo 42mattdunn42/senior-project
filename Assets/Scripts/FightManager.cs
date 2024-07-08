@@ -67,36 +67,8 @@ public class FightManager : MonoBehaviour
     public AudioSource playCardSound;
     public AudioSource burnCardSound;
 
-    private static FightManager instance;
-
-    public static FightManager Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = FindObjectOfType<FightManager>();
-                if (instance == null)
-                {
-                    GameObject go = new GameObject("FightManager");
-                    instance = go.AddComponent<FightManager>();
-                }
-            }
-            return instance;
-        }
-    }
-
     private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
         FindObjects();
     }
     // Start is called before the first frame update

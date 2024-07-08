@@ -11,10 +11,10 @@ public class GameManager : MonoBehaviour
     //private Enemy enemy;
     public int maxNumTurns;  // here for the example fight handler
     private Enemy enemy;
-    private DeckManager deck;
-    private HUDManager HUD;
+    //private DeckManager deck;
+    //private HUDManager HUD;
     //private Enemy enemy;
-    private GameObject fightManager;
+    //private GameObject fightManager;
     public int NumBattles;
     public int MaxFights;
     public List<Card> playerDeck = new List<Card>();
@@ -85,16 +85,16 @@ public class GameManager : MonoBehaviour
     public void LoadShop()
     {
         playerDeck = player.deck;
-        fightManager = GameObject.Find("FightManager");
-        fightManager.SetActive(false);
-        deck = GameObject.FindGameObjectWithTag("Deck").GetComponent<DeckManager>();
-        HUD = GameObject.FindGameObjectWithTag("HUD").GetComponent<HUDManager>();
-        deck.DisableDeckChildren();
-        HUD.DisableHUDChildren();
-        deck.UnparentDeck();
-        HUD.UnparentHUD();
-        DontDestroyOnLoad(deck.gameObject);
-        DontDestroyOnLoad(HUD.gameObject);
+        //fightManager = GameObject.Find("FightManager");
+        //fightManager.SetActive(false);
+        //deck = GameObject.FindGameObjectWithTag("Deck").GetComponent<DeckManager>();
+        //HUD = GameObject.FindGameObjectWithTag("HUD").GetComponent<HUDManager>();
+        //deck.DisableDeckChildren();
+        //HUD.DisableHUDChildren();
+        //deck.UnparentDeck();
+        //HUD.UnparentHUD();
+        //DontDestroyOnLoad(deck.gameObject);
+        //DontDestroyOnLoad(HUD.gameObject);
         SceneManager.LoadScene("Shop");
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -112,14 +112,14 @@ public class GameManager : MonoBehaviour
     public void LoadFightScene()
     {
         playerDeck = player.deck;
-        deck = GameObject.FindGameObjectWithTag("Deck").GetComponent<DeckManager>();
-        HUD = GameObject.FindGameObjectWithTag("HUD").GetComponent<HUDManager>();
-        deck.DisableDeckChildren();
-        HUD.EnableHUDChildren();
-        deck.UnparentDeck();
-        HUD.UnparentHUD();
-        DontDestroyOnLoad(deck.gameObject);
-        DontDestroyOnLoad(HUD.gameObject);
+        //deck = GameObject.FindGameObjectWithTag("Deck").GetComponent<DeckManager>();
+        //HUD = GameObject.FindGameObjectWithTag("HUD").GetComponent<HUDManager>();
+        //deck.DisableDeckChildren();
+        //HUD.EnableHUDChildren();
+        //deck.UnparentDeck();
+        //HUD.UnparentHUD();
+        //DontDestroyOnLoad(deck.gameObject);
+        //DontDestroyOnLoad(HUD.gameObject);
         SceneManager.LoadScene("FightScene");
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -139,16 +139,16 @@ public class GameManager : MonoBehaviour
         Start();
         if (scene.name == "Shop")
         {
-            deck.ReparentDeckToCanvas();
-            HUD.ReparentHUDToCanvas();
+            //deck.ReparentDeckToCanvas();
+            //HUD.ReparentHUDToCanvas();
             // Unsubscribe from the event to prevent memory leaks
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
-        else if (scene.name == "FightScene" && deck != null && HUD!=null)
+        else if (scene.name == "FightScene" /*&& deck != null && HUD!=null*/)
         {
-            deck.ReparentDeckToCanvas();
-            HUD.ReparentHUDToCanvas();
-            fightManager.SetActive(true);
+            //deck.ReparentDeckToCanvas();
+            //HUD.ReparentHUDToCanvas();
+            //fightManager.SetActive(true);
             // Unsubscribe from the event to prevent memory leaks
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
