@@ -54,11 +54,18 @@ public class FightManager : MonoBehaviour
 
 
     // pause menu and UI variables
-    public GameObject pauseMenu;
+    [SerializeField] public GameObject pauseMenu;
     private bool isPaused = false;
-    public GameObject helpMenu;
+    [SerializeField] public GameObject helpMenu;
     private bool isHelp = false;
     public Button endTurnButton;
+
+    public AudioSource clickSound;
+    public AudioSource endTurnSound;
+    public List<AudioSource> Draws;
+    public List<AudioSource> Shuffles;
+    public AudioSource playCardSound;
+    public AudioSource burnCardSound;
 
     private static FightManager instance;
 
@@ -97,6 +104,7 @@ public class FightManager : MonoBehaviour
     {
         FindObjects();
         FullReset();
+        Shuffles[Random.Range(0, Shuffles.Count)].Play();
     }
 
     private void OnEnable()
@@ -116,8 +124,8 @@ public class FightManager : MonoBehaviour
         burnRectTransform = GameObject.Find("Burn Card Area").GetComponent<RectTransform>();
         incomingDamage = GameObject.FindGameObjectWithTag("IncomingDamage").GetComponent<TextMeshProUGUI>();
         outgoingDamage = GameObject.FindGameObjectWithTag("OutgoingDamage").GetComponent<TextMeshProUGUI>();
-        pauseMenu = GameObject.Find("PauseMenu");
-        helpMenu = GameObject.Find("HelpMenu");
+        //pauseMenu = GameObject.FindGameObjectWithTag("PauseMenu");
+        //helpMenu = GameObject.FindGameObjectWithTag("HelpMenu");
     }
 
     // Update is called once per frame
@@ -126,6 +134,7 @@ public class FightManager : MonoBehaviour
         // Pause menu stuff
         if (Input.GetKeyUp(KeyCode.Escape))
         {
+            clickSound.Play();
             if (isHelp)
             {
                 ToggleHelpMenu();
@@ -133,7 +142,7 @@ public class FightManager : MonoBehaviour
             else
             {
                 isPaused = !isPaused;
-                Time.timeScale = isPaused ? 1 : 0;
+                Time.timeScale = isPaused ? 0 : 1;
                 pauseMenu.SetActive(isPaused);
             }
         }
@@ -212,6 +221,7 @@ public class FightManager : MonoBehaviour
     }
     public void EndTurn()
     {
+        endTurnSound.Play();
         if (playerTurn)  // due to damage delay, at the end of the player's turn they will take damage and vice versa
         {
             endTurnButton.interactable = false;
@@ -284,6 +294,8 @@ public class FightManager : MonoBehaviour
                         randCard.transform.position = cardSlots[i].position;
                         availableCardSlots[i] = false;
                         player.deck.Remove(randCard);
+
+                        Draws[Random.Range(0, Draws.Count)].Play();
                         return;
                     }
                 }
@@ -305,6 +317,8 @@ public class FightManager : MonoBehaviour
                         enemy.enemyHand.Add(randCard);
                         enemy.enemyDeck.Remove(randCard);
                         //Debug.Log($"Enemy drew card: {randCard.name} to slot {i}");
+
+                        Draws[Random.Range(0, Draws.Count)].Play();
                         return;
                     }
                 }
@@ -558,6 +572,7 @@ public class FightManager : MonoBehaviour
     //Delay and Pause
     public void Resume()
     {
+        clickSound.Play();
         isPaused = false;
         Time.timeScale = 1;
         pauseMenu.SetActive(isPaused);
@@ -565,9 +580,29 @@ public class FightManager : MonoBehaviour
 
     public void ToggleHelpMenu()
     {
+        clickSound.Play();
         isHelp = !isHelp;
         helpMenu.SetActive(isHelp);
         pauseMenu.SetActive(!isHelp);
+    }
+
+    public void ResetRun()
+    {
+        clickSound.Play();
+        FullReset();
+        SceneManager.LoadScene("FightScene");
+    }
+
+    public void MainMenu()
+    {
+        clickSound.Play();
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void Quit()
+    {
+        clickSound.Play();
+        Application.Quit();
     }
 
     //Animation and Delay Stuff
@@ -588,5 +623,14 @@ public class FightManager : MonoBehaviour
         playerTurn = true;
         enemyAutomaticActions = false;
         endTurnButton.interactable = true;
+    }
+
+    public void playPlayCardSound()
+    {
+        playCardSound.Play();
+    }
+    public void playBurnCardSound()
+    {
+        burnCardSound.Play();
     }
 }

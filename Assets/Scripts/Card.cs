@@ -99,6 +99,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     {
         if (actionPointCost <= player.actionPoints)
         {
+            fm.playPlayCardSound();
             if (ApplyEffect() == true)
             {
                 Vector3 cardPosition = transform.position;
@@ -132,6 +133,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     {
         if (player.actionPoints < player.maxActionPoints)
         {
+            fm.playBurnCardSound();
             player.actionPoints = player.actionPoints + 1;
             fm.UpdateActionPoints();
             Debug.Log("Card burned");

@@ -20,7 +20,10 @@ public class GameManager : MonoBehaviour
     public List<Card> playerDeck = new List<Card>();
     public List<Card> enemyDeck = new List<Card>();
     public bool firstLoad = true;
+    public AudioSource theme;
+    private bool isPlaying;
 
+    public AudioSource fightSound;
 
     private void Awake()
     {
@@ -28,8 +31,13 @@ public class GameManager : MonoBehaviour
         {
             _instance = this;
         }
+        else
+        {
+            Destroy(this.gameObject);
+        }
         DontDestroyOnLoad(this.gameObject);
         NumBattles = MaxFights;
+        isPlaying = false;
     }
 
     public static GameManager instance()
@@ -41,6 +49,16 @@ public class GameManager : MonoBehaviour
     {
         switch (SceneManager.GetActiveScene().name)  // needs to be here to assure that player is initialized
         {
+            case "MainMenu":
+                Debug.Log("MainMenu");
+                if (!isPlaying)
+                {
+                    Debug.Log("Playing theme");
+                    Debug.Log(isPlaying);
+                    theme.Play();
+                    isPlaying = true;
+                }
+                break;
             case "FightScene":
                 if (player == null)
                 {
@@ -131,5 +149,10 @@ public class GameManager : MonoBehaviour
             // Unsubscribe from the event to prevent memory leaks
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
+    }
+
+    public void playFightSound()
+    {
+        fightSound.Play();
     }
 }
