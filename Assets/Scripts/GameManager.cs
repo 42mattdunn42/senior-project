@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -26,6 +27,9 @@ public class GameManager : MonoBehaviour
     public AudioSource fightSound;
     private int playerCredits = 0;
 
+    public List<GameObject> cardPrefabs = new List<GameObject>();
+    private Dictionary<string, GameObject> cardPrefabDict = new Dictionary<string, GameObject>();
+
     private void Awake()
     {
         if (_instance == null)
@@ -39,6 +43,11 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
         NumBattles = MaxFights;
         isPlaying = false;
+
+        foreach(GameObject c in cardPrefabs)
+        {
+            cardPrefabDict[c.name] = c;
+        }
     }
 
     public static GameManager instance()
@@ -163,4 +172,24 @@ public class GameManager : MonoBehaviour
 
     public int getPlayerCredits() {  return playerCredits; }
     public void spendCredits(int amount) { playerCredits -= amount; }
+
+    public void AddCardToDeck(Card c)
+    {
+        // create card
+        GameObject obj = Instantiate(cardPrefabDict[c.name]) as GameObject;
+        if (obj != null)
+        {
+            Debug.Log("Created " + c.name);
+        }
+        else
+        {
+            Debug.LogError(c.name + " failed to instantiate correctly");
+        }
+        // set inactive
+        obj.SetActive(false);
+        // make parent deck game object
+        obj.transform.SetParent(this.transform.GetChild(0).gameObject.transform, false);
+        // add to list?
+        playerDeck.Add(c);
+    }
 }

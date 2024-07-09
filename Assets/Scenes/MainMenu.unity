@@ -996,6 +996,16 @@ MonoBehaviour:
   firstLoad: 1
   theme: {fileID: 1246748635}
   fightSound: {fileID: 1246748636}
+  cardPrefabs:
+  - {fileID: 239067614922133156, guid: 0c591cfcbf607ee4db5a70321536461d, type: 3}
+  - {fileID: 1528579840659947172, guid: af82597d501dc97468898c11504a49cc, type: 3}
+  - {fileID: 8783739389664188835, guid: c89ce17a0649e934ea113ae6e923cacc, type: 3}
+  - {fileID: 6388351519591168656, guid: f1f71889cb43b294c942b4fca6f7a353, type: 3}
+  - {fileID: 1846073135023435002, guid: 0e4b4013e7e7bd245a32f6bdafc14eff, type: 3}
+  - {fileID: 6990137725018452919, guid: 3968ffe2de1fdcd4e8f33c4a08535ee9, type: 3}
+  - {fileID: 2774596554396243712, guid: fc578b6d22450d249b1088f1b108ad08, type: 3}
+  - {fileID: 5215093672615089272, guid: 1877059401ec17544b9273c73052af9c, type: 3}
+  - {fileID: 6726624869989872329, guid: 69c3d90d68078b1438276bfe27bf09cf, type: 3}
 --- !u!4 &1246748634
 Transform:
   m_ObjectHideFlags: 0
