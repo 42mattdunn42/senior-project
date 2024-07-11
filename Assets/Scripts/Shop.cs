@@ -74,7 +74,7 @@ public class Shop : MonoBehaviour
         foreach(Card c in cardsInShop)
         {
             Vector2 mousePos = Input.mousePosition;
-            if(RectTransformUtility.RectangleContainsScreenPoint(c.transform.GetComponent<RectTransform>(), mousePos))
+            if(c.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(c.transform.GetComponent<RectTransform>(), mousePos))
             {
                 // check for funds
                 if(gm.getPlayerCredits() >= c.shopCost)
@@ -86,9 +86,10 @@ public class Shop : MonoBehaviour
                     // add card to deck
                     gm.AddCardToDeck(c);
 
+                    c.gameObject.SetActive(false);
+
                     // back to fight scene
-                    gm.playFightSound();
-                    gm.LoadFightScene();
+                    //gm.playFightSound();
                     return;
                 }
                 else

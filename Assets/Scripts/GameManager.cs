@@ -185,11 +185,11 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError(c.name + " failed to instantiate correctly");
         }
-        // set inactive
-        obj.SetActive(false);
         // make parent deck game object
         obj.transform.SetParent(this.transform.GetChild(0).gameObject.transform, false);
         // add to list?
         playerDeck.Add(c);
+        // set inactive
+        obj.SetActive(false);
     }
 }
