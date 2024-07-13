@@ -17,7 +17,8 @@ public class HealthBar : MonoBehaviour
         healthBar = GetComponent<Slider>();
 
         //text =  GetComponent<TextMeshProUGUI>();
-        if (isPlayerBar) {
+        if (isPlayerBar)
+        {
             healthBar.maxValue = player.maxhp;
             healthBar.value = player.maxhp;
             text.text = player.maxhp.ToString();
@@ -28,7 +29,7 @@ public class HealthBar : MonoBehaviour
             healthBar.value = enemy.maxhp;
             text.text = enemy.maxhp.ToString();
         }
-        
+
     }
     public void UpdateBar()
     {
@@ -39,7 +40,7 @@ public class HealthBar : MonoBehaviour
         }
         else
         {
-            if(enemy != null)
+            if (enemy != null)
             {
                 enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>();
             }

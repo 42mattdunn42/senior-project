@@ -26,9 +26,10 @@ public class Enemy : MonoBehaviour
     //Card Dictionary
     private Dictionary<int, int> enemyCardCount;
 
-    public Enemy(int hp) { 
-        this.hp = hp; 
-        maxhp = hp; 
+    public Enemy(int hp)
+    {
+        this.hp = hp;
+        maxhp = hp;
         if (healthBars == null)
         {
             healthBars = GameObject.FindGameObjectWithTag("HealthManager").GetComponent<HealthBarManager>();
@@ -43,8 +44,9 @@ public class Enemy : MonoBehaviour
         enemyCardCount = new Dictionary<int, int>();
     }
 
-    public bool IsAlive() { 
-        return hp > 0; 
+    public bool IsAlive()
+    {
+        return hp > 0;
     }
     public void TakeDamage(int damage)
     {

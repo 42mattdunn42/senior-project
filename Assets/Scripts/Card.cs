@@ -42,8 +42,15 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     public ParticleSystem playEfx;
     public ParticleSystem burnEfx;
 
+    public int shopCost;
+
 
     void Awake()
+    {
+        FindRef();
+    }
+
+    void FindRef()
     {
         IntializeCardDictionary();
         fm = FindObjectOfType<FightManager>();
@@ -52,6 +59,36 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         diceRoller = FindObjectOfType<DiceRoller>();
         tooltipPanel = GameObject.Find("TooltipPanel");
         tooltipText = tooltipPanel.GetComponentInChildren<TextMeshProUGUI>();
+    }
+    void RemoveRef()
+    {
+        fm = null;
+        player = null;
+        enemy = null;
+        diceRoller = null;
+        tooltipPanel = null;
+        tooltipText = null;
+    }
+
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Clear old references and update new references
+        if (scene.name == "FightScene")
+        {
+            RemoveRef();
+            FindRef();
+        }
+        // Find ref again after scene change
     }
     // Start is called before the first frame update
     void Start()
@@ -99,6 +136,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     {
         if (actionPointCost <= player.actionPoints)
         {
+            fm.playPlayCardSound();
             if (ApplyEffect() == true)
             {
                 Vector3 cardPosition = transform.position;
@@ -132,6 +170,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     {
         if (player.actionPoints < player.maxActionPoints)
         {
+            fm.playBurnCardSound();
             player.actionPoints = player.actionPoints + 1;
             fm.UpdateActionPoints();
             Debug.Log("Card burned");
@@ -151,7 +190,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     void UpgradeCard(bool canUpgrade, int cardID)
     {
-        if(canUpgrade)
+        if (canUpgrade)
         {
             //do stuff
             player.deck.Remove(this);
@@ -241,7 +280,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     {
         if (fm.playerTurn)
         {
-            if(amount + player.maxActionPoints <= 10)
+            if (amount + player.maxActionPoints <= 10)
             {
                 player.maxActionPoints++;
                 fm.UpdateActionPoints();
@@ -274,7 +313,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     bool DoubleDamage()
     {
         {
-            if(fm.CalculateDamage() > 0)
+            if (fm.CalculateDamage() > 0)
             {
                 fm.doubleDamage = true;
                 return true;
@@ -285,7 +324,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
                 return false;
             }
         }
-        
+
     }
 
     bool ChooseReroll(int numDie, bool allowSameRerolls)
@@ -296,7 +335,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     bool EnergyDrain(int num)
     {
-        if(enemy.enemyActionPoints > 0)
+        if (enemy.enemyActionPoints > 0)
         {
             enemy.enemyActionPoints = enemy.enemyActionPoints - num;
             fm.UpdateActionPoints();
@@ -363,10 +402,15 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             {
                 ShowTooltip(effectText);
             }
-        }   
+        }
     }
     private bool IsPointerOverUIObject(PointerEventData eventData, RectTransform target)
     {
+        if (target == null)
+        {
+            return false;
+        }
+
         Vector2 localMousePosition;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             target,
@@ -390,6 +434,11 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     //ALL TOOLTIP FUNCTIONS//
     void ShowTooltip(string message)
     {
+        if(tooltipPanel == null || tooltipText ==null)
+        {
+            tooltipPanel = GameObject.Find("TooltipPanel");
+            tooltipText = tooltipPanel.GetComponentInChildren<TextMeshProUGUI>();
+        }
         if (playerCard)
         {
             //Debug.Log($"Showing tooltip with message: {message}");
@@ -402,7 +451,11 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     void HideTooltip()
     {
-        
+        if (tooltipPanel == null || tooltipText == null)
+        {
+            tooltipPanel = GameObject.Find("TooltipPanel");
+            tooltipText = tooltipPanel.GetComponentInChildren<TextMeshProUGUI>();
+        }
         if (playerCard)
         {
             //tooltipPanel.SetActive(false);
@@ -412,6 +465,11 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     }
     void UpdateTooltipPosition()
     {
+        if (tooltipPanel == null || tooltipText == null)
+        {
+            tooltipPanel = GameObject.Find("TooltipPanel");
+            tooltipText = tooltipPanel.GetComponentInChildren<TextMeshProUGUI>();
+        }
         if (playerCard)
         {
             // Calculate the position of the tooltip in world space relative to the card's position

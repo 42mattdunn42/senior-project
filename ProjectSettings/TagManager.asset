@@ -9,17 +9,14 @@ TagManager:
   - HealthManager
   - Enemy
   - EnemyHealthBar
-<<<<<<< Updated upstream
-=======
   - GameManager
-  - Canvas
-  - Deck
-  - Tooltip
-  - HUD
+  - PlayerHealthBar
   - IncomingDamage
   - OutgoingDamage
-  - PlayerHealthBar
->>>>>>> Stashed changes
+  - Deck
+  - HUD
+  - HelpMenu
+  - PauseMenu
   layers:
   - Default
   - TransparentFX

@@ -12,7 +12,6 @@ public class Player : MonoBehaviour
     public FightManager fm;
     public ParticleSystem damageEfx;
     public Transform damageEfxSpawnPos;
-    public int funds;
 
     //player deck variables
     public List<Card> deck = new List<Card>();
@@ -25,12 +24,7 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
-        DontDestroyOnLoad(gameObject);
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
+        // Initialize attributes
         maxhp = hp;
         healthBars = GameObject.FindGameObjectWithTag("HealthManager").GetComponent<HealthBarManager>();
         fm = GameObject.FindGameObjectWithTag("FightManager").GetComponent<FightManager>();
@@ -45,7 +39,7 @@ public class Player : MonoBehaviour
     {
         if (shieldLength > 0 && damage != 0)
         {
-            if(damage > shield)
+            if (damage > shield)
             {
                 hp -= (damage - shield);
                 fm.DeactivateShield(true);
@@ -56,7 +50,7 @@ public class Player : MonoBehaviour
                 fm.UpdateShield(true, shield);
             }
             shieldLength--;
-            if(shieldLength < 1)
+            if (shieldLength < 1)
             {
                 fm.DeactivateShield(true);
             }
@@ -66,7 +60,7 @@ public class Player : MonoBehaviour
             hp -= damage;
         }
         healthBars.updatePlayerBar();
-        if(damage != 0)
+        if (damage != 0)
         {
             Instantiate(damageEfx, damageEfxSpawnPos.position, transform.rotation);
         }

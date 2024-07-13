@@ -22,6 +22,9 @@ public class DiceRoller : MonoBehaviour
     public List<int> GetFaces() { return this.faces; }
     private FightManager fm;
 
+    public List<AudioSource> diceRolls;
+    public List<AudioSource> dieRolls;
+
     private void Start()
     {
         fm = GameObject.FindGameObjectWithTag("FightManager").GetComponent<FightManager>();
@@ -37,6 +40,7 @@ public class DiceRoller : MonoBehaviour
     /// <returns>An int array of the results of the roll(s)</returns>
     public void Roll()
     {
+        diceRolls[UnityEngine.Random.Range(0, diceRolls.Count)].Play();
         ResetColor();
         int[] output = new int[dice.Count];
         for (int i = 0; i < dice.Count; i++)
@@ -67,6 +71,7 @@ public class DiceRoller : MonoBehaviour
     {
         if (rerollEligibility[die_number] && maxRerolls > 0)
         {
+            dieRolls[UnityEngine.Random.Range(0, dieRolls.Count)].Play();
             if (!allowSameReroll)
             {
                 rerollEligibility[die_number] = false;

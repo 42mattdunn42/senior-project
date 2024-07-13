@@ -20,13 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 93b6bb1f6b44d934e8fc75ec5529729e
-<<<<<<< Updated upstream
-=======
   - enabled: 1
     path: Assets/Scenes/Shop.unity
     guid: 6ccccada92d079444903346d5c3eca95
-  - enabled: 1
-    path: Assets/Scenes/FightScene2.unity
-    guid: e483c5b52c7d5b649a0c79d5bfb33eef
->>>>>>> Stashed changes
   m_configObjects: {}

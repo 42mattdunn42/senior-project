@@ -8,13 +8,13 @@ using Random = UnityEngine.Random;
 using UnityEngine.SceneManagement;
 using TMPro;
 using Unity.VisualScripting;
-using JetBrains.Annotations;
 
 public class FightManager : MonoBehaviour
 {
     private DiceRoller roller;
     private Player player;
     private Enemy enemy;
+    private GameManager gm;
     public bool playerTurn = true; //start with player turn
     bool playerAutomaticActions = false; //checks if the automatic actions have been completed yet
     bool enemyAutomaticActions = false; //same but for enemy
@@ -54,35 +54,53 @@ public class FightManager : MonoBehaviour
 
 
     // pause menu and UI variables
-    public GameObject pauseMenu;
+    [SerializeField] public GameObject pauseMenu;
     private bool isPaused = false;
-    public GameObject helpMenu;
+    [SerializeField] public GameObject helpMenu;
     private bool isHelp = false;
     public Button endTurnButton;
 
+    public AudioSource clickSound;
+    public AudioSource endTurnSound;
+    public List<AudioSource> Draws;
+    public List<AudioSource> Shuffles;
+    public AudioSource playCardSound;
+    public AudioSource burnCardSound;
+
     private void Awake()
     {
-        DontDestroyOnLoad(this);
+        FindObjects();
+        FullReset();
     }
     // Start is called before the first frame update
     void Start()
     {
-<<<<<<< Updated upstream
-=======
-        FindObjects();
-        FullReset();
+        //FindObjects();
+        //FullReset();
+        Shuffles[Random.Range(0, Shuffles.Count)].Play();
     }
 
-    private void OnEnable()
+    void OnEnable()
     {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        RemoveObjects();
         FindObjects();
+        player.deck = gm.playerDeck;
     }
 
 
     public void FindObjects()
     {
         gm = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
->>>>>>> Stashed changes
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         roller = GameObject.FindGameObjectWithTag("Roller").GetComponent<DiceRoller>();
         enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>();
@@ -91,8 +109,23 @@ public class FightManager : MonoBehaviour
         burnRectTransform = GameObject.Find("Burn Card Area").GetComponent<RectTransform>();
         incomingDamage = GameObject.FindGameObjectWithTag("IncomingDamage").GetComponent<TextMeshProUGUI>();
         outgoingDamage = GameObject.FindGameObjectWithTag("OutgoingDamage").GetComponent<TextMeshProUGUI>();
-        pauseMenu = GameObject.Find("PauseMenu");
-        helpMenu = GameObject.Find("HelpMenu");
+        //pauseMenu = GameObject.FindGameObjectWithTag("PauseMenu");
+        //helpMenu = GameObject.FindGameObjectWithTag("HelpMenu");
+    }
+
+    public void RemoveObjects()
+    {
+        gm = null;
+        player = null;
+        roller = null;
+        enemy = null;
+        endTurnButton = null;
+        playRectTransform = null;
+        burnRectTransform = null;
+        incomingDamage = null;
+        outgoingDamage = null;
+        //pauseMenu = GameObject.FindGameObjectWithTag("PauseMenu");
+        //helpMenu = GameObject.FindGameObjectWithTag("HelpMenu");
     }
 
     // Update is called once per frame
@@ -101,13 +134,15 @@ public class FightManager : MonoBehaviour
         // Pause menu stuff
         if (Input.GetKeyUp(KeyCode.Escape))
         {
+            clickSound.Play();
             if (isHelp)
             {
                 ToggleHelpMenu();
             }
-            else {
+            else
+            {
                 isPaused = !isPaused;
-                Time.timeScale = isPaused ? 1 : 0;
+                Time.timeScale = isPaused ? 0 : 1;
                 pauseMenu.SetActive(isPaused);
             }
         }
@@ -122,10 +157,10 @@ public class FightManager : MonoBehaviour
             // draw cards
             // add AP
             // Roll dice
-            if(!playerAutomaticActions)
+            if (!playerAutomaticActions)
             {
                 roller.ResetDiceNumbers();
-                for (int i = 0; i<3; i++)
+                for (int i = 0; i < 3; i++)
                 {
                     DrawCards();
                 }
@@ -137,7 +172,7 @@ public class FightManager : MonoBehaviour
 
             //playerTurn = false;
         }
-        else if(!playerTurn && player.IsAlive() && enemy.IsAlive())  // enemy turn
+        else if (!playerTurn && player.IsAlive() && enemy.IsAlive())  // enemy turn
         {
             // enemy stuff
             if (!enemyAutomaticActions)
@@ -163,22 +198,19 @@ public class FightManager : MonoBehaviour
             if (!player.IsAlive())  // player lost
             {
                 // do lose stuff
-<<<<<<< Updated upstream
-                SceneManager.LoadScene("LoseScreen");
-=======
+                //SceneManager.LoadScene("LoseScreen");
                 gm.NumBattles = gm.MaxFights;
+                FullReset();
                 gm.LoadLoss();
->>>>>>> Stashed changes
             }
             else  // player won
             {
                 // do win stuff
-<<<<<<< Updated upstream
-                SceneManager.LoadScene("WinScreen");
-=======
+                //SceneManager.LoadScene("WinScreen");
                 if (gm.NumBattles <= 0)
                 {
                     gm.NumBattles = gm.MaxFights;
+                    FullReset();
                     gm.LoadWin();
                 }
                 else
@@ -186,12 +218,12 @@ public class FightManager : MonoBehaviour
                     FullReset();
                     gm.LoadShop();
                 }
->>>>>>> Stashed changes
             }
         }
     }
     public void EndTurn()
     {
+        endTurnSound.Play();
         if (playerTurn)  // due to damage delay, at the end of the player's turn they will take damage and vice versa
         {
             endTurnButton.interactable = false;
@@ -236,6 +268,8 @@ public class FightManager : MonoBehaviour
         player.maxActionPoints = 5;
         enemy.enemyActionPoints = 0;
         enemy.maxEnemyActionPoints = 5;
+        playerTurn = true;
+        playerAutomaticActions = false;
         for (int i = 0; i < availableCardSlots.Length; i++)
         {
             availableCardSlots[i] = true;
@@ -262,12 +296,14 @@ public class FightManager : MonoBehaviour
                         randCard.transform.position = cardSlots[i].position;
                         availableCardSlots[i] = false;
                         player.deck.Remove(randCard);
+
+                        Draws[Random.Range(0, Draws.Count)].Play();
                         return;
                     }
                 }
             }
         }
-        else if(playerTurn==false) 
+        else if (playerTurn == false)
         {
             if (enemy.enemyDeck.Count >= 1)
             {
@@ -283,6 +319,8 @@ public class FightManager : MonoBehaviour
                         enemy.enemyHand.Add(randCard);
                         enemy.enemyDeck.Remove(randCard);
                         //Debug.Log($"Enemy drew card: {randCard.name} to slot {i}");
+
+                        Draws[Random.Range(0, Draws.Count)].Play();
                         return;
                     }
                 }
@@ -298,9 +336,9 @@ public class FightManager : MonoBehaviour
     //ACTION POINT STUFF
     public void AddActionPoints()
     {
-        if(playerTurn==true)
+        if (playerTurn == true)
         {
-            if (player.actionPoints <= player.maxActionPoints-3)
+            if (player.actionPoints <= player.maxActionPoints - 3)
             {
                 player.actionPoints = player.actionPoints + 3;
             }
@@ -309,7 +347,7 @@ public class FightManager : MonoBehaviour
                 player.actionPoints = player.maxActionPoints;
             }
         }
-        if(playerTurn==false) //add AP for enemy turns
+        if (playerTurn == false) //add AP for enemy turns
         {
             if (enemy.enemyActionPoints <= 2)
             {
@@ -325,49 +363,49 @@ public class FightManager : MonoBehaviour
     {
         //if (playerTurn == true || energyDrain == true)
         //{
-            for (int i = 0; i < player.maxActionPoints; i++)
+        for (int i = 0; i < player.maxActionPoints; i++)
+        {
+            if (i < player.actionPoints)
             {
-                if (i < player.actionPoints)
+                if (!actionPointsPips[i].enabled)
                 {
-                    if (!actionPointsPips[i].enabled)
-                    {
-                        actionPointsPips[i].enabled = true;
-                    }
-                    actionPointsPips[i].sprite = APFull;
+                    actionPointsPips[i].enabled = true;
                 }
-                else
-                {
-                    if (!actionPointsPips[i].enabled)
-                    {
-                        actionPointsPips[i].enabled = true;
-                    }
-                    actionPointsPips[i].sprite = APEmpty;
-                }
+                actionPointsPips[i].sprite = APFull;
             }
+            else
+            {
+                if (!actionPointsPips[i].enabled)
+                {
+                    actionPointsPips[i].enabled = true;
+                }
+                actionPointsPips[i].sprite = APEmpty;
+            }
+        }
         //}
         //if (playerTurn == false || energyDrain == true) //add AP for enemy turns
         //{
-            for (int i = 0; i < enemy.maxEnemyActionPoints; i++)
+        for (int i = 0; i < enemy.maxEnemyActionPoints; i++)
+        {
+            if (i < enemy.enemyActionPoints)
             {
-                if (i < enemy.enemyActionPoints)
+                if (!enemyActionPointsPips[i].enabled)
                 {
-                    if (!enemyActionPointsPips[i].enabled)
-                    {
-                        actionPointsPips[i].enabled = true;
-                    }
-                    enemyActionPointsPips[i].sprite = APFull;
+                    actionPointsPips[i].enabled = true;
                 }
-                else
-                {
-                    if (!enemyActionPointsPips[i].enabled)
-                    {
-                        actionPointsPips[i].enabled = true;
-                    }
-                    enemyActionPointsPips[i].sprite = APEmpty;
-                }
+                enemyActionPointsPips[i].sprite = APFull;
             }
+            else
+            {
+                if (!enemyActionPointsPips[i].enabled)
+                {
+                    actionPointsPips[i].enabled = true;
+                }
+                enemyActionPointsPips[i].sprite = APEmpty;
+            }
+        }
         //}
-    }    
+    }
     //DAMAGE STUFF
     /// <summary>
     /// Calculates the damage from the dice rolling to be dealt.
@@ -531,11 +569,12 @@ public class FightManager : MonoBehaviour
     {
         Debug.Log(CalculateDamage());
     }
-    
+
 
     //Delay and Pause
     public void Resume()
     {
+        clickSound.Play();
         isPaused = false;
         Time.timeScale = 1;
         pauseMenu.SetActive(isPaused);
@@ -543,9 +582,29 @@ public class FightManager : MonoBehaviour
 
     public void ToggleHelpMenu()
     {
+        clickSound.Play();
         isHelp = !isHelp;
         helpMenu.SetActive(isHelp);
         pauseMenu.SetActive(!isHelp);
+    }
+
+    public void ResetRun()
+    {
+        clickSound.Play();
+        FullReset();
+        SceneManager.LoadScene("FightScene");
+    }
+
+    public void MainMenu()
+    {
+        clickSound.Play();
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void Quit()
+    {
+        clickSound.Play();
+        Application.Quit();
     }
 
     //Animation and Delay Stuff
@@ -566,5 +625,14 @@ public class FightManager : MonoBehaviour
         playerTurn = true;
         enemyAutomaticActions = false;
         endTurnButton.interactable = true;
+    }
+
+    public void playPlayCardSound()
+    {
+        playCardSound.Play();
+    }
+    public void playBurnCardSound()
+    {
+        burnCardSound.Play();
     }
 }

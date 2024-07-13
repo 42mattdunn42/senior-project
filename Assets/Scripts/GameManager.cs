@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -8,25 +9,26 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager _instance = null;
     private Player player;
-<<<<<<< Updated upstream
     //private Enemy enemy;
-    private FightManager fightManager;
     public int maxNumTurns;  // here for the example fight handler
-    bool playerTurn = true; //start with player turn
-    int turnNum = 0;
-=======
     private Enemy enemy;
     private DeckManager deck;
     //private HUDManager HUD;
     //private Enemy enemy;
-    private GameObject fightManager;
+    //private GameObject fightManager;
     public int NumBattles;
     public int MaxFights;
     public List<Card> playerDeck = new List<Card>();
     public List<Card> enemyDeck = new List<Card>();
     public bool firstLoad = true;
->>>>>>> Stashed changes
+    public AudioSource theme;
+    private bool isPlaying;
 
+    public AudioSource fightSound;
+    private int playerCredits = 0;
+
+    public List<GameObject> cardPrefabs = new List<GameObject>();
+    private Dictionary<string, GameObject> cardPrefabDict = new Dictionary<string, GameObject>();
 
     private void Awake()
     {
@@ -34,7 +36,18 @@ public class GameManager : MonoBehaviour
         {
             _instance = this;
         }
-        DontDestroyOnLoad(this.gameObject);  // not sure if this is neccessary, but would be nice
+        else
+        {
+            Destroy(this.gameObject);
+        }
+        DontDestroyOnLoad(this.gameObject);
+        NumBattles = MaxFights;
+        isPlaying = false;
+
+        foreach(GameObject c in cardPrefabs)
+        {
+            cardPrefabDict[c.name] = c;
+        }
     }
 
     public static GameManager instance()
@@ -44,15 +57,39 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-
+        Debug.Log("Start called: " + SceneManager.GetActiveScene().name);
         switch (SceneManager.GetActiveScene().name)  // needs to be here to assure that player is initialized
         {
+            case "MainMenu":
+                Debug.Log("MainMenu");
+                if (!isPlaying)
+                {
+                    Debug.Log("Playing theme");
+                    Debug.Log(isPlaying);
+                    theme.Play();
+                    isPlaying = true;
+                }
+                break;
             case "FightScene":
-                // InitiateFight();  // maybe change to initiate a fight in a fight manager
-                // don't need to call it b/c it will be iitialized with the scene
+                if (player == null)
+                {
+                    player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+                    if(playerDeck.Count == 0) 
+                    {
+                        playerDeck = player.deck;
+                    }
+                }
+                else
+                {
+                    //player.deck = playerDeck;
+                }
+                enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>();
+                enemyDeck = enemy.enemyDeck;
+                NumBattles--;
+                playerCredits += 100;
                 break;
             case "ShopScene":
+                break;
             default: break;
         }
     }
@@ -60,42 +97,40 @@ public class GameManager : MonoBehaviour
     //Scene Functions
     public void LoadShop()
     {
-        playerDeck = player.deck;
-        fightManager = GameObject.Find("FightManager");
-        fightManager.SetActive(false);
-        deck = GameObject.FindGameObjectWithTag("Deck").GetComponent<DeckManager>();
-        //HUD = GameObject.FindGameObjectWithTag("HUD").GetComponent<HUDManager>();
+        //playerDeck = player.deck;
+        if(deck == null)
+        {
+            deck = GameObject.FindGameObjectWithTag("Deck").GetComponent<DeckManager>();
+        }
         deck.DisableDeckChildren();
-        //HUD.DisableHUDChildren();
         deck.UnparentDeck();
-        //HUD.UnparentHUD();
-        DontDestroyOnLoad(deck.gameObject);
-        //DontDestroyOnLoad(HUD.gameObject);
+        deck.ReparentDeckToGM();
         SceneManager.LoadScene("Shop");
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     public void LoadWin()
     {
+        deck.DisableDeckChildren();
+        deck.UnparentDeck();
+        deck.ReparentDeckToGM();
         SceneManager.LoadScene("WinScreen");
     }
 
     public void LoadLoss()
     {
+        if (deck == null)
+        {
+            deck = GameObject.FindGameObjectWithTag("Deck").GetComponent<DeckManager>();
+        }
+        deck.DisableDeckChildren();
+        deck.UnparentDeck();
+        deck.ReparentDeckToGM();
         SceneManager.LoadScene("LoseScreen");
     }
 
     public void LoadFightScene()
     {
-        playerDeck = player.deck;
-        deck = GameObject.FindGameObjectWithTag("Deck").GetComponent<DeckManager>();
-        //HUD = GameObject.FindGameObjectWithTag("HUD").GetComponent<HUDManager>();
-        deck.DisableDeckChildren();
-        //HUD.EnableHUDChildren();
-        deck.UnparentDeck();
-        //HUD.UnparentHUD();
-        DontDestroyOnLoad(deck.gameObject);
-        //DontDestroyOnLoad(HUD.gameObject);
         SceneManager.LoadScene("FightScene");
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -112,51 +147,49 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-<<<<<<< Updated upstream
-=======
         Start();
         if (scene.name == "Shop")
         {
-            deck.ReparentDeckToCanvas();
-            //HUD.ReparentHUDToCanvas();
             // Unsubscribe from the event to prevent memory leaks
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
-        else if(scene.name == "FightScene" && deck!=null /*&&HUD!=null*/)
+        else if (scene.name == "FightScene" /*&& deck != null && HUD!=null*/)
         {
-            deck.ReparentDeckToCanvas();
-            //HUD.ReparentHUDToCanvas();
-            fightManager.SetActive(true);
+            if (deck != null)
+            {
+                deck.UnparentDeck();
+                deck.ReparentDeckToCanvas();
+            }
             // Unsubscribe from the event to prevent memory leaks
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
->>>>>>> Stashed changes
     }
 
-    // initiates turn order
-    void InitiateFight()
+    public void playFightSound()
     {
-        Debug.Log("Fight Initiated >:)");
-        // get enemy in fight here
-        //enemy = null;
+        fightSound.Play();
+    }
 
-        // example of how a fight manager might handle the turns
-        
-        // get enemy
-        while (player.IsAlive() && turnNum < maxNumTurns)
+    public int getPlayerCredits() {  return playerCredits; }
+    public void spendCredits(int amount) { playerCredits -= amount; }
+
+    public void AddCardToDeck(Card c)
+    {
+        // create card
+        GameObject obj = Instantiate(cardPrefabDict[c.name]) as GameObject;
+        if (obj != null)
         {
-            if (playerTurn)
-            {
-                // do player turn here
-                playerTurn = false;
-                turnNum++;
-            }
-            else
-            {
-                // do enemy turn here
-
-                playerTurn = true;
-            }
+            Debug.Log("Created " + c.name);
         }
+        else
+        {
+            Debug.LogError(c.name + " failed to instantiate correctly");
+        }
+        // make parent deck game object
+        obj.transform.SetParent(this.transform.GetChild(0).gameObject.transform, false);
+        // add to list?
+        playerDeck.Add(c);
+        // set inactive
+        obj.SetActive(false);
     }
 }
