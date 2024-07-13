@@ -278,7 +278,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     bool ChangeMaxAP(int amount)
     {
-        if (fm.playerTurn)
+        if (fm.playerTurn == true)
         {
             if (amount + player.maxActionPoints <= 10)
             {
@@ -335,16 +335,33 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     bool EnergyDrain(int num)
     {
-        if (enemy.enemyActionPoints > 0)
+        if (fm.playerTurn)
         {
-            enemy.enemyActionPoints = enemy.enemyActionPoints - num;
-            fm.UpdateActionPoints();
-            return true;
+            if (enemy.enemyActionPoints > 0)
+            {
+                enemy.enemyActionPoints = enemy.enemyActionPoints - num;
+                fm.UpdateActionPoints();
+                return true;
+            }
+            else
+            {
+                Debug.Log("Cannot Drain AP. Enemy has no AP!");
+                return false;
+            }
         }
         else
         {
-            Debug.Log("Cannot Drain AP. Target has no AP!");
-            return false;
+            if (player.actionPoints > 0)
+            {
+                player.actionPoints = player.actionPoints - num;
+                fm.UpdateActionPoints();
+                return true;
+            }
+            else
+            {
+                Debug.Log("Cannot Drain AP. Player has no AP!");
+                return false;
+            }
         }
     }
 

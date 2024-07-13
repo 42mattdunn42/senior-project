@@ -185,9 +185,13 @@ public class FightManager : MonoBehaviour
                 AddActionPoints();
                 UpdateActionPoints();
                 roller.Roll();
-                for (int i = 0; i < 1; i++)
+                if (gm.NumBattles == 1)
                 {
                     enemy.EnemyPlayLogic();
+                }
+                if (gm.NumBattles == 0)
+                {
+                    enemy.EnemyPlayLogic2();
                 }
                 enemyAutomaticActions = true;
                 EndTurn();
@@ -275,7 +279,7 @@ public class FightManager : MonoBehaviour
             availableCardSlots[i] = true;
             enemyAvailableCardSlots[i] = true;
         }
-        DiscardPileToDeck();
+        DiscardPileToDeck(); //probably need to reset enemy deck too
     }
 
 
@@ -305,23 +309,49 @@ public class FightManager : MonoBehaviour
         }
         else if (playerTurn == false)
         {
-            if (enemy.enemyDeck.Count >= 1)
+            if(gm.NumBattles == 1)
             {
-                Card randCard = enemy.enemyDeck[Random.Range(0, enemy.enemyDeck.Count)];
-                for (int i = 0; i < enemyAvailableCardSlots.Length; i++)
+                if (enemy.enemyDeck.Count >= 1)
                 {
-                    if (enemyAvailableCardSlots[i] == true)
+                    Card randCard = enemy.enemyDeck[Random.Range(0, enemy.enemyDeck.Count)];
+                    for (int i = 0; i < enemyAvailableCardSlots.Length; i++)
                     {
-                        randCard.gameObject.SetActive(true);
-                        randCard.handIndex = i;
-                        randCard.transform.position = enemyCardSlots[i].position;
-                        enemyAvailableCardSlots[i] = false;
-                        enemy.enemyHand.Add(randCard);
-                        enemy.enemyDeck.Remove(randCard);
-                        //Debug.Log($"Enemy drew card: {randCard.name} to slot {i}");
+                        if (enemyAvailableCardSlots[i] == true)
+                        {
+                            randCard.gameObject.SetActive(true);
+                            randCard.handIndex = i;
+                            randCard.transform.position = enemyCardSlots[i].position;
+                            enemyAvailableCardSlots[i] = false;
+                            enemy.enemyHand.Add(randCard);
+                            enemy.enemyDeck.Remove(randCard);
+                            //Debug.Log($"Enemy drew card: {randCard.name} to slot {i}");
 
-                        Draws[Random.Range(0, Draws.Count)].Play();
-                        return;
+                            Draws[Random.Range(0, Draws.Count)].Play();
+                            return;
+                        }
+                    }
+                }
+            }
+            else if(gm.NumBattles == 0) //why is it zero?? idk
+            {
+                if (enemy.enemyDeck2.Count >= 1)
+                {
+                    Card randCard = enemy.enemyDeck2[Random.Range(0, enemy.enemyDeck2.Count)];
+                    for (int i = 0; i < enemyAvailableCardSlots.Length; i++)
+                    {
+                        if (enemyAvailableCardSlots[i] == true)
+                        {
+                            randCard.gameObject.SetActive(true);
+                            randCard.handIndex = i;
+                            randCard.transform.position = enemyCardSlots[i].position;
+                            enemyAvailableCardSlots[i] = false;
+                            enemy.enemyHand.Add(randCard);
+                            enemy.enemyDeck2.Remove(randCard);
+                            //Debug.Log($"Enemy drew card: {randCard.name} to slot {i}");
+
+                            Draws[Random.Range(0, Draws.Count)].Play();
+                            return;
+                        }
                     }
                 }
             }
@@ -391,7 +421,7 @@ public class FightManager : MonoBehaviour
             {
                 if (!enemyActionPointsPips[i].enabled)
                 {
-                    actionPointsPips[i].enabled = true;
+                    enemyActionPointsPips[i].enabled = true;
                 }
                 enemyActionPointsPips[i].sprite = APFull;
             }
@@ -399,7 +429,7 @@ public class FightManager : MonoBehaviour
             {
                 if (!enemyActionPointsPips[i].enabled)
                 {
-                    actionPointsPips[i].enabled = true;
+                    enemyActionPointsPips[i].enabled = true;
                 }
                 enemyActionPointsPips[i].sprite = APEmpty;
             }

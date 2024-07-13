@@ -10,11 +10,13 @@ public class Enemy : MonoBehaviour
     public int shield;
     public int shieldLength;
     public FightManager fm;
+    private Player player;
     public ParticleSystem damageEfx;
     public Transform damageEfxSpawnPos;
 
     //enemy deck variables
     public List<Card> enemyDeck = new List<Card>();
+    public List<Card> enemyDeck2 = new List<Card>();
     public List<Card> enemyHand = new List<Card>();
     public List<Card> enemyDiscardPile = new List<Card>();
 
@@ -41,6 +43,7 @@ public class Enemy : MonoBehaviour
     {
         healthBars = GameObject.FindGameObjectWithTag("HealthManager").GetComponent<HealthBarManager>();
         fm = GameObject.FindGameObjectWithTag("FightManager").GetComponent<FightManager>();
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         enemyCardCount = new Dictionary<int, int>();
     }
 
@@ -107,29 +110,75 @@ public class Enemy : MonoBehaviour
         StartCoroutine(EnemyPlayLogicCoroutine());
     }
 
+    public void EnemyPlayLogic2()
+    {
+        StartCoroutine(EnemyPlayLogicCoroutine2());
+    }
+
     private IEnumerator EnemyPlayLogicCoroutine()
     {
         EnemyCheckHand();
 
-        // Try to play King of Diamonds (cardID 2)
+        // Try to play Loaded Dice (cardID 2)
         if (enemyCardCount.ContainsKey(2) && enemyCardCount[2] > 0 && fm.CalculateDamage() == 0)
         {
             yield return PlayCardIfPossible(2, "Loaded Dice");
         }
 
-        // Try to play Queen of Hearts (cardID 3)
+        // Try to play Steady Aim (cardID 3)
         if (enemyCardCount.ContainsKey(3) && enemyCardCount[3] > 0 && fm.CalculateDamage() == 0)
         {
             yield return PlayCardIfPossible(3, "Steady Aim");
         }
 
-        // Try to play Ace of Hearts (cardID 4)
+        // Try to play Fortify (cardID 4)
         if (enemyCardCount.ContainsKey(4) && enemyCardCount[4] > 0 && fm.damageDelay > 0)
         {
             yield return PlayCardIfPossible(4, "Fortify");
         }
 
-        // Try to play Jack of Clubs (cardID 1)
+        // Try to play Recover (cardID 1)
+        if (enemyCardCount.ContainsKey(1) && enemyCardCount[1] > 0 && hp < 100)
+        {
+            yield return PlayCardIfPossible(1, "Recover");
+        }
+    }
+
+    private IEnumerator EnemyPlayLogicCoroutine2()
+    {
+        EnemyCheckHand();
+
+        // Try to play Booster Energy (cardID 5)
+        if (enemyCardCount.ContainsKey(5) && enemyCardCount[5] > 0)
+        {
+            yield return PlayCardIfPossible(5, "Booster Energy");
+        }
+
+        // Try to play Energy Drain (cardID 9)
+        if (enemyCardCount.ContainsKey(9) && enemyCardCount[9] > 0 && player.actionPoints>0)
+        {
+            yield return PlayCardIfPossible(9, "Energy Drain");
+        }
+
+        // Try to play Fortify (cardID 4)
+        if ((enemyCardCount.ContainsKey(4) && enemyCardCount[4] > 0 && fm.damageDelay > 15) || (fm.damageDelay == 0 && enemyHand.Count > 4))
+        {
+            yield return PlayCardIfPossible(4, "Fortify");
+        }
+
+        // Try to play Steady Aim (cardID 3)
+        if (enemyCardCount.ContainsKey(3) && enemyCardCount[3] > 0 && fm.CalculateDamage() == 0)
+        {
+            yield return PlayCardIfPossible(3, "Steady Aim");
+        }
+
+        // Try to play Deadeye (cardID 6)
+        if (enemyCardCount.ContainsKey(6) && enemyCardCount[6] > 0 && fm.CalculateDamage() > 0)
+        {
+            yield return PlayCardIfPossible(6, "Deadeye");
+        }
+
+        // Try to play Recover (cardID 1)
         if (enemyCardCount.ContainsKey(1) && enemyCardCount[1] > 0 && hp < 100)
         {
             yield return PlayCardIfPossible(1, "Recover");
