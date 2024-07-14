@@ -71,6 +71,7 @@ public class Shop : MonoBehaviour
     private void OnMouseUp()
     {
         Debug.Log("MouseUp");
+        int i = 0;
         foreach(Card c in cardsInShop)
         {
             Vector2 mousePos = Input.mousePosition;
@@ -83,10 +84,12 @@ public class Shop : MonoBehaviour
                     Debug.Log("Bought card: " + c.name);
 
                     gm.spendCredits(c.shopCost);
+                    credits.text = "Credits: " + gm.getPlayerCredits();
                     // add card to deck
                     gm.AddCardToDeck(c);
 
                     c.gameObject.SetActive(false);
+                    priceTags[i].gameObject.SetActive(false);
 
                     // back to fight scene
                     //gm.playFightSound();
@@ -97,6 +100,7 @@ public class Shop : MonoBehaviour
                     Debug.Log("Insufficient funds");
                 }
             }
+            i++;
         }
     }
 }
