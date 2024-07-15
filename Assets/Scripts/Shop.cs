@@ -14,6 +14,7 @@ public class Shop : MonoBehaviour
     public bool[] availableCardSlots;
     public List<TextMeshProUGUI> priceTags = new List<TextMeshProUGUI>();
     public TextMeshProUGUI credits;
+    public AudioSource failedBuySound;
 
     // Start is called before the first frame update
     void Start()
@@ -80,6 +81,8 @@ public class Shop : MonoBehaviour
                 // check for funds
                 if(gm.getPlayerCredits() >= c.shopCost)
                 {
+                    gm.playBuySound();
+
                     // buy card
                     Debug.Log("Bought card: " + c.name);
 
@@ -91,13 +94,12 @@ public class Shop : MonoBehaviour
                     c.gameObject.SetActive(false);
                     priceTags[i].gameObject.SetActive(false);
 
-                    // back to fight scene
-                    //gm.playFightSound();
                     return;
                 }
                 else
                 {
                     Debug.Log("Insufficient funds");
+                    failedBuySound.Play();
                 }
             }
             i++;

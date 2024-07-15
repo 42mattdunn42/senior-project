@@ -25,10 +25,12 @@ public class GameManager : MonoBehaviour
     private bool isPlaying;
 
     public AudioSource fightSound;
+    public AudioSource buySound;
     private int playerCredits = 0;
 
     public List<GameObject> cardPrefabs = new List<GameObject>();
     private Dictionary<string, GameObject> cardPrefabDict = new Dictionary<string, GameObject>();
+    private List<string> cardsBought = new List<string>();
 
     private void Awake()
     {
@@ -155,6 +157,8 @@ public class GameManager : MonoBehaviour
         }
         else if (scene.name == "FightScene" /*&& deck != null && HUD!=null*/)
         {
+            cardsBought = new List<string>();
+
             if (deck != null)
             {
                 deck.UnparentDeck();
@@ -170,11 +174,17 @@ public class GameManager : MonoBehaviour
         fightSound.Play();
     }
 
+    public void playBuySound()
+    {
+        buySound.Play();
+    }
+
     public int getPlayerCredits() {  return playerCredits; }
     public void spendCredits(int amount) { playerCredits -= amount; }
 
     public void AddCardToDeck(Card c)
     {
+        cardsBought.Add(c.name);
         // create card
         GameObject obj = Instantiate(cardPrefabDict[c.name]) as GameObject;
         if (obj != null)
@@ -189,6 +199,23 @@ public class GameManager : MonoBehaviour
         obj.transform.SetParent(this.transform.GetChild(0).gameObject.transform, false);
         // add to list?
         playerDeck.Add(c);
+        // set inactive
+        obj.SetActive(false);
+    }
+    public void AddCardToDeck(string c)
+    {
+        // create card
+        GameObject obj = Instantiate(cardPrefabDict[c]) as GameObject;
+        if (obj != null)
+        {
+            Debug.Log("Created " + c);
+        }
+        else
+        {
+            Debug.LogError(c + " failed to instantiate correctly");
+        }
+        // make parent deck game object
+        obj.transform.SetParent(this.transform.GetChild(0).gameObject.transform, false);
         // set inactive
         obj.SetActive(false);
     }
