@@ -198,7 +198,7 @@ public class GameManager : MonoBehaviour
         // make parent deck game object
         obj.transform.SetParent(this.transform.GetChild(0).gameObject.transform, false);
         // add to list?
-        playerDeck.Add(c);
+        playerDeck.Add(obj.GetComponent<Card>());
         // set inactive
         obj.SetActive(false);
     }

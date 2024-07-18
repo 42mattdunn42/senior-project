@@ -92,6 +92,13 @@ public class FightManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        //if (scene.name == "FightScene")
+        //{
+        //    gm = GameManager.instance();
+        //    player.deck = gm.playerDeck;
+        //    RemoveObjects();
+        //    FindObjects();
+        //}
         RemoveObjects();
         FindObjects();
         player.deck = gm.playerDeck;
