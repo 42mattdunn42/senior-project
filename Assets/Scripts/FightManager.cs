@@ -196,7 +196,7 @@ public class FightManager : MonoBehaviour
                 {
                     enemy.EnemyPlayLogic();
                 }
-                if (gm.NumBattles == 0)
+                if (gm.NumBattles == 2)
                 {
                     enemy.EnemyPlayLogic2();
                 }
@@ -210,7 +210,7 @@ public class FightManager : MonoBehaviour
             {
                 // do lose stuff
                 //SceneManager.LoadScene("LoseScreen");
-                gm.NumBattles = gm.MaxFights;
+                //gm.NumBattles = gm.MaxFights;
                 FullReset();
                 gm.LoadLoss();
             }
@@ -218,9 +218,10 @@ public class FightManager : MonoBehaviour
             {
                 // do win stuff
                 //SceneManager.LoadScene("WinScreen");
-                if (gm.NumBattles <= 0)
+                gm.NumBattles++;
+                if (gm.NumBattles >= gm.MaxFights)
                 {
-                    gm.NumBattles = gm.MaxFights;
+                    //gm.NumBattles = gm.MaxFights;
                     FullReset();
                     gm.LoadWin();
                 }
@@ -339,7 +340,7 @@ public class FightManager : MonoBehaviour
                     }
                 }
             }
-            else if(gm.NumBattles == 0) //why is it zero?? idk
+            else if(gm.NumBattles == 2)
             {
                 if (enemy.enemyDeck2.Count >= 1)
                 {
@@ -368,6 +369,21 @@ public class FightManager : MonoBehaviour
     {
         player.deck.AddRange(player.discardPile);
         player.discardPile.Clear();
+        if(gm.NumBattles == 1)
+        {
+            enemy.enemyDeck.AddRange(enemy.enemyDiscardPile);
+            enemy.enemyDiscardPile.Clear();
+        }
+        else if (gm.NumBattles == 2)
+        {
+            enemy.enemyDeck2.AddRange(enemy.enemyDiscardPile);
+            enemy.enemyDiscardPile.Clear();
+        }
+        else
+        {
+            enemy.enemyDeck.AddRange(enemy.enemyDiscardPile);
+            enemy.enemyDiscardPile.Clear();
+        }
     }
 
     //ACTION POINT STUFF

@@ -994,7 +994,6 @@ MonoBehaviour:
   MaxFights: 3
   playerDeck: []
   enemyDeck: []
-  firstLoad: 1
   theme: {fileID: 1246748635}
   fightSound: {fileID: 1246748636}
   buySound: {fileID: 1246748637}

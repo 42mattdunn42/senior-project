@@ -24,12 +24,6 @@ public class Menus : MonoBehaviour
     {
         gm.playFightSound();
         gm.LoadFightScene();
-        gm.firstLoad = false;
-    }
-    public void LoadNextFight()
-    {
-        gm.playFightSound();
-        gm.LoadFightScene();
     }
     public void LoadMainMenu()
     {

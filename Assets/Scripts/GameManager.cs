@@ -18,9 +18,9 @@ public class GameManager : MonoBehaviour
     //private GameObject fightManager;
     public int NumBattles;
     public int MaxFights;
+    private bool firstLoad = true;
     public List<Card> playerDeck = new List<Card>();
     public List<Card> enemyDeck = new List<Card>();
-    public bool firstLoad = true;
     public AudioSource theme;
     private bool isPlaying;
 
@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
             Destroy(this.gameObject);
         }
         DontDestroyOnLoad(this.gameObject);
-        NumBattles = MaxFights;
+        NumBattles = 0;
         isPlaying = false;
 
         foreach(GameObject c in cardPrefabs)
@@ -87,7 +87,6 @@ public class GameManager : MonoBehaviour
                 }
                 enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<Enemy>();
                 enemyDeck = enemy.enemyDeck;
-                NumBattles--;
                 playerCredits += 100;
                 break;
             case "ShopScene":
@@ -113,6 +112,8 @@ public class GameManager : MonoBehaviour
 
     public void LoadWin()
     {
+        NumBattles = 0;
+        firstLoad = true;
         deck.DisableDeckChildren();
         deck.UnparentDeck();
         deck.ReparentDeckToGM();
@@ -125,6 +126,8 @@ public class GameManager : MonoBehaviour
         {
             deck = GameObject.FindGameObjectWithTag("Deck").GetComponent<DeckManager>();
         }
+        NumBattles = 0;
+        firstLoad = true;
         deck.DisableDeckChildren();
         deck.UnparentDeck();
         deck.ReparentDeckToGM();
@@ -133,6 +136,11 @@ public class GameManager : MonoBehaviour
 
     public void LoadFightScene()
     {
+        if(firstLoad == true)
+        {
+            NumBattles++;
+            firstLoad = false;
+        }
         SceneManager.LoadScene("FightScene");
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
