@@ -142,6 +142,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             if (ApplyEffect() == true)
             {
                 Vector3 cardPosition = transform.position;
+                player.hand.Remove(this);
                 player.discardPile.Add(this);
                 gameObject.SetActive(false);
                 Instantiate(playEfx, cardPosition, Quaternion.identity);
@@ -182,6 +183,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             Debug.Log("AP already at maximum value. Discarding Card.");
         }
         Vector3 cardPosition = transform.position;
+        player.hand.Remove(this);
         player.discardPile.Add(this);
         gameObject.SetActive(false);
         Instantiate(burnEfx, cardPosition, Quaternion.identity);

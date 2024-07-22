@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
 
     //player deck variables
     public List<Card> deck = new List<Card>();
+    public List<Card> hand = new List<Card>();
     public List<Card> discardPile = new List<Card>();
 
     //action point variables

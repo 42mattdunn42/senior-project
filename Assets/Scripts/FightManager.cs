@@ -307,6 +307,7 @@ public class FightManager : MonoBehaviour
                         randCard.handIndex = i;
                         randCard.transform.position = cardSlots[i].position;
                         availableCardSlots[i] = false;
+                        player.hand.Add(randCard);
                         player.deck.Remove(randCard);
 
                         Draws[Random.Range(0, Draws.Count)].Play();
@@ -367,23 +368,30 @@ public class FightManager : MonoBehaviour
     }
     public void DiscardPileToDeck()
     {
-        //Need to also make it so that any card that is active also gets added to the discardPile before function occurs
-        player.deck.AddRange(player.discardPile);
+        player.deck.AddRange(player.discardPile); //Discard Pile back to Deck
+        player.deck.AddRange(player.hand); //Hand back to Deck
         player.discardPile.Clear();
-        if(gm.NumBattles == 1)
+        player.hand.Clear();
+        if (gm.NumBattles == 1)
         {
             enemy.enemyDeck.AddRange(enemy.enemyDiscardPile);
+            enemy.enemyDeck.AddRange(enemy.enemyHand);
             enemy.enemyDiscardPile.Clear();
+            enemy.enemyHand.Clear();
         }
         else if (gm.NumBattles == 2)
         {
             enemy.enemyDeck2.AddRange(enemy.enemyDiscardPile);
+            enemy.enemyDeck2.AddRange(enemy.enemyHand);
             enemy.enemyDiscardPile.Clear();
+            enemy.enemyHand.Clear();
         }
         else
         {
             enemy.enemyDeck.AddRange(enemy.enemyDiscardPile);
+            enemy.enemyDeck.AddRange(enemy.enemyHand);
             enemy.enemyDiscardPile.Clear();
+            enemy.enemyHand.Clear();
         }
     }
 
