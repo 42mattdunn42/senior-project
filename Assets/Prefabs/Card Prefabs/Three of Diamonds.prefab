@@ -54,7 +54,7 @@ MonoBehaviour:
   cardID: 8
   apCost: 3
   effectText: Choose three die to rerolled. They can be the same die
-  playerCard: 1
+  playerCard: 0
   tooltipText: {fileID: 0}
   tooltipPanel: {fileID: 0}
   hasBeenPlayed: 0

@@ -83,13 +83,14 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        Debug.Log($"Scene loaded: {scene.name}");
         // Clear old references and update new references
         if (scene.name == "FightScene")
         {
             RemoveRef();
             FindRef();
         }
-        // Find ref again after scene change
+        //Find ref again after scene change
     }
     // Start is called before the first frame update
     void Start()

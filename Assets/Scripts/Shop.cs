@@ -72,37 +72,45 @@ public class Shop : MonoBehaviour
     private void OnMouseUp()
     {
         Debug.Log("MouseUp");
-        int i = 0;
-        foreach(Card c in cardsInShop)
+        Vector2 mousePos = Input.mousePosition;
+
+        for (int i = 0; i < cardsInShop.Count; i++)
         {
-            Vector2 mousePos = Input.mousePosition;
-            if(c.gameObject.activeSelf && RectTransformUtility.RectangleContainsScreenPoint(c.transform.GetComponent<RectTransform>(), mousePos))
+            Card c = cardsInShop[i];
+
+            if (c.gameObject.activeSelf)
             {
-                // check for funds
-                if(gm.getPlayerCredits() >= c.shopCost)
+                RectTransform rectTransform = c.transform.GetComponent<RectTransform>();
+
+                // Check if the mouse is over the card
+                if (RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePos, Camera.main))
                 {
-                    gm.playBuySound();
+                    // Check for funds
+                    if (gm.getPlayerCredits() >= c.shopCost)
+                    {
+                        gm.playBuySound();
 
-                    // buy card
-                    Debug.Log("Bought card: " + c.name);
+                        // Buy card
+                        Debug.Log("Bought card: " + c.name);
 
-                    gm.spendCredits(c.shopCost);
-                    credits.text = "Credits: " + gm.getPlayerCredits();
-                    // add card to deck
-                    gm.AddCardToDeck(c);
+                        gm.spendCredits(c.shopCost);
+                        credits.text = "Credits: " + gm.getPlayerCredits();
 
-                    c.gameObject.SetActive(false);
-                    priceTags[i].gameObject.SetActive(false);
+                        // Add card to deck
+                        gm.AddCardToDeck(c);
 
-                    return;
-                }
-                else
-                {
-                    Debug.Log("Insufficient funds");
-                    failedBuySound.Play();
+                        c.gameObject.SetActive(false);
+                        priceTags[i].gameObject.SetActive(false);
+
+                        return;
+                    }
+                    else
+                    {
+                        Debug.Log("Insufficient funds");
+                        failedBuySound.Play();
+                    }
                 }
             }
-            i++;
         }
     }
 }
