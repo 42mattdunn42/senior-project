@@ -72,6 +72,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     void OnEnable()
     {
+        FindRef();
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -417,6 +418,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             }*/
             else
             {
+                //Debug.Log("No Transform Found!");
                 ShowTooltip(effectText);
             }
         }

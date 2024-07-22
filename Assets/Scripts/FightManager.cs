@@ -367,6 +367,7 @@ public class FightManager : MonoBehaviour
     }
     public void DiscardPileToDeck()
     {
+        //Need to also make it so that any card that is active also gets added to the discardPile before function occurs
         player.deck.AddRange(player.discardPile);
         player.discardPile.Clear();
         if(gm.NumBattles == 1)
