@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -44,6 +45,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     public int shopCost;
 
+    private Vector3 prevPos;
 
     void Awake()
     {
@@ -160,12 +162,14 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             else
             {
                 Debug.Log("Card conditions not met and cannot be played!");
+                this.transform.position = prevPos;
                 ShowTooltip(effectText);
             }
         }
         else
         {
             Debug.Log("Card cannot be played due to insufficient AP!");
+            this.transform.position = prevPos;
             ShowTooltip(effectText);
         }
     }
@@ -383,6 +387,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         if (playerCard)
         {
             HideTooltip();
+            prevPos = this.transform.position;
         }
     }
     public void OnDrag(PointerEventData eventData)
@@ -422,6 +427,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             else
             {
                 //Debug.Log("No Transform Found!");
+                this.transform.position = prevPos;
                 ShowTooltip(effectText);
             }
         }
