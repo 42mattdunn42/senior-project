@@ -1,6 +1,9 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEditor.SearchService;
@@ -121,10 +124,11 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             { 6, () => DoubleDamage() },  //Deadeye
             { 7, () => ChooseReroll(3,false) },  //Weighted Dice
             { 8, () => ChooseReroll(3,true) },  // 3 of diamonds
-            { 9, () => EnergyDrain(1) },
-            { 10,() => Poison() },
-            { 11,() => ReflectDamage() },
-            { 12,() => Bind() }
+            { 9, () => EnergyDrain(1) }, //EnergyDrain
+            { 10,() => Poison() }, //Poison
+            { 11,() => ReflectDamage() }, //Reflect
+            { 12,() => Bind() }, //Bind
+            { 13,() => Redraw() } //Redraw
         };
     }
     public bool ApplyEffect()
@@ -417,6 +421,63 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             Debug.LogWarning("Error in Bind!");
             return false;
         }
+    }
+
+    bool Redraw()
+    {
+        int count = 0;
+        if (fm.playerTurn)
+        {
+            if(player.hand.Count == 1)
+            {
+                Debug.Log("Cannot play! Only one card in hand");
+                return false;
+            }
+            else
+            {
+                foreach (Card card in player.hand)
+                {
+                    card.gameObject.SetActive(false);
+                    player.hand.Remove(card);
+                    player.discardPile.Add(card);
+                    count++;
+                }
+                for (int i = 0; i < count; i++)
+                {
+                    fm.availableCardSlots[i] = true;
+                    fm.DrawCards();
+                }
+                count = 0;
+                return true;
+            }
+        }
+        else if(!fm.playerTurn)
+        {
+            if(enemy.enemyHand.Count == 1)
+            {
+                Debug.Log("Cannot play! Only one card in hand");
+                return false;
+            }
+            else
+            {
+                foreach (Card card in enemy.enemyHand)
+                {
+                    card.gameObject.SetActive(false);
+                    enemy.enemyHand.Remove(card);
+                    enemy.enemyDiscardPile.Add(card);
+                    count++;
+                }
+                for(int i = 0;i < count; i++)
+                {
+                    fm.enemyAvailableCardSlots[i] = true;
+                    fm.DrawCards();
+                }
+                count = 0;
+                return true;
+            }
+        }
+        Debug.LogWarning("Error in Redraw");
+        return false;
     }
 
     bool ChooseReroll(int numDie, bool allowSameRerolls)
