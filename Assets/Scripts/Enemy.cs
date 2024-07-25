@@ -14,6 +14,11 @@ public class Enemy : MonoBehaviour
     public ParticleSystem damageEfx;
     public Transform damageEfxSpawnPos;
 
+    //Status Effects
+    public bool poisoned = false;
+    public int poisonedAmt = 0;
+    public bool bound = false;
+
     //enemy deck variables
     public List<Card> enemyDeck = new List<Card>();
     public List<Card> enemyDeck2 = new List<Card>();

@@ -13,6 +13,11 @@ public class Player : MonoBehaviour
     public ParticleSystem damageEfx;
     public Transform damageEfxSpawnPos;
 
+    //Status Effects
+    public bool poisoned=false;
+    public int poisonedAmt = 0;
+    public bool bound = false;
+
     //player deck variables
     public List<Card> deck = new List<Card>();
     public List<Card> hand = new List<Card>();

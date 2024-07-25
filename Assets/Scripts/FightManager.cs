@@ -44,7 +44,6 @@ public class FightManager : MonoBehaviour
 
     // Damage delay
     public int damageDelay = 0;  // must be initialized to zero to prevent damage from being dealt prematurely
-    public bool doubleDamage = false; //starts with damage being normal at start
     public TextMeshProUGUI incomingDamage;
     public TextMeshProUGUI outgoingDamage;
 
@@ -52,6 +51,10 @@ public class FightManager : MonoBehaviour
     public RawImage playerShield;
     public RawImage enemyShield;
 
+    //Card Effects
+    public bool doubleDamage = false; //starts with damage being normal at start
+    public bool reflectDamage = false;
+    public int reflectAmount = 0;
 
     // pause menu and UI variables
     [SerializeField] public GameObject pauseMenu;
@@ -177,6 +180,11 @@ public class FightManager : MonoBehaviour
                 playerAutomaticActions = true;
             }
 
+            if (player.bound == true) //If the player is bound, then end their turn immediately
+            {
+                EndTurn();
+                player.bound = false;
+            }
             //playerTurn = false;
         }
         else if (!playerTurn && player.IsAlive() && enemy.IsAlive())  // enemy turn
@@ -192,16 +200,25 @@ public class FightManager : MonoBehaviour
                 AddActionPoints();
                 UpdateActionPoints();
                 roller.Roll();
-                if (gm.NumBattles == 1)
-                {
-                    enemy.EnemyPlayLogic();
-                }
-                if (gm.NumBattles == 2)
-                {
-                    enemy.EnemyPlayLogic2();
-                }
                 enemyAutomaticActions = true;
-                EndTurn();
+
+                if (enemy.bound == true) //If enemy is bound, they immediately end their turn
+                {
+                    EndTurn();
+                    enemy.bound = false;
+                }
+                else
+                {
+                    if (gm.NumBattles == 1)
+                    {
+                        enemy.EnemyPlayLogic();
+                    }
+                    if (gm.NumBattles == 2)
+                    {
+                        enemy.EnemyPlayLogic2();
+                    }
+                    EndTurn();
+                }
             }
         }
         else  // someone was defeated
@@ -239,8 +256,25 @@ public class FightManager : MonoBehaviour
         if (playerTurn)  // due to damage delay, at the end of the player's turn they will take damage and vice versa
         {
             endTurnButton.interactable = false;
-            player.TakeDamage(damageDelay);
-            damageDelay = CalculateDamage();
+            if (reflectDamage==false)
+            {
+                player.TakeDamage(damageDelay);
+                damageDelay = CalculateDamage(); //calculates damage for the enemy turn
+            }
+            else
+            {
+                reflectAmount = damageDelay;
+                damageDelay = CalculateDamage();
+                damageDelay += reflectAmount;
+                reflectAmount = 0;
+                reflectDamage = false;
+            }
+
+            if (enemy.poisoned)
+            {
+                damageDelay += enemy.poisonedAmt;
+            }
+
             if (doubleDamage)
             {
                 damageDelay = damageDelay * 2;
@@ -256,8 +290,25 @@ public class FightManager : MonoBehaviour
         {
             StartCoroutine(WaitForEnemyCardAnimations(() =>
             {
-                enemy.TakeDamage(damageDelay);
-                damageDelay = CalculateDamage();
+                if(reflectDamage == false)
+                {
+                    enemy.TakeDamage(damageDelay);
+                    damageDelay = CalculateDamage();
+                }
+                else
+                {
+                    reflectAmount = damageDelay;
+                    damageDelay = CalculateDamage();
+                    damageDelay += reflectAmount;
+                    reflectAmount = 0;
+                    reflectDamage = false;
+                }
+                
+                if (player.poisoned)
+                {
+                    damageDelay += player.poisonedAmt;
+                }
+
                 if (doubleDamage)
                 {
                     damageDelay = damageDelay * 2;

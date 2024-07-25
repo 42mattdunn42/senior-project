@@ -121,7 +121,10 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             { 6, () => DoubleDamage() },  //Deadeye
             { 7, () => ChooseReroll(3,false) },  //Weighted Dice
             { 8, () => ChooseReroll(3,true) },  // 3 of diamonds
-            { 9, () => EnergyDrain(1) }
+            { 9, () => EnergyDrain(1) },
+            { 10,() => Poison() },
+            { 11,() => ReflectDamage() },
+            { 12,() => Bind() }
         };
     }
     public bool ApplyEffect()
@@ -211,7 +214,13 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     {
         if (fm.playerTurn == true)
         {
-            if (player.hp == player.maxhp)
+            if(player.hp == player.maxhp && player.poisoned==true)
+            {
+                player.poisoned = false;
+                player.poisonedAmt = 0;
+                return true;
+            }
+            else if (player.hp == player.maxhp)
             {
                 return false;
             }
@@ -219,28 +228,43 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             {
                 player.hp = player.maxhp;
                 player.healthBars.updatePlayerBar();
+                player.poisoned = false;
+                player.poisonedAmt = 0;
                 return true;
             }
             else
             {
                 player.hp = player.hp + amount;
                 player.healthBars.updatePlayerBar();
+                player.poisoned = false;
+                player.poisonedAmt = 0;
                 return true;
             }
         }
         else if (fm.playerTurn == false)
         {
-            if (enemy.hp == enemy.maxhp)
+            if (enemy.hp == enemy.maxhp && enemy.poisoned==true)
+            {
+                enemy.poisoned = false;
+                enemy.poisonedAmt = 0;
+                return true;
+            }
+            else if (enemy.hp == enemy.maxhp)
             {
                 return false;
             }
             else if (enemy.hp + amount >= enemy.maxhp)
             {
+                enemy.poisoned = false;
+                enemy.poisonedAmt = 0;
                 enemy.hp = enemy.maxhp;
+                enemy.healthBars.updateEnemyBar();
                 return true;
             }
             else
             {
+                enemy.poisoned = false;
+                enemy.poisonedAmt = 0;
                 enemy.hp = enemy.hp + amount;
                 enemy.healthBars.updateEnemyBar();
                 return true;
@@ -335,6 +359,66 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     }
 
+    bool Poison()
+    {
+        if(fm.playerTurn == true)
+        {
+            enemy.poisoned = true;
+            enemy.poisonedAmt += 3;
+            //Make it activate an icon near HP bar
+        }
+        else if(fm.playerTurn == false)
+        {
+            player.poisoned = true;
+            player.poisonedAmt += 3;
+            //Make it activate an icon near HP bar
+        }
+        return true;
+    }
+
+    bool ReflectDamage()
+    {
+        if (fm.damageDelay == 0)
+        {
+            Debug.Log("No damage to reflect! Cannot be played!");
+            return false;
+        }
+        else
+        {
+            fm.reflectDamage = true;
+            return true;
+        }
+    }
+
+    bool Bind()
+    {
+        if (fm.playerTurn && enemy.bound == false)
+        {
+            enemy.bound = true;
+            return true;
+        }
+        else if (fm.playerTurn && enemy.bound == true)
+        {
+            Debug.Log("Enemy is already bound!");
+            return false;
+        }
+        else if (fm.playerTurn == false && player.bound == false)
+        {
+            player.bound = true;
+            return true;
+        }
+        else if(fm.playerTurn==false && player.bound == true)
+        {
+            Debug.Log("Player is already bound!");
+            return false;
+        }
+        else
+        {
+            Debug.LogWarning("Error in Bind!");
+            return false;
+        }
+    }
+
     bool ChooseReroll(int numDie, bool allowSameRerolls)
     {
         diceRoller.allowRerolls(numDie, allowSameRerolls);
@@ -377,9 +461,6 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     {
         return true;
     }
-
-    //CARD ANIMATION FUNCTIONS//
-
 
     //ALL DRAG/UI FUNCTIONS//
     public void OnBeginDrag(PointerEventData eventData)
