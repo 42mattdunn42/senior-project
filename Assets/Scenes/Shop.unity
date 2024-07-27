@@ -849,7 +849,6 @@ MonoBehaviour:
   - {fileID: 2137713102}
   - {fileID: 1473883754}
   - {fileID: 1982575104}
-  - {fileID: 0}
   cardSlots:
   - {fileID: 1553665155}
   - {fileID: 68391303}
