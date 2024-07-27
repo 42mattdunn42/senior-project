@@ -428,48 +428,56 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         int count = 0;
         if (fm.playerTurn)
         {
-            if(player.hand.Count == 1)
+            if (player.hand.Count == 1)
             {
                 Debug.Log("Cannot play! Only one card in hand");
                 return false;
             }
             else
             {
-                foreach (Card card in player.hand)
+                for (int i = player.hand.Count - 1; i >= 0; i--)
                 {
-                    card.gameObject.SetActive(false);
-                    player.hand.Remove(card);
-                    player.discardPile.Add(card);
-                    count++;
+                    Card card = player.hand[i];
+                    if (card != this)
+                    {
+                        player.hand.RemoveAt(i); // Remove the card by index
+                        player.discardPile.Add(card);
+                        card.gameObject.SetActive(false);
+                        count++;
+                    }
                 }
+                fm.ResetCardSlots();
                 for (int i = 0; i < count; i++)
                 {
-                    fm.availableCardSlots[i] = true;
                     fm.DrawCards();
                 }
                 count = 0;
                 return true;
             }
         }
-        else if(!fm.playerTurn)
+        else if (!fm.playerTurn)
         {
-            if(enemy.enemyHand.Count == 1)
+            if (enemy.enemyHand.Count == 1)
             {
                 Debug.Log("Cannot play! Only one card in hand");
                 return false;
             }
             else
             {
-                foreach (Card card in enemy.enemyHand)
+                for (int i = enemy.enemyHand.Count - 1; i >= 0; i--)
                 {
-                    card.gameObject.SetActive(false);
-                    enemy.enemyHand.Remove(card);
-                    enemy.enemyDiscardPile.Add(card);
-                    count++;
+                    Card card = enemy.enemyHand[i];
+                    if (card != this)
+                    {
+                        enemy.enemyHand.RemoveAt(i); // Remove the card by index
+                        enemy.enemyDiscardPile.Add(card);
+                        card.gameObject.SetActive(false);
+                        count++;
+                    }
                 }
-                for(int i = 0;i < count; i++)
+                fm.ResetCardSlots();
+                for (int i = 0; i < count; i++)
                 {
-                    fm.enemyAvailableCardSlots[i] = true;
                     fm.DrawCards();
                 }
                 count = 0;
@@ -479,6 +487,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         Debug.LogWarning("Error in Redraw");
         return false;
     }
+
 
     bool ChooseReroll(int numDie, bool allowSameRerolls)
     {

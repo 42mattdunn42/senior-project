@@ -341,7 +341,6 @@ public class FightManager : MonoBehaviour
         DiscardPileToDeck(); //probably need to reset enemy deck too
     }
 
-
     //CARD STUFF
     public void DrawCards()
     {
@@ -443,6 +442,20 @@ public class FightManager : MonoBehaviour
             enemy.enemyDeck.AddRange(enemy.enemyHand);
             enemy.enemyDiscardPile.Clear();
             enemy.enemyHand.Clear();
+        }
+    }
+
+    public void ResetCardSlots()
+    {
+        if (playerTurn)
+        {
+            for(int i=0; i<availableCardSlots.Length;i++)
+            availableCardSlots[i] = true;
+        }
+        else if(!playerTurn)
+        {
+            for (int i = 0; i < enemyAvailableCardSlots.Length; i++)
+                enemyAvailableCardSlots[i] = true;
         }
     }
 
