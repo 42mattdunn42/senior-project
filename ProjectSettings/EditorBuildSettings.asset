@@ -5,22 +5,22 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
-  - enabled: 1
-    path: Assets/Scenes/WinScreen.unity
-    guid: 2e89b79e382dab14c913b5ff001226f8
-  - enabled: 1
-    path: Assets/Scenes/FightScene.unity
-    guid: 562f30db17cb327419daefa9bbadeeba
-  - enabled: 1
-    path: Assets/Scenes/LoseScreen.unity
-    guid: 57c5800d5e5ea974aaabb7aee6808bf5
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 93b6bb1f6b44d934e8fc75ec5529729e
   - enabled: 1
+    path: Assets/Scenes/FightScene.unity
+    guid: 562f30db17cb327419daefa9bbadeeba
+  - enabled: 1
     path: Assets/Scenes/Shop.unity
     guid: 6ccccada92d079444903346d5c3eca95
+  - enabled: 1
+    path: Assets/Scenes/WinScreen.unity
+    guid: 2e89b79e382dab14c913b5ff001226f8
+  - enabled: 1
+    path: Assets/Scenes/LoseScreen.unity
+    guid: 57c5800d5e5ea974aaabb7aee6808bf5
+  - enabled: 0
+    path: Assets/Scenes/SampleScene.unity
+    guid: 2cda990e2423bbf4892e6590ba056729
   m_configObjects: {}
