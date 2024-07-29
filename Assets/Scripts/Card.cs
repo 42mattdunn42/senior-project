@@ -45,6 +45,9 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     //Particle FX
     public ParticleSystem playEfx;
     public ParticleSystem burnEfx;
+    public Sprite cardBack;
+    public Sprite cardFront;
+    private UnityEngine.UI.Image cardImage;
 
     public int shopCost;
 
@@ -53,6 +56,16 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     void Awake()
     {
         FindRef();
+        Scene currentScene = SceneManager.GetActiveScene();
+        if (cardImage == null)
+        {
+            cardImage = GetComponent<UnityEngine.UI.Image>();
+            cardFront = cardImage.sprite;
+        }
+        if (playerCard == false && currentScene.name == "FightScene" && cardImage.sprite != cardBack)
+        {
+            ShowCardBack();
+        }
     }
 
     void FindRef()
@@ -203,13 +216,19 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         fm.availableCardSlots[handIndex] = true;
     }
 
-    void UpgradeCard(bool canUpgrade, int cardID)
+    public void ShowCardBack()
     {
-        if (canUpgrade)
+        if (cardImage != null && cardBack != null)
         {
-            //do stuff
-            player.deck.Remove(this);
-            gameObject.SetActive(false);
+            cardImage.sprite = cardBack;
+        }
+    }
+
+    public void ShowCardFront()
+    {
+        if (cardImage != null)
+        {
+            cardImage.sprite = cardFront;
         }
     }
 

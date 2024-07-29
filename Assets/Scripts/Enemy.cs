@@ -213,6 +213,7 @@ public class Enemy : MonoBehaviour
         {
             if (playedCard.ApplyEffect())
             {
+                playedCard.ShowCardFront();
                 // Deduct action points immediately
                 for (int i = 0; i < actionPointCost; i++)
                 {

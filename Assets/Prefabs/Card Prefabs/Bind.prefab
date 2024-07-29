@@ -61,6 +61,7 @@ MonoBehaviour:
   handIndex: 0
   playEfx: {fileID: 1110556030845387871, guid: 87ee5838b8fee7243859cfe3567827cf, type: 3}
   burnEfx: {fileID: 6650199810314842004, guid: 8a5bb07fa1c03184182bbdfaef2684e7, type: 3}
+  cardBack: {fileID: 21300000, guid: c0e1d8176a021934aa7e3b42d76cf628, type: 3}
   shopCost: 0
 --- !u!222 &9093636784985476940
 CanvasRenderer:

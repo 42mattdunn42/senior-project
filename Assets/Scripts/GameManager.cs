@@ -203,6 +203,8 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError(c.name + " failed to instantiate correctly");
         }
+        Card cardComponent = obj.GetComponent<Card>();
+        cardComponent.playerCard = true;
         // make parent deck game object
         obj.transform.SetParent(this.transform.GetChild(0).gameObject.transform, false);
         // add to list?
