@@ -217,6 +217,10 @@ public class FightManager : MonoBehaviour
                     {
                         enemy.EnemyPlayLogic2();
                     }
+                    if (gm.NumBattles == 3)
+                    {
+                        enemy.EnemyPlayLogic3();
+                    }
                     EndTurn();
                 }
             }
@@ -280,8 +284,7 @@ public class FightManager : MonoBehaviour
                 damageDelay = damageDelay * 2;
                 doubleDamage = false;
             }
-            outgoingDamage.text = "Incoming: " + damageDelay;
-            incomingDamage.text = "";
+            UpdateIncomingDamage();
             Debug.Log("Player End Turn");
             playerTurn = false;
             playerAutomaticActions = false;
@@ -314,12 +317,17 @@ public class FightManager : MonoBehaviour
                     damageDelay = damageDelay * 2;
                     doubleDamage = false;
                 }
-                incomingDamage.text = "Incoming: " + damageDelay;
-                outgoingDamage.text = "";
+                UpdateIncomingDamage();
                 Debug.Log("Enemy End Turn");
                 StartCoroutine(DelayBeforePlayerTurn());
             }));
         }
+    }
+
+    public void UpdateIncomingDamage()
+    {
+        incomingDamage.text = "Incoming: " + damageDelay;
+        outgoingDamage.text = "";
     }
 
     //GameEndStuff
@@ -331,6 +339,7 @@ public class FightManager : MonoBehaviour
         player.maxActionPoints = 5;
         enemy.enemyActionPoints = 0;
         enemy.maxEnemyActionPoints = 5;
+        RemoveConditions();
         playerTurn = true;
         playerAutomaticActions = false;
         for (int i = 0; i < availableCardSlots.Length; i++)
@@ -339,6 +348,16 @@ public class FightManager : MonoBehaviour
             enemyAvailableCardSlots[i] = true;
         }
         DiscardPileToDeck(); //probably need to reset enemy deck too
+    }
+
+    public void RemoveConditions()
+    {
+        player.poisoned = false;
+        enemy.poisoned = false;
+        player.poisonedAmt = 0;
+        enemy.poisonedAmt = 0;
+        player.bound = false;
+        enemy.bound = false;
     }
 
     //CARD STUFF
@@ -414,6 +433,29 @@ public class FightManager : MonoBehaviour
                     }
                 }
             }
+            else if(gm.NumBattles == 3)
+            {
+                if (enemy.enemyDeck3.Count >= 1)
+                {
+                    Card randCard = enemy.enemyDeck3[Random.Range(0, enemy.enemyDeck3.Count)];
+                    for (int i = 0; i < enemyAvailableCardSlots.Length; i++)
+                    {
+                        if (enemyAvailableCardSlots[i] == true)
+                        {
+                            randCard.gameObject.SetActive(true);
+                            randCard.handIndex = i;
+                            randCard.transform.position = enemyCardSlots[i].position;
+                            enemyAvailableCardSlots[i] = false;
+                            enemy.enemyHand.Add(randCard);
+                            enemy.enemyDeck3.Remove(randCard);
+                            //Debug.Log($"Enemy drew card: {randCard.name} to slot {i}");
+
+                            Draws[Random.Range(0, Draws.Count)].Play();
+                            return;
+                        }
+                    }
+                }
+            }
         }
     }
     public void DiscardPileToDeck()
@@ -433,6 +475,13 @@ public class FightManager : MonoBehaviour
         {
             enemy.enemyDeck2.AddRange(enemy.enemyDiscardPile);
             enemy.enemyDeck2.AddRange(enemy.enemyHand);
+            enemy.enemyDiscardPile.Clear();
+            enemy.enemyHand.Clear();
+        }
+        else if(gm.NumBattles == 3)
+        {
+            enemy.enemyDeck3.AddRange(enemy.enemyDiscardPile);
+            enemy.enemyDeck3.AddRange(enemy.enemyHand);
             enemy.enemyDiscardPile.Clear();
             enemy.enemyHand.Clear();
         }

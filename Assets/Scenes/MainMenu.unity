@@ -991,7 +991,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxNumTurns: 0
   NumBattles: 0
-  MaxFights: 3
+  MaxFights: 4
   playerDeck: []
   enemyDeck: []
   theme: {fileID: 1246748635}

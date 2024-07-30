@@ -239,8 +239,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         {
             if(player.hp == player.maxhp && player.poisoned==true)
             {
-                player.poisoned = false;
-                player.poisonedAmt = 0;
+                CurePoison();
                 return true;
             }
             else if (player.hp == player.maxhp)
@@ -251,16 +250,14 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             {
                 player.hp = player.maxhp;
                 player.healthBars.updatePlayerBar();
-                player.poisoned = false;
-                player.poisonedAmt = 0;
+                CurePoison();
                 return true;
             }
             else
             {
                 player.hp = player.hp + amount;
                 player.healthBars.updatePlayerBar();
-                player.poisoned = false;
-                player.poisonedAmt = 0;
+                CurePoison();
                 return true;
             }
         }
@@ -268,8 +265,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         {
             if (enemy.hp == enemy.maxhp && enemy.poisoned==true)
             {
-                enemy.poisoned = false;
-                enemy.poisonedAmt = 0;
+                CurePoison();
                 return true;
             }
             else if (enemy.hp == enemy.maxhp)
@@ -278,22 +274,38 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             }
             else if (enemy.hp + amount >= enemy.maxhp)
             {
-                enemy.poisoned = false;
-                enemy.poisonedAmt = 0;
                 enemy.hp = enemy.maxhp;
                 enemy.healthBars.updateEnemyBar();
+                CurePoison();
                 return true;
             }
             else
             {
-                enemy.poisoned = false;
-                enemy.poisonedAmt = 0;
                 enemy.hp = enemy.hp + amount;
                 enemy.healthBars.updateEnemyBar();
+                CurePoison();
                 return true;
             }
         }
         else { return false; }
+    }
+
+    void CurePoison()
+    {
+        if (fm.playerTurn)
+        {
+            player.poisoned = false;
+            fm.damageDelay -= player.poisonedAmt;
+            fm.UpdateIncomingDamage();
+            player.poisonedAmt = 0;
+        }
+        else
+        {
+            enemy.poisoned = false;
+            fm.damageDelay -= enemy.poisonedAmt;
+            fm.UpdateIncomingDamage();
+            enemy.poisonedAmt = 0;
+        }
     }
 
     // rerolls all dice
