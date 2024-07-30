@@ -284,7 +284,7 @@ public class FightManager : MonoBehaviour
                 damageDelay = damageDelay * 2;
                 doubleDamage = false;
             }
-            UpdateIncomingDamage();
+            UpdateOutgoingDamage();
             Debug.Log("Player End Turn");
             playerTurn = false;
             playerAutomaticActions = false;
@@ -328,6 +328,12 @@ public class FightManager : MonoBehaviour
     {
         incomingDamage.text = "Incoming: " + damageDelay;
         outgoingDamage.text = "";
+    }
+
+    public void UpdateOutgoingDamage()
+    {
+        outgoingDamage.text = "Incoming: " + damageDelay;
+        incomingDamage.text = "";
     }
 
     //GameEndStuff

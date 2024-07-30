@@ -141,7 +141,8 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             { 10,() => Poison() }, //Poison
             { 11,() => ReflectDamage() }, //Reflect
             { 12,() => Bind() }, //Bind
-            { 13,() => Redraw() } //Redraw
+            { 13,() => Redraw() }, //Redraw
+            { 14,() => Truesight() }, //Truesight
         };
     }
     public bool ApplyEffect()
@@ -556,6 +557,15 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
                 return false;
             }
         }
+    }
+    //Player Card Only
+    bool Truesight()
+    {
+        foreach (Card card in enemy.enemyHand)
+        {
+            card.ShowCardFront();
+        }
+        return true;
     }
 
     bool NoEffect()
