@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -22,6 +23,7 @@ public class Enemy : MonoBehaviour
     //enemy deck variables
     public List<Card> enemyDeck = new List<Card>();
     public List<Card> enemyDeck2 = new List<Card>();
+    public List<Card> enemyDeck3 = new List<Card>();
     public List<Card> enemyHand = new List<Card>();
     public List<Card> enemyDiscardPile = new List<Card>();
 
@@ -120,6 +122,11 @@ public class Enemy : MonoBehaviour
         StartCoroutine(EnemyPlayLogicCoroutine2());
     }
 
+    public void EnemyPlayLogic3()
+    {
+        StartCoroutine(EnemyPlayLogicCoroutine3());
+    }
+
     private IEnumerator EnemyPlayLogicCoroutine()
     {
         EnemyCheckHand();
@@ -188,6 +195,47 @@ public class Enemy : MonoBehaviour
         {
             yield return PlayCardIfPossible(1, "Recover");
         }
+    }
+
+    private IEnumerator EnemyPlayLogicCoroutine3()
+    {
+        EnemyCheckHand();
+        // Try to play Reflect (cardID 11)
+        if (enemyCardCount.ContainsKey(11) && enemyCardCount[11] > 0 && fm.damageDelay >= 15)
+        {
+            yield return PlayCardIfPossible(11, "Reflect");
+        }
+        // Try to play Poison (cardID 10)
+        if (enemyCardCount.ContainsKey(10) && enemyCardCount[10] > 0)
+        {
+            yield return PlayCardIfPossible(10, "Poison");
+        }
+        // Try to play Redraw (cardID 13)
+        if (enemyCardCount.ContainsKey(13) && enemyCardCount[13] > 0)
+        {
+            yield return PlayCardIfPossible(13, "Redraw");
+        }
+        // Try to play Deadeye (cardID 6)
+        if (enemyCardCount.ContainsKey(6) && enemyCardCount[6] > 0 && fm.CalculateDamage() >= 15)
+        {
+            yield return PlayCardIfPossible(6, "Deadeye");
+        }
+        // Try to play Steady Aim (cardID 3)
+        if (enemyCardCount.ContainsKey(3) && enemyCardCount[3] > 0 && fm.CalculateDamage() == 0)
+        {
+            yield return PlayCardIfPossible(3, "Steady Aim");
+        }
+        // Try to play Fortify (cardID 4)
+        if ((enemyCardCount.ContainsKey(4) && enemyCardCount[4] > 0 && fm.damageDelay > 15) || (fm.damageDelay == 0 && enemyHand.Count > 4))
+        {
+            yield return PlayCardIfPossible(4, "Fortify");
+        }
+        // Try to play Recover (cardID 1)
+        if (enemyCardCount.ContainsKey(1) && enemyCardCount[1] > 0 && hp < 100 || poisoned == true)
+        {
+            yield return PlayCardIfPossible(1, "Recover");
+        }
+        
     }
 
     private IEnumerator PlayCardIfPossible(int cardID, string cardName)
