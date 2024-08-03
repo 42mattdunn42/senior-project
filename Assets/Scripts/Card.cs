@@ -183,6 +183,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             else
             {
                 Debug.Log("Card conditions not met and cannot be played!");
+                fm.mtm.DisplayMessage("Card conditions not met and cannot be played!");
                 this.transform.position = prevPos;
                 ShowTooltip(effectText);
             }
@@ -190,6 +191,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         else
         {
             Debug.Log("Card cannot be played due to insufficient AP!");
+            fm.mtm.DisplayMessage("Card cannot be played due to insufficient AP!");
             this.transform.position = prevPos;
             ShowTooltip(effectText);
         }
@@ -561,6 +563,10 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
     //Player Card Only
     bool Truesight()
     {
+        if(enemy.enemyHand.Count == 0)
+        {
+            return false;
+        }
         foreach (Card card in enemy.enemyHand)
         {
             card.ShowCardFront();

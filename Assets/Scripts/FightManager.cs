@@ -62,6 +62,7 @@ public class FightManager : MonoBehaviour
     [SerializeField] public GameObject helpMenu;
     private bool isHelp = false;
     public Button endTurnButton;
+    public messageTextManager mtm;
 
     public AudioSource clickSound;
     public AudioSource endTurnSound;
@@ -119,6 +120,7 @@ public class FightManager : MonoBehaviour
         burnRectTransform = GameObject.Find("Burn Card Area").GetComponent<RectTransform>();
         incomingDamage = GameObject.FindGameObjectWithTag("IncomingDamage").GetComponent<TextMeshProUGUI>();
         outgoingDamage = GameObject.FindGameObjectWithTag("OutgoingDamage").GetComponent<TextMeshProUGUI>();
+        mtm = GameObject.FindGameObjectWithTag("FeedbackText").GetComponent<messageTextManager>();
         //pauseMenu = GameObject.FindGameObjectWithTag("PauseMenu");
         //helpMenu = GameObject.FindGameObjectWithTag("HelpMenu");
     }
